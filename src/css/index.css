@@ -32,7 +32,7 @@ body, html{
     display: flex;
     justify-content: stretch;
     align-items: center;
-    background-color: var(--calendar-header-color);
+    background-color: var(--calendar-header-bg-color);
 }
 
 .calendar-arrow{
@@ -42,7 +42,7 @@ body, html{
     align-items: center;
     width: var(--calendar-day-width);
     height: 100%;
-    background-color: var(--calendar-bg-color);
+    background-color: var(--calendar-arrow-bg-color);
 }
 
 .calendar-arrow::after{
@@ -84,6 +84,7 @@ body, html{
 
 .calendar-day.selected{
     background-color: var(--calendar-day-selected-color);
+    border-radius: var(--calendar-day-selected-border-radius);
 }
 
 .calendar-day.weekend{
@@ -96,7 +97,7 @@ body, html{
 
 /*------------- task --------------*/
 .task{
-
+    line-height: 1.2;
 }
 
 .task-container{
@@ -104,12 +105,17 @@ body, html{
     display: flex;
     gap: var(--task-content-gap);
     background-color: var(--task-bg-color);
-    border-bottom: 1px solid var(--task-border-color);
+}
+
+.task-container + .task-container{
+    border-top: 1px solid var(--task-border-color);
 }
 
 .task-date{
     flex: none;
     justify-self: flex-start;
+    font-size: 0.7rem;
+    line-height: 1.4;
 }
 
 .task-content{
@@ -119,17 +125,23 @@ body, html{
 }
 
 .task-title{
-    color: var(--task-text-color);
+    color: var(--task-title-color);
     font-size: 1.05rem;
     font-weight: 500;
 }
 
 .task-description{
-
+    font-size: 0.75rem;
+    font-weight: 300;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
 }
 
 .task-button{
-    color: var(--text-accent-color);
+    align-self: flex-start;
+    color: var(--text-button-color);
     border: none;
     padding: 0;
     font-weight: 500;
@@ -138,11 +150,20 @@ body, html{
 /*---------------------------------*/
 
 .container{
-    padding: 0 var(--padding);
+    padding: var(--padding) var(--padding) 0;
 }
 
 .dayBtn{
     padding: 8px 12px;
+    color: var(--text-color);
+    font-weight: 600;
     background-color: var(--bg-main);
+    border-radius: 4px;
     border: none;
+}
+
+.tasks-list{
+    padding-top: var(--padding);
+    border-radius: var(--border-radius);
+    overflow: hidden;
 }

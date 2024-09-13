@@ -8,7 +8,10 @@ type CalendarProps = {
 }
 
 
-const montFormatter = new Intl.DateTimeFormat(navigator.language, {month: "long"})
+const montFormatter = new Intl.DateTimeFormat(navigator.language, {
+    month: "long",
+    year: "numeric"
+})
 
 
 export function Calendar({initDate, onSelect}: CalendarProps) {
@@ -26,17 +29,30 @@ export function Calendar({initDate, onSelect}: CalendarProps) {
     }, []);
 
 
-    function handleDateChange(d: number) {
+    function handleDateChange(day: number) {
+        const d = new Date(ptr.getFullYear(), ptr.getMonth(), day)
+        onSelect?.(d)
+    }
 
+    function handleArrowClick(dir: number){
+        const d = new Date(ptr)
+        d.setMonth(ptr.getMonth() + dir)
+        setPtr(d)
     }
 
 
     return (
         <div className='calendar'>
             <div className='calendar-header'>
-                <div className='calendar-arrow calendar-arrow-left'/>
+                <div
+                    className='calendar-arrow calendar-arrow-left'
+                    onClick={() => handleArrowClick(-1)}
+                />
                 <div className='calendar-month'>{montFormatter.format(ptr)}</div>
-                <div className='calendar-arrow calendar-arrow-right'/>
+                <div
+                    className='calendar-arrow calendar-arrow-right'
+                    onClick={() => handleArrowClick(1)}
+                />
             </div>
             <div className='calendar-days'>
                 {
@@ -46,6 +62,7 @@ export function Calendar({initDate, onSelect}: CalendarProps) {
                                 dayVal={d}
                                 dayIdx={i}
                                 sameMonth={sameMonth}
+                                onClick={() => handleDateChange(d)}
                             />
                         )
                     )

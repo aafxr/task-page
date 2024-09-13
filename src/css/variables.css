@@ -1,8 +1,10 @@
 :root{
     --vh: 1vh;
-    --text-color: #000;
-    --text-accent-color: #d44e4e;
+    --text-color: #7e7e7e;
+    --text-accent-color: #478EE4;
+    --text-button-color: #d44e4e;
     --border-color: #c1c1c1;
+    --border-radius: 8px;
     --bg-main: #fff;
     --bg-secondery: #eee;
     --padding: 10px;
@@ -10,14 +12,17 @@
     --calendar-day-width: 40px;
     --calendar-day-height: 40px;
     --calendar-day-selected-color: #b0dd86;
-    --calendar-header-color: #d3e1ed;
-    --calendar-bg-color: #eaf6ff;
+    --calendar-day-selected-border-radius: 4px;
+    --calendar-header-bg-color: #d3e1ed;
+    --calendar-arrow-bg-color: #eaf6ff;
+    --calendar-bg-color: var(--bg-main); /* #eaf6ff */
     --calendar-arrow-color: #8ba7be;
     --calendar-weekend-text-color: #d44e4e;
-    --calendar-border-radius: 8px;
+    --calendar-border-radius: var(--border-radius);
 
     --task-bg-color: var(--bg-main);
     --task-content-gap: var(--padding);
     --task-border-color: var(--border-color);
-    --task-text-color: #478EE4;
+    --task-title-color: var(--text-accent-color);
+    --task-text-color: var(--text-color);
 }
