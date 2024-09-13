@@ -1,16 +1,13 @@
 import React, {useMemo} from 'react';
 import {Task} from "../../classes/Task";
+import {dateFormatter} from "../../utils/dateFormatter";
 
 
 type TaskComponentProps = {
     task: Task
 }
 
-const timeFormatter = new Intl.DateTimeFormat(navigator.language, {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit"
-})
+
 
 export function TaskComponent({task} : TaskComponentProps) {
     const isClosed = !!task.closedDate
@@ -18,7 +15,7 @@ export function TaskComponent({task} : TaskComponentProps) {
 
     return (
         <div className='task task-container'>
-            {!!closeDate && <div className='task-date'>{timeFormatter.format(closeDate)}</div>}
+            {!!closeDate && <div className='task-date'>{dateFormatter.format(closeDate)}</div>}
             <div className='task-content'>
                 <p className='task-title'>{task.title}</p>
                 <p className='task-description'>{task.description}</p>

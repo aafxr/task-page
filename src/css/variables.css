@@ -1,0 +1,23 @@
+:root{
+    --vh: 1vh;
+    --text-color: #000;
+    --text-accent-color: #d44e4e;
+    --border-color: #c1c1c1;
+    --bg-main: #fff;
+    --bg-secondery: #eee;
+    --padding: 10px;
+
+    --calendar-day-width: 40px;
+    --calendar-day-height: 40px;
+    --calendar-day-selected-color: #b0dd86;
+    --calendar-header-color: #d3e1ed;
+    --calendar-bg-color: #eaf6ff;
+    --calendar-arrow-color: #8ba7be;
+    --calendar-weekend-text-color: #d44e4e;
+    --calendar-border-radius: 8px;
+
+    --task-bg-color: var(--bg-main);
+    --task-content-gap: var(--padding);
+    --task-border-color: var(--border-color);
+    --task-text-color: #478EE4;
+}

@@ -1,0 +1,148 @@
+@import "reset.css";
+@import "variables.css";
+
+*, *::before, *::after{
+    box-sizing: border-box;
+    background-color: inherit;
+    color: inherit;
+    line-height: inherit;
+}
+
+body, html{
+    font-family: sans-serif;
+    min-height: 100vh;
+    color: var(--text-color);
+    font-size: 16px;
+    background-color: var(--bg-secondery);
+}
+
+
+/*----------- calendar ------------*/
+.calendar{
+    font-size: 0.85rem;
+    width: calc(var(--calendar-day-width) * 7);
+    background-color: var(--calendar-bg-color);
+    border-radius: var(--calendar-border-radius);
+    overflow: hidden;
+}
+
+.calendar-header{
+    height: var(--calendar-day-height);
+    position: relative;
+    display: flex;
+    justify-content: stretch;
+    align-items: center;
+    background-color: var(--calendar-header-color);
+}
+
+.calendar-arrow{
+    flex: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--calendar-day-width);
+    height: 100%;
+    background-color: var(--calendar-bg-color);
+}
+
+.calendar-arrow::after{
+    content: "";
+    border-top: 4px solid var(--calendar-arrow-color);
+    border-left: 4px solid var(--calendar-arrow-color);
+    border-right: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    transform: rotate(-45deg);
+}
+
+.calendar-arrow-right::after{
+    transform: rotate(135deg);
+}
+
+.calendar-month{
+    flex: 1 1;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
+.calendar-days{
+    width: calc(var(--calendar-day-width) * 7);
+    display: flex;
+    flex-wrap: wrap;
+    background-color: var(--calendar-bg-color);
+}
+
+.calendar-day{
+    flex: none;
+    width: var(--calendar-day-width);
+    height: var(--calendar-day-height);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+}
+
+.calendar-day.selected{
+    background-color: var(--calendar-day-selected-color);
+}
+
+.calendar-day.weekend{
+    color: var(--calendar-weekend-text-color);
+}
+/*---------------------------------*/
+
+
+
+
+/*------------- task --------------*/
+.task{
+
+}
+
+.task-container{
+    padding: 10px;
+    display: flex;
+    gap: var(--task-content-gap);
+    background-color: var(--task-bg-color);
+    border-bottom: 1px solid var(--task-border-color);
+}
+
+.task-date{
+    flex: none;
+    justify-self: flex-start;
+}
+
+.task-content{
+    display: flex;
+    flex-direction: column;
+    gap: var(--task-content-gap);
+}
+
+.task-title{
+    color: var(--task-text-color);
+    font-size: 1.05rem;
+    font-weight: 500;
+}
+
+.task-description{
+
+}
+
+.task-button{
+    color: var(--text-accent-color);
+    border: none;
+    padding: 0;
+    font-weight: 500;
+}
+
+/*---------------------------------*/
+
+.container{
+    padding: 0 var(--padding);
+}
+
+.dayBtn{
+    padding: 8px 12px;
+    background-color: var(--bg-main);
+    border: none;
+}
