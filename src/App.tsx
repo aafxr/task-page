@@ -4,6 +4,7 @@ import {TaskComponent} from "./components/TaskComponent";
 import {dateFormatter} from "./utils/dateFormatter";
 import {Calendar} from "./components/Calendar/Calendar";
 import {Container} from "./components/Container";
+import {useState} from "react";
 
 
 const tasks = [
@@ -20,14 +21,14 @@ const tasks = [
 ]
 
 function App() {
-    const selectedDay = new Date()
+    const [selectedDay, setSelectedDay] = useState(new Date())
 
 
     return (
         <div className="App">
             <Container>
                 <button className='dayBtn'>{dateFormatter.format(selectedDay)}</button>
-                <Calendar initDate={selectedDay} onSelect={console.log}/>
+                <Calendar date={selectedDay} onSelect={setSelectedDay}/>
                 <div className='tasks-list'>
                     {tasks.map(t => (
                         <TaskComponent task={t}/>

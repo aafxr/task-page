@@ -3,7 +3,7 @@ import {calendarBoard} from "../../utils/calendarBoard";
 import clsx from "clsx";
 
 type CalendarProps = {
-    initDate?: Date,
+    date?: Date,
     onSelect?: (d: Date) => unknown
 }
 
@@ -14,7 +14,7 @@ const montFormatter = new Intl.DateTimeFormat(navigator.language, {
 })
 
 
-export function Calendar({initDate, onSelect}: CalendarProps) {
+export function Calendar({date, onSelect}: CalendarProps) {
     const [day, setDay] = useState(new Date())
     const [ptr, setPtr] = useState(new Date())
     const board = useMemo(() => calendarBoard(ptr), [ptr])
@@ -23,10 +23,10 @@ export function Calendar({initDate, onSelect}: CalendarProps) {
 
 
     useEffect(() => {
-        if (!initDate) return
-        setDay(initDate)
-        setPtr(initDate)
-    }, []);
+        if (!date) return
+        setDay(date)
+        setPtr(date)
+    }, [date]);
 
 
     function handleDateChange(day: number) {
