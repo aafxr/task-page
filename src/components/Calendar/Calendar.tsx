@@ -58,6 +58,7 @@ export function Calendar({date, onSelect}: CalendarProps) {
                 {
                     board.map((d, i) => (
                             <CalendarDay
+                                key={i}
                                 day={day}
                                 dayVal={d}
                                 dayIdx={i}

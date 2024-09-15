@@ -4,7 +4,7 @@ import {firstMonthDayOffset} from "./firstMonthDayOffset";
 export function calendarBoard(d: Date){
     const days = monthDays(d)
     const offset = firstMonthDayOffset(d)
-    let total = days + offset
+    let total = 42
     const rest = 7 - total % 7
     if (rest !== 7) total += rest
 

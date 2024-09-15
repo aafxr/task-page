@@ -9,11 +9,13 @@ import {useState} from "react";
 
 const tasks = [
     new Task({
+        id: '1',
         title: 'задача 1',
         description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque error expedita illum iusto magni minus modi molestiae neque quisquam sed.',
         deadline: new Date('2024.08.12')
     }),
     new Task({
+        id: '2',
         title: 'задача 2',
         description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque error expedita illum iusto magni minus modi molestiae neque quisquam sed.',
         deadline: new Date('2024.08.11')
@@ -31,7 +33,7 @@ function App() {
                 <Calendar date={selectedDay} onSelect={setSelectedDay}/>
                 <div className='tasks-list'>
                     {tasks.map(t => (
-                        <TaskComponent task={t}/>
+                        <TaskComponent key={t.id} task={t}/>
                     ))}
                 </div>
             </Container>

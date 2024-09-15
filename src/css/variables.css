@@ -25,4 +25,5 @@
     --task-border-color: var(--border-color);
     --task-title-color: var(--text-accent-color);
     --task-text-color: var(--text-color);
+    --task-border-radius: var(--border-radius);
 }
