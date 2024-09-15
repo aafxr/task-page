@@ -164,7 +164,7 @@ body, html{
 }
 
 .tasks-list{
-    padding-top: var(--padding);
+    margin-top: var(--padding);
     border-radius: var(--task-border-radius);
     overflow: hidden;
 }
