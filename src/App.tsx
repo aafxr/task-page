@@ -4,7 +4,8 @@ import {TaskComponent} from "./components/TaskComponent";
 import {dateFormatter} from "./utils/dateFormatter";
 import {Calendar} from "./components/Calendar/Calendar";
 import {Container} from "./components/Container";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {Modal} from "./components/Moadl";
 
 
 const tasks = [
@@ -22,17 +23,59 @@ const tasks = [
     }),
 ]
 
-function App() {
-    const [selectedDay, setSelectedDay] = useState(new Date())
 
+type AppState = {
+    openCalendar: boolean
+    selectedDay: Date
+    tasks: Task[]
+    tasksLoading: boolean
+    error: Error | null
+}
+
+
+const defaultState: AppState = {
+    openCalendar: false,
+    selectedDay: new Date(),
+    tasksLoading: false,
+    tasks: [],
+    error: new Error('message')
+}
+
+function App() {
+    const [s, setState] = useState(defaultState)
+
+
+    useEffect(() => {
+        setState({...s, tasks})
+    }, []);
+
+
+    function handleChangeSelectedDay(d: Date) {
+        setState(p => ({...p, selectedDay: d, openCalendar: false}))
+    }
+
+
+    function handleToggleCalendar() {
+        setState(p => ({...p, openCalendar: !p.openCalendar}))
+    }
+
+
+    console.log(s)
 
     return (
         <div className="App">
             <Container>
-                <button className='dayBtn'>{dateFormatter.format(selectedDay)}</button>
-                <Calendar date={selectedDay} onSelect={setSelectedDay}/>
+                <button className='dayBtn' onClick={handleToggleCalendar}>{dateFormatter.format(s.selectedDay)}</button>
+                {!!s.error && (
+                    <div className='app-error'>
+                        <p>{s.error.message}</p>
+                    </div>
+                )}
+                <Modal open={s.openCalendar} onClose={handleToggleCalendar}>
+                    <Calendar date={s.selectedDay} onSelect={handleChangeSelectedDay}/>
+                </Modal>
                 <div className='tasks-list'>
-                    {tasks.map(t => (
+                    {s.tasks.map(t => (
                         <TaskComponent key={t.id} task={t}/>
                     ))}
                 </div>

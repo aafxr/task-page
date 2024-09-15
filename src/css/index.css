@@ -1,14 +1,14 @@
 @import "reset.css";
 @import "variables.css";
 
-*, *::before, *::after{
+*, *::before, *::after {
     box-sizing: border-box;
     background-color: inherit;
     color: inherit;
     line-height: inherit;
 }
 
-body, html{
+body, html {
     font-family: sans-serif;
     min-height: 100vh;
     color: var(--text-color);
@@ -18,7 +18,7 @@ body, html{
 
 
 /*----------- calendar ------------*/
-.calendar{
+.calendar {
     font-size: 0.85rem;
     width: calc(var(--calendar-day-width) * 7);
     background-color: var(--calendar-bg-color);
@@ -26,7 +26,7 @@ body, html{
     overflow: hidden;
 }
 
-.calendar-header{
+.calendar-header {
     height: var(--calendar-day-height);
     position: relative;
     display: flex;
@@ -35,7 +35,7 @@ body, html{
     background-color: var(--calendar-header-bg-color);
 }
 
-.calendar-arrow{
+.calendar-arrow {
     flex: none;
     display: flex;
     justify-content: center;
@@ -45,7 +45,7 @@ body, html{
     background-color: var(--calendar-arrow-bg-color);
 }
 
-.calendar-arrow::after{
+.calendar-arrow::after {
     content: "";
     border-top: 4px solid var(--calendar-arrow-color);
     border-left: 4px solid var(--calendar-arrow-color);
@@ -54,25 +54,25 @@ body, html{
     transform: rotate(-45deg);
 }
 
-.calendar-arrow-right::after{
+.calendar-arrow-right::after {
     transform: rotate(135deg);
 }
 
-.calendar-month{
+.calendar-month {
     flex: 1 1;
     font-weight: 600;
     text-overflow: ellipsis;
     text-align: center;
 }
 
-.calendar-days{
+.calendar-days {
     width: calc(var(--calendar-day-width) * 7);
     display: flex;
     flex-wrap: wrap;
     background-color: var(--calendar-bg-color);
 }
 
-.calendar-day{
+.calendar-day {
     flex: none;
     width: var(--calendar-day-width);
     height: var(--calendar-day-height);
@@ -82,25 +82,24 @@ body, html{
     font-weight: 600;
 }
 
-.calendar-day.selected{
+.calendar-day.selected {
     background-color: var(--calendar-day-selected-color);
     border-radius: var(--calendar-day-selected-border-radius);
 }
 
-.calendar-day.weekend{
+.calendar-day.weekend {
     color: var(--calendar-weekend-text-color);
 }
+
 /*---------------------------------*/
 
 
-
-
 /*------------- task --------------*/
-.task{
+.task {
     line-height: 1.2;
 }
 
-.task-container{
+.task-container {
     padding: 10px;
     display: flex;
     gap: var(--task-content-gap);
@@ -108,30 +107,34 @@ body, html{
     border-color: var(--task-border-color);
 }
 
-.task-container + .task-container{
+.task-container + .task-container {
     border-top: 1px solid var(--task-border-color);
 }
 
-.task-date{
+.task-date {
     flex: none;
     justify-self: flex-start;
-    font-size: 0.7rem;
+    font-size: 1rem;
     line-height: 1.4;
 }
 
-.task-content{
+.task-date span {
+    font-size: 0.7rem;
+}
+
+.task-content {
     display: flex;
     flex-direction: column;
     gap: var(--task-content-gap);
 }
 
-.task-title{
+.task-title {
     color: var(--task-title-color);
     font-size: 1.05rem;
     font-weight: 500;
 }
 
-.task-description{
+.task-description {
     font-size: 0.75rem;
     font-weight: 300;
     line-clamp: 2;
@@ -140,7 +143,7 @@ body, html{
     -webkit-box-orient: vertical;
 }
 
-.task-button{
+.task-button {
     align-self: flex-start;
     color: var(--text-button-color);
     border: none;
@@ -150,11 +153,37 @@ body, html{
 
 /*---------------------------------*/
 
-.container{
+
+/*------------ Modal --------------*/
+.modal {
+}
+
+.modal-back {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: transparent;
+    z-index: calc(var(--z-modal) - 1);
+}
+
+.modal-content {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: var(--z-modal);
+}
+
+/*---------------------------------*/
+
+
+.container {
     padding: var(--padding) var(--padding) 0;
 }
 
-.dayBtn{
+.dayBtn {
     padding: 8px 12px;
     color: var(--text-color);
     font-weight: 600;
@@ -163,8 +192,16 @@ body, html{
     border: none;
 }
 
-.tasks-list{
+.tasks-list {
     margin-top: var(--padding);
     border-radius: var(--task-border-radius);
     overflow: hidden;
+}
+
+.app-error {
+    margin-top: var(--margin);
+    padding: var(--padding);
+    color: var(--text-error-color);
+    background-color: var(--error-bg-color);
+    border-radius: var(--border-radius);
 }

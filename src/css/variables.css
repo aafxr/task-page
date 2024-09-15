@@ -2,12 +2,14 @@
     --vh: 1vh;
     --text-color: #7e7e7e;
     --text-accent-color: #478EE4;
-    --text-button-color: #d44e4e;
+    --text-error-color: #F44336;
+    --text-button-color: var(--text-error-color);
     --border-color: #c1c1c1;
     --border-radius: 8px;
     --bg-main: #fff;
     --bg-secondery: #eee;
     --padding: 10px;
+    --margin: 10px;
 
     --calendar-day-width: 40px;
     --calendar-day-height: 40px;
@@ -26,4 +28,9 @@
     --task-title-color: var(--text-accent-color);
     --task-text-color: var(--text-color);
     --task-border-radius: var(--border-radius);
+
+    --error-bg-color: var(--bg-main);
+
+
+    --z-modal: 1000;
 }

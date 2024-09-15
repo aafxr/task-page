@@ -15,7 +15,7 @@ export function TaskComponent({task} : TaskComponentProps) {
 
     return (
         <div className='task task-container'>
-            {!!closeDate && <div className='task-date'>{dateFormatter.format(closeDate)}</div>}
+            {!!closeDate && <div className='task-date'><span>{dateFormatter.format(closeDate)}</span></div>}
             <div className='task-content'>
                 <p className='task-title'>{task.title}</p>
                 <p className='task-description'>{task.description}</p>
