@@ -10,6 +10,7 @@ import {TaskService} from "./services";
 import {Task} from "./classes/Task";
 
 import './css/App.css';
+import {ReportComponent} from "./components/ReportComponent";
 
 
 const tasks = [
@@ -35,6 +36,7 @@ type AppState = {
     tasks: Task[]
     tasksLoading: boolean
     error: Error | null
+    selectedTask: Task | null
 }
 
 
@@ -43,7 +45,8 @@ const defaultState: AppState = {
     selectedDay: new Date(),
     tasksLoading: false,
     tasks: tasks,
-    error: null
+    error: null,
+    selectedTask: null
 }
 
 function App() {
@@ -65,6 +68,11 @@ function App() {
 
     function handleToggleCalendar() {
         setState(p => ({...p, openCalendar: !p.openCalendar}))
+    }
+
+
+    function handleSelectTask(t: Task){
+        setState(p => ({...p, selectedTask: t}))
     }
 
 
@@ -90,12 +98,15 @@ function App() {
                     : (
                         <div className='tasks-list'>
                             {s.tasks.map(t => (
-                                <TaskComponent key={t.id} task={t}/>
+                                <TaskComponent key={t.id} task={t} onReport={handleSelectTask}/>
                             ))}
                         </div>
                     )
                 }
             </Container>
+
+
+            {!!s.selectedTask && <ReportComponent task={s.selectedTask} />}
         </div>
     );
 }

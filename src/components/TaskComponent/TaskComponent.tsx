@@ -6,10 +6,11 @@ import clsx from "clsx";
 
 type TaskComponentProps = {
     task: Task
+    onReport?: (t: Task) => unknown
 }
 
 
-export function TaskComponent({task}: TaskComponentProps) {
+export function TaskComponent({task, onReport}: TaskComponentProps) {
     const isClosed = !!task.closedDate
     const closeDate = useMemo(() => isClosed ? task.closedDate : task.deadline, [isClosed, task])
 
@@ -24,7 +25,7 @@ export function TaskComponent({task}: TaskComponentProps) {
                 <p className='task-description'>{task.description}</p>
                 {isClosed
                     ? 'Задача закрыта ... ???'
-                    : <button className='task-button'>Написать отчет</button>
+                    : <button className='task-button' onClick={() => onReport?.(task)}>Написать отчет</button>
                 }
                 <button className='task-button'>Редактировать отчет</button>
             </div>

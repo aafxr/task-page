@@ -1,6 +1,8 @@
 import React, {HTMLAttributes, useEffect, useState} from 'react';
 import clsx from "clsx";
 import {Task} from "../../classes/Task";
+import {Container} from "../Container";
+import {TextArea} from "../TextArea";
 
 
 interface ReportComponentProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onSubmit'>{
@@ -22,9 +24,17 @@ export function ReportComponent({task, onSubmit,...props}: ReportComponentProps)
 
 
     return (
-        <div {...props} className={clsx('wrapper overlay', props.className)}>
-            <div className='wrapper-header'></div>
-            <div className='wrapper-content'></div>
+        <div {...props} className={clsx('report report-container wrapper overlay', props.className)}>
+            <div className='wrapper-header'>
+                <Container>
+                    <div className='report-title'>Отчет по задаче</div>
+                </Container>
+            </div>
+            <div className='wrapper-content'>
+                <Container>
+                    <TextArea className='report-text' />
+                </Container>
+            </div>
             <div className='wrapper-footer'></div>
         </div>
     );

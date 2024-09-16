@@ -12,7 +12,8 @@ export class TaskService {
 
         const filter = {
             filter: {
-                DEADLINE: { '>=': formattedStartDate, '<=': formattedEndDate }
+                DEADLINE: { '>=': formattedStartDate, '<=': formattedEndDate },
+                REAL_STATUS: {'<': 5}
             },
         }
 
