@@ -1,8 +1,8 @@
-import React, {HTMLAttributes} from 'react';
+import React, {TextareaHTMLAttributes} from 'react';
 import clsx from "clsx";
 
 
-interface TextAreaProps extends HTMLAttributes<HTMLTextAreaElement>{}
+interface TextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement>{}
 
 
 export function TextArea(props: TextAreaProps) {

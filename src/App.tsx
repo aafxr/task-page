@@ -76,6 +76,17 @@ function App() {
     }
 
 
+    function removeSelectedTask(){
+        setState(p => ({...p, selectedTask: null}))
+    }
+
+
+    function handleSaveReport(t:Task){
+        console.log('saving task: ', t.title)
+        setState(p => ({...p, selectedTask: null}))
+    }
+
+
     return (
         <div className="App">
             <Container>
@@ -106,7 +117,13 @@ function App() {
             </Container>
 
 
-            {!!s.selectedTask && <ReportComponent task={s.selectedTask} />}
+            {!!s.selectedTask &&
+                <ReportComponent
+                    task={s.selectedTask}
+                    onSubmit={handleSaveReport}
+                    onClose={removeSelectedTask}
+                />
+            }
         </div>
     );
 }

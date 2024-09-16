@@ -9,14 +9,14 @@ interface ModalProps extends HTMLAttributes<HTMLDivElement> {
 
 
 export function Modal(props: ModalProps) {
-    const {onClose} = props
+    const {onClose, open} = props
 
 
     const handleKeyPres = useCallback((e: KeyboardEvent) => {
-        if (!onClose) return
+        if (!onClose || !open) return
         const {key} = e
         if (key === 'Escape' || key === 'enter') onClose()
-    }, [onClose])
+    }, [onClose, open])
 
 
     useEffect(() => {

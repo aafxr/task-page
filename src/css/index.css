@@ -49,6 +49,7 @@ body, html {
 
 /*----------- button --------------*/
 .btn{
+    flex: 1 1;
     padding: var(--padding);
     display: flex;
     justify-content: center;
@@ -79,8 +80,8 @@ body, html {
     padding: var(--padding);
     font-size: 0.8rem;
     background-color: var(--bg-main);
-    border: var(--border-color);
-    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
     outline-color: var(--text-accent-color);
     resize: none;
 }
@@ -261,9 +262,9 @@ body, html {
 }
 
 .calendar-modal{
-    top: var(--offset);
-    left: var(--offset);
-    transform: unset;
+    /*top: var(--offset);*/
+    /*left: var(--offset);*/
+    /*transform: unset;*/
 }
 
 /*---------------------------------*/
@@ -279,6 +280,27 @@ body, html {
     top: 0;
     right: 0;
     bottom: 0;
+    background-color: var(--bg-main);
+}
+
+.report-title{
+    font-weight: 600;
+}
+
+.report-content{
+    /*padding: var(--padding);*/
+    height: calc(100% - var(--padding) *2);
+}
+
+.report-text{
+    flex: 1 1;
+    width: 100%;
+    /*height: 100%;*/
+}
+
+.confirm-btn{
+    color: var(--text-color);
+    background-color: var(--confirm-color);
 }
 /*---------------------------------*/
 
@@ -331,4 +353,11 @@ body, html {
     font-size: 0.75rem;
     background-color: var(--error-bg-color);
     border-radius: var(--border-radius);
+}
+
+.footer-btns{
+    padding: 0 var(--padding) var(--padding);
+    display: flex;
+    justify-content: stretch;
+    gap: var(--offset);
 }

@@ -4,6 +4,7 @@
     --text-accent-color: #478EE4;
     --text-error-color: #F44336;
     --text-button-color: var(--text-error-color);
+    --confirm-color: #b0dd86;
     --border-color: #c1c1c1;
     --border-radius: 8px;
     --bg-main: #fff;
@@ -16,7 +17,7 @@
 
     --calendar-day-width: 40px;
     --calendar-day-height: 40px;
-    --calendar-day-selected-color: #b0dd86;
+    --calendar-day-selected-color: var(--confirm-color);
     --calendar-day-selected-border-radius: 4px;
     --calendar-header-bg-color: #d3e1ed;
     --calendar-arrow-bg-color: #eaf6ff;
