@@ -47,6 +47,35 @@ body, html {
 }
 /*---------------------------------*/
 
+/*----------- button --------------*/
+.btn{
+    padding: var(--padding);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-accent-color);
+    font-size: 1rem;
+    font-weight: 600;
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color) ;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+}
+.btn.full{
+    width: 100%;
+}
+
+.btn:disabled{
+    filter: brightness(0.96);
+    pointer-events: none;
+    cursor: default;
+}
+
+/*---------------------------------*/
+
+
+
+
 /*----------- calendar ------------*/
 .calendar {
     font-size: 0.85rem;

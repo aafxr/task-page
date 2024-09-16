@@ -9,6 +9,7 @@ import {Loader} from "./components/Loader";
 import {Modal} from "./components/Moadl";
 import {TaskService} from "./services";
 import {Task} from "./classes/Task";
+import {Button} from "./components/Button";
 
 
 const tasks = [
