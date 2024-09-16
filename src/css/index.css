@@ -241,8 +241,15 @@ body, html {
     position: fixed;
     left: 50%;
     top: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1 );
     transform: translate(-50%, -50%);
     z-index: var(--z-modal);
+}
+
+.calendar-modal{
+    top: var(--offset);
+    left: var(--offset);
+    transform: unset;
 }
 
 /*---------------------------------*/

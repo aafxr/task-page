@@ -8,8 +8,9 @@
     --border-radius: 8px;
     --bg-main: #fff;
     --bg-secondery: #eee;
-    --padding: 10px;
-    --margin: 10px;
+    --offset: 10px;
+    --padding: var(--offset);
+    --margin: var(--offset);
     --z-modal: 1000;
     --z-page-overlay: 100;
 

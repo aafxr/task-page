@@ -22,7 +22,11 @@ export function TaskComponent({task}: TaskComponentProps) {
             <div className='task-content'>
                 <p className='task-title'>{task.title}</p>
                 <p className='task-description'>{task.description}</p>
-                <button className='task-button'>{isClosed ? 'задача закрыиа' : 'Написать отчет'}</button>
+                {isClosed
+                    ? 'Задача закрыта ... ???'
+                    : <button className='task-button'>Написать отчет</button>
+                }
+                <button className='task-button'>Редактировать отчет</button>
             </div>
         </div>
     );

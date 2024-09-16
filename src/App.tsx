@@ -1,4 +1,3 @@
-import './css/App.css';
 import {useEffect, useState} from "react";
 
 import {TaskComponent} from "./components/TaskComponent";
@@ -9,7 +8,8 @@ import {Loader} from "./components/Loader";
 import {Modal} from "./components/Moadl";
 import {TaskService} from "./services";
 import {Task} from "./classes/Task";
-import {Button} from "./components/Button";
+
+import './css/App.css';
 
 
 const tasks = [
@@ -77,7 +77,11 @@ function App() {
                         <p>{s.error.message}</p>
                     </div>
                 )}
-                <Modal open={s.openCalendar} onClose={handleToggleCalendar}>
+                <Modal
+                    className='calendar-modal'
+                    open={s.openCalendar}
+                    onClose={handleToggleCalendar}
+                >
                     <Calendar date={s.selectedDay} onSelect={handleChangeSelectedDay}/>
                 </Modal>
 
