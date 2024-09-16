@@ -16,16 +16,15 @@ export function TaskEditePage() {
     const [report, setReport] = useState('')
 
 
-
     useEffect(() => {
-        if(!task) return
+        if (!task) return
         setReport(task.description)
     }, [task])
 
 
     function handleSave(e: React.UIEvent) {
         e.stopPropagation()
-        if(!task) return
+        if (!task) return
         if (report === task.description) return
         task.description = report
         TaskService.update(s, task)
@@ -34,7 +33,7 @@ export function TaskEditePage() {
     }
 
 
-    function handleReportChange(e: ChangeEvent<HTMLTextAreaElement>){
+    function handleReportChange(e: ChangeEvent<HTMLTextAreaElement>) {
         setReport(e.target.value)
     }
 
@@ -45,11 +44,10 @@ export function TaskEditePage() {
     }
 
 
-
     return (
         <div className='report report-container wrapper overlay'>
             <div className='wrapper-header'>
-                    <div className='report-title'>Отчет по задаче</div>
+                <div className='report-title title'>Отчет по задаче</div>
             </div>
             <div className='wrapper-content'>
                 <Container className='report-content'>

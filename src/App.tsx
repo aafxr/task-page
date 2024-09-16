@@ -1,8 +1,7 @@
 import {useEffect} from "react";
 import {Navigate, Route, Routes} from "react-router-dom";
 
-import {TaskEditePage} from "./pages/TaskEditePage/TaskEditePage";
-import {TaskDetails} from "./pages/TaskDetails/TaskDetails";
+import {TaskEditePage, TaskDetails} from "./pages";
 import {useAppContext} from "./context/AppContext";
 import {TaskService} from "./services";
 import {Main} from "./pages";

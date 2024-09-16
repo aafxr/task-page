@@ -59,7 +59,7 @@ body, html {
     font-weight: 600;
     background-color: var(--bg-main);
     border: 1px solid var(--border-color) ;
-    border-radius: var(--border-radius);
+    border-radius: 4px;
     outline-color: var(--text-accent-color);
     cursor: pointer;
 }
@@ -357,8 +357,12 @@ body, html {
 }
 
 .footer-btns{
-    padding: 0 var(--padding) var(--padding);
     display: flex;
     justify-content: stretch;
-    gap: var(--offset);
+    /*gap: var(--offset);*/
+}
+
+.title{
+    margin: var(--margin) var(--margin) 0;
+    font-weight: 600;
 }
