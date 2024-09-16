@@ -11,6 +11,7 @@
     --padding: 10px;
     --margin: 10px;
     --z-modal: 1000;
+    --z-page-overlay: 100;
 
     --calendar-day-width: 40px;
     --calendar-day-height: 40px;

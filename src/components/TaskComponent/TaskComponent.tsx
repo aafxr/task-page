@@ -1,6 +1,7 @@
 import React, {useMemo} from 'react';
 import {Task} from "../../classes/Task";
 import {dateFormatter} from "../../utils/dateFormatter";
+import clsx from "clsx";
 
 
 type TaskComponentProps = {
@@ -13,11 +14,10 @@ export function TaskComponent({task}: TaskComponentProps) {
     const closeDate = useMemo(() => isClosed ? task.closedDate : task.deadline, [isClosed, task])
 
     return (
-        <div className='task task-container'>
+        <div className={clsx('task task-container', {closed: isClosed})}>
             <div className='task-date-container'>
-                {!isClosed && <span className='task-deadline'>Крайний срок:</span>}
+                <span className='task-deadline'>{isClosed ? 'Закрыта' : 'Крайний срок:'}</span>
                 {!!closeDate && <span className='task-date'>{dateFormatter.format(closeDate)}</span>}
-                {isClosed && <span className='task-closed'>Закрыта</span>}
             </div>
             <div className='task-content'>
                 <p className='task-title'>{task.title}</p>
