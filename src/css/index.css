@@ -191,6 +191,7 @@ body, html {
 
 .task-date-container {
     flex: none;
+    width: 60px;
     justify-self: flex-start;
     display: flex;
     flex-direction: column;

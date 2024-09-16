@@ -1,4 +1,4 @@
-import React, {createContext, PropsWithChildren, useCallback, useContext, useState} from 'react';
+import React, {createContext, PropsWithChildren, useContext, useState} from 'react';
 import {Task} from "../../classes/Task";
 
 
@@ -29,7 +29,7 @@ export interface AppContextState {
     selectedTask: Task | null
 
 
-    updateAppContext: (ctx: AppContextState) => unknown
+    updateAppContext: React.Dispatch<React.SetStateAction<AppContextState>>
 }
 
 
