@@ -10,6 +10,7 @@
     --bg-secondery: #eee;
     --padding: 10px;
     --margin: 10px;
+    --z-modal: 1000;
 
     --calendar-day-width: 40px;
     --calendar-day-height: 40px;
@@ -31,6 +32,7 @@
 
     --error-bg-color: var(--bg-main);
 
-
-    --z-modal: 1000;
+    --loader-width: 40px;
+    --loader-height: 40px;
+    --loader-color: var(--text-accent-color);
 }

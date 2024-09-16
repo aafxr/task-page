@@ -13,6 +13,8 @@ const montFormatter = new Intl.DateTimeFormat(navigator.language, {
     year: "numeric"
 })
 
+const weekDays = ['Пн','Вт', 'Ср','Чт','Пт','Сб','Вс']
+
 
 export function Calendar({date, onSelect}: CalendarProps) {
     const [day, setDay] = useState(new Date())
@@ -55,6 +57,7 @@ export function Calendar({date, onSelect}: CalendarProps) {
                 />
             </div>
             <div className='calendar-days'>
+                {weekDays.map((wd, idx) => <WeekDayName key={idx} name={wd} idx={idx} />)}
                 {
                     board.map((d, i) => (
                             <CalendarDay
@@ -73,6 +76,27 @@ export function Calendar({date, onSelect}: CalendarProps) {
     );
 }
 
+
+interface WeekDayNameProps extends HTMLAttributes<HTMLDivElement>{
+    name: string,
+    idx: number,
+}
+
+
+function WeekDayName({name, idx, ...props}: WeekDayNameProps){
+    const weekend = idx === 5 || idx === 6
+    const cn = clsx('calendar-day', {weekend}, props.className)
+
+
+    return (
+        <div
+            {...props}
+            className={cn}
+        >{name}</div>
+    )
+}
+
+
 interface CalendarDayProps extends HTMLAttributes<HTMLDivElement> {
     day: Date
     dayVal: number
@@ -84,7 +108,7 @@ function CalendarDay({day, dayVal, dayIdx, sameMonth, ...props}: CalendarDayProp
     const selected = (sameMonth && dayVal === day.getDate())
     const wd = dayIdx % 7
     const weekend = wd === 5 || wd === 6
-    const cn = clsx('calendar-day', {selected, weekend})
+    const cn = clsx('calendar-day', {selected, weekend}, props.className)
 
     return <div
         {...props}

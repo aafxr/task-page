@@ -1,11 +1,14 @@
 import './css/App.css';
-import {Task} from "./classes/Task";
+import {useEffect, useState} from "react";
+
 import {TaskComponent} from "./components/TaskComponent";
 import {dateFormatter} from "./utils/dateFormatter";
-import {Calendar} from "./components/Calendar/Calendar";
 import {Container} from "./components/Container";
-import {useEffect, useState} from "react";
+import {Calendar} from "./components/Calendar";
+import {Loader} from "./components/Loader";
 import {Modal} from "./components/Moadl";
+import {TaskService} from "./services";
+import {Task} from "./classes/Task";
 
 
 const tasks = [
@@ -19,7 +22,8 @@ const tasks = [
         id: '2',
         title: 'задача 2',
         description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque error expedita illum iusto magni minus modi molestiae neque quisquam sed.',
-        deadline: new Date('2024.08.11')
+        deadline: new Date('2024.08.11'),
+        closedDate: new Date('2024.08.10')
     }),
 ]
 
@@ -37,8 +41,8 @@ const defaultState: AppState = {
     openCalendar: false,
     selectedDay: new Date(),
     tasksLoading: false,
-    tasks: [],
-    error: new Error('message')
+    tasks: tasks,
+    error: null
 }
 
 function App() {
@@ -46,8 +50,11 @@ function App() {
 
 
     useEffect(() => {
-        setState({...s, tasks})
-    }, []);
+        setState(p => ({...p, /*tasks: [], */ tasksLoading: true}))
+        TaskService.getTasks(s.selectedDay)
+            .then(tl => setState(p => ({...p, tasks: tl, tasksLoading: false})))
+            .catch(e => setState(p => ({...p, tasksLoading: false, error: e})))
+    }, [s.selectedDay]);
 
 
     function handleChangeSelectedDay(d: Date) {
@@ -59,8 +66,6 @@ function App() {
         setState(p => ({...p, openCalendar: !p.openCalendar}))
     }
 
-
-    console.log(s)
 
     return (
         <div className="App">
@@ -74,11 +79,17 @@ function App() {
                 <Modal open={s.openCalendar} onClose={handleToggleCalendar}>
                     <Calendar date={s.selectedDay} onSelect={handleChangeSelectedDay}/>
                 </Modal>
-                <div className='tasks-list'>
-                    {s.tasks.map(t => (
-                        <TaskComponent key={t.id} task={t}/>
-                    ))}
-                </div>
+
+                {s.tasksLoading
+                    ? <Loader/>
+                    : (
+                        <div className='tasks-list'>
+                            {s.tasks.map(t => (
+                                <TaskComponent key={t.id} task={t}/>
+                            ))}
+                        </div>
+                    )
+                }
             </Container>
         </div>
     );

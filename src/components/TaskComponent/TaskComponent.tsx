@@ -8,14 +8,17 @@ type TaskComponentProps = {
 }
 
 
-
-export function TaskComponent({task} : TaskComponentProps) {
+export function TaskComponent({task}: TaskComponentProps) {
     const isClosed = !!task.closedDate
     const closeDate = useMemo(() => isClosed ? task.closedDate : task.deadline, [isClosed, task])
 
     return (
         <div className='task task-container'>
-            {!!closeDate && <div className='task-date'><span>{dateFormatter.format(closeDate)}</span></div>}
+            <div className='task-date-container'>
+                {!isClosed && <span className='task-deadline'>Крайний срок:</span>}
+                {!!closeDate && <span className='task-date'>{dateFormatter.format(closeDate)}</span>}
+                {isClosed && <span className='task-closed'>Закрыта</span>}
+            </div>
             <div className='task-content'>
                 <p className='task-title'>{task.title}</p>
                 <p className='task-description'>{task.description}</p>

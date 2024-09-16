@@ -1,7 +1,7 @@
 import {Task} from "../classes/Task";
 import {fetchTasks} from "../api";
 
-export class TasksService {
+export class TaskService {
     static async getTasks(d: Date): Promise<Task[]> {
         const today = new Date();
         const startOfDay = new Date(today.setHours(0, 0, 0, 0));
