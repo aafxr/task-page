@@ -20,7 +20,7 @@ export function TaskComponent({task}: TaskComponentProps) {
     const handleTaskClick = () => navigate(`/task/${task.id}`)
 
 
-    function handleReportClick(e: UIEvent){
+    function handleReportClick(e: UIEvent) {
         e.stopPropagation()
         navigate(`/task/${task.id}/edite`)
     }
@@ -37,9 +37,10 @@ export function TaskComponent({task}: TaskComponentProps) {
                 <p className='task-description'>{task.description}</p>
                 {isClosed
                     ? 'Задача закрыта ... ???'
-                    : <button className='task-button' onClick={handleReportClick}>Написать отчет</button>
+                    : <button className='task-button' onClick={handleReportClick}>
+                        {task.description ? 'Редактировать отчет' : 'Написать отчет'}
+                    </button>
                 }
-                <button className='task-button'>Редактировать отчет</button>
             </div>
         </div>
     );
