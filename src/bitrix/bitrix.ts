@@ -14,8 +14,9 @@ const axios_bx = axios.create({
 export const bitrix = {}
 
 export async function getAuth() {
-    const authResponse: any = await axios_bx.get(`/oauth/authorize/?client_id=${CLIENT_ID}&state=JJHgsdgfkdaslg7lbadsfg`).catch(console.error)
-    if (!authResponse) return {}
+    const res = await axios_bx.get(`/oauth/authorize/?client_id=${CLIENT_ID}&state=JJHgsdgfkdaslg7lbadsfg`).catch(console.error)
+    if (!res || res.status !== 200) return {}
+    const authResponse = res.data
 
     console.log(authResponse)
     const params = Array.from(new URL(authResponse.url).searchParams.entries()).reduce((a, [k, v]) => {
