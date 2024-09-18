@@ -14,7 +14,7 @@ const axios_bx = axios.create({
 export const bitrix = {}
 
 export async function getAuth() {
-    const authResponse: any = await axios_bx.get(`/oauth/authorize/?client_id=${CLIENT_ID}`).catch(console.error)
+    const authResponse: any = await axios_bx.get(`/oauth/authorize/?client_id=${CLIENT_ID}&state=JJHgsdgfkdaslg7lbadsfg`).catch(console.error)
     if (!authResponse) return {}
 
     console.log(authResponse)
