@@ -1,5 +1,7 @@
+import {BXAuth} from "./BXAuth";
 
 const HOST_NAME = process.env.REACT_APP_HOST_NAME || ''
+const PATH_NAME = process.env.REACT_APP_PATH_NAME || ''
 
 const CLIENT_ID = process.env.REACT_APP_CLIENT_ID || ''
 const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET || ''
@@ -7,12 +9,17 @@ const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET || ''
 const baseURL = `https://${HOST_NAME}`
 
 
-// const axios_bx = axios.create({
-//     baseURL: `https://${HOST_NAME}`,
-// })
+const bxAuth = new BXAuth(baseURL, CLIENT_ID, CLIENT_SECRET)
+
+bxAuth.getAuth()
+    .then(r => !r && window.history.pushState(null, '', HOST_NAME + PATH_NAME))
+    .catch(console.error)
+
 
 
 export const bitrix = {}
+
+
 
 export async function getAuth() {
     const authResponse: any = await fetch(`${baseURL}/oauth/authorize/?client_id=${CLIENT_ID}&state=JJHgsdgfkdaslg7lbadsfg`).catch(console.error)
@@ -36,4 +43,7 @@ export async function getAuth() {
     console.log(tokens)
     return tokens
 }
+
+
+
 
