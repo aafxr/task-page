@@ -7,7 +7,6 @@ import {TaskService} from "./services";
 import {Main} from "./pages";
 
 import './css/App.css';
-import {getAuth} from "./bitrix";
 
 
 function App() {
@@ -19,14 +18,6 @@ function App() {
             .then(tl => s.updateAppContext(({...s, tasks: tl, tasksLoading: false})))
             .catch(e => s.updateAppContext(({...s, tasksLoading: false, error: e})))
     }, [s.selectedDay]);
-
-
-    useEffect(() => {
-        getAuth()
-            .then(console.log)
-            .catch(console.error)
-
-    }, []);
 
 
 
