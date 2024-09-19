@@ -1,31 +1,42 @@
 import {Task} from "../classes/Task";
 import {fetchTasks} from "../api";
 import {AppContextState} from "../context/AppContext";
+import {bitrix} from "../bitrix";
+
+let nextTasks = 0
+
 
 export class TaskService {
     /**
      * список задач на дату
      * @param ctx
+     * @param next
      */
-    static async getTasks(ctx: AppContextState): Promise<Task[]> {
+    static async getTasks(ctx: AppContextState, next = false): Promise<Task[]> {
         ctx.updateAppContext(({...ctx, /*tasks: [], */ tasksLoading: true}))
 
-        const today = new Date(ctx.selectedDay);
-        const startOfDay = new Date(today.setHours(0, 0, 0, 0));
-        const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+        if (!next) nextTasks = 0;
 
-        const formattedStartDate = startOfDay.toISOString().split('T')[0];
-        const formattedEndDate = endOfDay.toISOString().split('T')[0];
+        const today = new Date(ctx.selectedDay);
+
+        const user_id = (await bitrix.getAuth()).user_id
 
         const filter = {
             filter: {
-                DEADLINE: { '>=': formattedStartDate, '<=': formattedEndDate },
-                REAL_STATUS: {'<': 5}
+                RESPONSIBLE_ID: user_id,
+                '<STATUS':5
             },
+            order: {
+                DEADLINE:'desc',
+                CREATED_DATE:'desc',
+            },
+            start: nextTasks
         }
 
-        const tasks = await fetchTasks(filter)
-        return tasks.map(t => new Task(t));
+        const response = await fetchTasks(filter)
+        nextTasks = response.next
+
+        return response.result.tasks.map(t => new Task(t));
     }
 
 

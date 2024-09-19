@@ -53,6 +53,8 @@ export function TaskEditePage() {
                 <Container className='report-content'>
                     <TextArea
                         className='report-text'
+                        cols={40}
+                        rows={6}
                         value={report}
                         placeholder={'Отчет по задаче'}
                         onChange={handleReportChange}

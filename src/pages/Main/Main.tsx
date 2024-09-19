@@ -23,7 +23,9 @@ export function Main() {
     return (
         <div>
             <Container>
-                <button className='dayBtn' onClick={handleToggleCalendar}>{dateFormatter.format(s.selectedDay)}</button>
+                <div>
+                    <button className='dayBtn' onClick={handleToggleCalendar}>{dateFormatter.format(s.selectedDay)}</button>
+                </div>
                 {!!s.error && (
                     <div className='app-error'>
                         <p>{s.error.message}</p>

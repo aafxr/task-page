@@ -1,3 +1,5 @@
+type GrantType = 'refresh_token' | 'authorization_code'
+
 type AppCredentials = {
     client_id: string
     state?: string
@@ -25,9 +27,9 @@ type OAuthData = {
 }
 
 
-export class BXAuth{
+export class BXAuth {
     /** origin like: https://example.com */
-    baseURL:string
+    baseURL: string
 
     client_id: string
     client_secret: string
@@ -36,17 +38,23 @@ export class BXAuth{
     oauthData: OAuthData | null = null
 
 
-
-
-
-    constructor( baseURL: string, client_id: string, client_secret: string) {
+    constructor(baseURL: string, client_id: string, client_secret: string) {
         this.baseURL = baseURL
         this.client_id = client_id
         this.client_secret = client_secret
+
+
+
+        this.auth = this.auth.bind(this)
+        this.refresh = this.refresh.bind(this)
+
+        this._loadState()
     }
 
-
-    async getAuth() {
+    /**
+     * отправляет запрос на получение токенов доступа к апи
+     */
+    async auth(): Promise<boolean> {
         this.appCredentials = null
         this.oauthData = null
 
@@ -56,21 +64,43 @@ export class BXAuth{
             this.appCredentials = BXAuth.parseCredentials(authResponse.url)
         }
 
-        if(!this.appCredentials || 'client_id' in this.appCredentials) return false
+        if (!this.appCredentials || 'client_id' in this.appCredentials) return false
 
-        const params = BXAuth.submitParamsForCredentials(this.client_id, this.client_secret, this.appCredentials)
+        const params = BXAuth.submitParamsForCredentials(this, 'authorization_code')
 
         if (!params) return false
 
-        const tokens = await fetch(this.baseURL + '/oauth/token/?' + params)
+        this.oauthData = await fetch(this.baseURL + '/oauth/token/?' + params)
             .then((res) => res.json())
             .catch(console.error)
 
-        console.log(tokens)
+        this._saveState()
+        return this.isAuthenticated()
+    }
 
-        this.oauthData = tokens
 
-        return true
+    /**
+     * обнавляет токен доступа к апи
+     */
+    async refresh(): Promise<boolean> {
+        const refresh_token = this.refresh_token
+        if (!refresh_token) return await this.auth()
+
+
+        const params = BXAuth.submitParamsForCredentials(this, 'refresh_token')
+
+        if (!params) {
+            this.appCredentials = null
+            this.oauthData = null
+            return false
+        }
+
+        this.oauthData = await fetch(this.baseURL + '/oauth/token/?' + params)
+            .then((res) => res.json())
+            .catch(console.error)
+
+        this._saveState()
+        return this.isAuthenticated()
     }
 
 
@@ -78,16 +108,38 @@ export class BXAuth{
         return !!this.oauthData
     }
 
-    get access_token(){
+    get access_token() {
         return this.oauthData?.access_token || ''
     }
 
-    get refresh_token(){
+    get refresh_token() {
         return this.oauthData?.refresh_token || ''
     }
 
-    get user_id(){
+    get user_id() {
         return this.oauthData?.user_id || ''
+    }
+
+
+    private _saveState(){
+        if('localStorage' in globalThis){
+            const data = {
+                oauthData: this.oauthData,
+                appCredentials: this.appCredentials
+            }
+            globalThis.localStorage.setItem('bx', JSON.stringify(data))
+        }
+    }
+
+    private _loadState(){
+        if('localStorage' in globalThis) {
+            try{
+                const data = JSON.parse(localStorage.getItem('bx') || '{}')
+                if('oauthData' in data) this.oauthData = data.oauthData
+                if('appCredentials' in data) this.appCredentials = data.appCredentials
+
+            }catch (_){}
+        }
     }
 
 
@@ -100,14 +152,24 @@ export class BXAuth{
     }
 
 
-    static submitParamsForCredentials(client_id: string, client_secret: string, credentials: AppCredentials): string {
-        if (!credentials || !('code' in credentials)) return ''
+    static submitParamsForCredentials(bxAuth: BXAuth, grant_type: GrantType): string {
+        if (!bxAuth.appCredentials || !('code' in bxAuth.appCredentials)) return ''
+        if(grant_type === 'refresh_token' && !bxAuth.refresh_token) return ''
+
+        const {client_id, client_secret} = bxAuth
 
         const paramsForToken = new URLSearchParams()
-        paramsForToken.append('grant_type','authorization_code')
+        paramsForToken.append('grant_type', grant_type)
         paramsForToken.append('client_id', client_id)
-        paramsForToken.append('client_secret',client_secret)
-        paramsForToken.append('code',credentials.code)
+        paramsForToken.append('client_secret', client_secret)
+
+        switch (grant_type){
+            case "authorization_code":
+                paramsForToken.append('code', bxAuth.appCredentials.code)
+                break
+            case "refresh_token":
+                paramsForToken.append('refresh_token', bxAuth.refresh_token)
+        }
 
         return paramsForToken.toString()
     }

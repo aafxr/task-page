@@ -1,3 +1,4 @@
+import {errors} from "../errors";
 import {BXAuth} from "./BXAuth";
 import {ajax} from "./ajax";
 
@@ -12,56 +13,74 @@ const baseURL = `https://${HOST_NAME}`
 
 const bxAuth = new BXAuth(baseURL, CLIENT_ID, CLIENT_SECRET)
 
-console.log('HOST_NAME + PATH_NAME   =   ', baseURL + PATH_NAME)
 
 // @ts-ignore
-window.bxAuth =
-    bxAuth
+window.bxAuth = bxAuth
 
-// @ts-ignore
-window.getAuth = () =>
-    bxAuth.getAuth()
-        .then(r => !r && window.history.pushState(null, '', baseURL + PATH_NAME))
-        .catch(console.error)
-
-bxAuth.getAuth()
-    .then(r => !r && window.history.pushState(null, '', baseURL + PATH_NAME))
+bxAuth.refresh()
+    .then(r => console.log('auth: ', r))
     .catch(console.error)
-
-
-
 
 
 export const bitrix = {
     callMethod(
-        methodName:string,
+        methodName: string,
         params: Record<string, any> = {},
-        cb: (res: any) => unknown = () => {},
-        fail:(e: Error) => unknown = () => {}
-    ){
-        new Promise(async (resolve, rej ) => {
+        cb: (res: any) => unknown = () => {
+        },
+        fail: (e: Error) => unknown = () => {
+        }
+    ) {
+        new Promise(async (resolve, rej) => {
+            if (!bxAuth.isAuthenticated()) {
+                if (!await bxAuth.refresh()) {
+                    fail(new Error(errors.UNAUTHORIZED))
+                    return
+                }
+            }
+
             const res = await fetch(bitrix._callMethodURL(methodName, params))
                 .then(res => res.json())
-                .catch(e => fail(e))
+                .catch(fail)
             cb(res)
         })
             .catch(fail)
     },
 
-    _callMethodURL(methodName:string, params: Record<string, any>){
-        let _params = ''
-        ajax.prepareData(params, '', (data = '') => _params = data )
+    async getAuth(): Promise<Exclude<BXAuth['oauthData'], null>> {
+        if (bxAuth.isAuthenticated()){
+            return bxAuth.oauthData!
+        }
 
-        const sp =  new URLSearchParams()
+        if (await bxAuth.refresh()){
+            return bxAuth.oauthData!
+        }
+        else throw new Error(errors.UNAUTHORIZED)
+        // return bxAuth.oauthData || {
+        //     access_token: '',
+        //     expires: 0,
+        //     expires_in: 0,
+        //     scope: '',
+        //     domain: '',
+        //     server_endpoint: '',
+        //     status: '',
+        //     client_endpoint: '',
+        //     member_id: '',
+        //     user_id: 0,
+        //     refresh_token: '',
+        // }
+    },
+
+    _callMethodURL(methodName: string, params: Record<string, any>) {
+        let _params = ''
+        ajax.prepareData(params, '', (data = '') => _params = data)
+
+        const sp = new URLSearchParams()
         sp.append('auth', bxAuth.access_token)
 
         return baseURL + '/rest/' + methodName + '?' + _params + '&' + sp.toString()
     }
 }
-
-
-
-
 
 
 // @ts-ignore

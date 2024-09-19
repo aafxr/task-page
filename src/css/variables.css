@@ -15,6 +15,10 @@
     --z-modal: 1000;
     --z-page-overlay: 100;
 
+    --ui-radius: 4px;
+    --ui-color: var(--text-color);
+    --ui-border-color: var(--border-color);
+
     --calendar-day-width: 40px;
     --calendar-day-height: 40px;
     --calendar-day-selected-color: var(--confirm-color);
@@ -38,4 +42,11 @@
     --loader-width: 40px;
     --loader-height: 40px;
     --loader-color: var(--text-accent-color);
+
+    --btn-height: 40px;
+    --btn-radius: var(--ui-radius);
+    --btn-color: var(--ui-color);
+
+    --textarea-padding: 4px;
+    --checbox-width: 16px
 }

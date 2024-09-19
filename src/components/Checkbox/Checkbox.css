@@ -1,0 +1,44 @@
+.bx-checkbox {
+    display: flex;
+    align-items: center;
+    user-select: none; /* Запретить выделение текста */
+}
+
+.bx-checkbox-input {
+    margin-right: 8px;
+    -webkit-appearance: none; /* Скрыть стандартный внешний вид */
+    appearance: none; /* Скрыть стандартный внешний вид */
+    width: 16px; /* Размер чекбокса */
+    height: 16px; /* Размер чекбокса */
+    color: var(--text-color);
+    border: 1px solid var(--ui-border-color); /* Граница */
+    border-radius: var(--ui-radius); /* Скругленные углы */
+    background-color: #fff; /* Фон */
+    cursor: pointer;
+}
+
+.bx-checkbox-input:checked {
+    background-color: var(--text-accent-color); /* Фон при выборе */
+    border-color: var(--text-accent-color); /* Цвет границы при выборе */
+}
+
+.bx-checkbox-input:checked::before {
+    content: '';
+    display: block;
+    width: 8px;
+    height: 6px;
+    border-left: 2px solid #fff; /* Цвет галочки */
+    border-bottom: 2px solid #fff; /* Цвет галочки */
+    border-right: 2px solid transparent; /* Цвет галочки */
+    border-top: 2px solid transparent; /* Цвет галочки */
+    position: relative;
+    top: 3px;
+    left: 3px;
+    transform: rotate(-45deg); /* Поворот галочки */
+}
+
+.bx-checkbox-label {
+    font-size: 0.875rem; /* Размер шрифта */
+    color: var(--text-color); /* Цвет текста */
+    cursor: pointer;
+}
