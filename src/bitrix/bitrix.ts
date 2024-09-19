@@ -1,4 +1,5 @@
 import {BXAuth} from "./BXAuth";
+import {ajax} from "./ajax";
 
 const HOST_NAME = process.env.REACT_APP_HOST_NAME || ''
 const PATH_NAME = process.env.REACT_APP_PATH_NAME || ''
@@ -11,39 +12,57 @@ const baseURL = `https://${HOST_NAME}`
 
 const bxAuth = new BXAuth(baseURL, CLIENT_ID, CLIENT_SECRET)
 
+console.log('HOST_NAME + PATH_NAME   =   ', baseURL + PATH_NAME)
+
+// @ts-ignore
+window.bxAuth =
+    bxAuth
+
+// @ts-ignore
+window.getAuth = () =>
+    bxAuth.getAuth()
+        .then(r => !r && window.history.pushState(null, '', baseURL + PATH_NAME))
+        .catch(console.error)
+
 bxAuth.getAuth()
-    .then(r => !r && window.history.pushState(null, '', HOST_NAME + PATH_NAME))
+    .then(r => !r && window.history.pushState(null, '', baseURL + PATH_NAME))
     .catch(console.error)
 
 
 
-export const bitrix = {}
 
 
+export const bitrix = {
+    callMethod(
+        methodName:string,
+        params: Record<string, any> = {},
+        cb: (res: any) => unknown = () => {},
+        fail:(e: Error) => unknown = () => {}
+    ){
+        new Promise(async (resolve, rej ) => {
+            const res = await fetch(bitrix._callMethodURL(methodName, params))
+                .then(res => res.json())
+                .catch(e => fail(e))
+            cb(res)
+        })
+            .catch(fail)
+    },
 
-export async function getAuth() {
-    const authResponse: any = await fetch(`${baseURL}/oauth/authorize/?client_id=${CLIENT_ID}&state=JJHgsdgfkdaslg7lbadsfg`).catch(console.error)
-    if (!authResponse) return {}
+    _callMethodURL(methodName:string, params: Record<string, any>){
+        let _params = ''
+        ajax.prepareData(params, '', (data = '') => _params = data )
 
-    console.log(authResponse)
-    const params = Array.from(new URL(authResponse.url).searchParams.entries()).reduce((a, [k, v]) => {
-        a[k] = v
-        return a
-    }, {} as Record<string, any>)
-    console.log(params)
+        const sp =  new URLSearchParams()
+        sp.append('auth', bxAuth.access_token)
 
-    const paramsForToken = new URLSearchParams()
-    paramsForToken.append('grant_type','authorization_code')
-    paramsForToken.append('client_id', CLIENT_ID)
-    paramsForToken.append('client_secret',CLIENT_SECRET)
-    paramsForToken.append('code',params.code)
-
-    const tokens = await fetch(baseURL + '/oauth/token/?' + paramsForToken.toString()).catch(console.error)
-
-    console.log(tokens)
-    return tokens
+        return baseURL + '/rest/' + methodName + '?' + _params + '&' + sp.toString()
+    }
 }
 
 
 
 
+
+
+// @ts-ignore
+window.bitrix = bitrix

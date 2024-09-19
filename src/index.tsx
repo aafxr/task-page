@@ -1,11 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './css/index.css';
-import App from './App';
-import {setFixedVH} from "./utils/setFixedVH";
-import {AppContextProvider} from "./context/AppContext";
 import {BrowserRouter} from "react-router-dom";
-import {getAuth} from "./bitrix";
+
+import './css/index.css';
+
+import {AppContextProvider} from "./context/AppContext";
+import {setFixedVH} from "./utils/setFixedVH";
+import App from './App';
 
 //===================== установка фикчированного vh ================================================
 setFixedVH()
@@ -25,11 +26,6 @@ window.addEventListener('resize', setFixedVH)
 //         console.log
 //     )
 // }
-
-
-getAuth()
-    .then(console.log)
-    .catch(console.error)
 
 
 const root = ReactDOM.createRoot(

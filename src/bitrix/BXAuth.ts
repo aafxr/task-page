@@ -67,7 +67,10 @@ export class BXAuth{
             .catch(console.error)
 
         console.log(tokens)
-        return tokens
+
+        this.oauthData = tokens
+
+        return true
     }
 
 
