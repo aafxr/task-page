@@ -8,6 +8,7 @@ import {errors} from "../errors";
 function errorMessageToReadableMessage(errorMessage: string): string{
 
     switch (errorMessage){
+        case errors.BX_EXPIRED_TOKEN:
         case errors.UNAUTHORIZED:
             return 'Необходимо авторизоваться в срм'
         case errors.BX_PAYMENT_REQUIRED:
