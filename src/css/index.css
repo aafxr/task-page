@@ -261,6 +261,13 @@ body, html {
 }
 /*---------------------------------*/
 
+/*------------- task property -----*/
+.taskDetails-property-accent{
+    color: var(--text-error-color);
+    font-weight: 600;
+}
+/*---------------------------------*/
+
 
 .container {
     padding: var(--padding) var(--padding) 0;

@@ -63,6 +63,11 @@ const properties: TaskPropertyVisualize[] = [
         property: "changedDate",
         propertyName: 'Дата изменения',
         value: (k, task) => task[k] ? dateFormatter.format(task[k]) : ''
+    },
+    {
+        property: "deadline",
+        propertyName: 'Крайний срок',
+        value: (k, task) => task[k] ? <b>{dateFormatter.format(task[k])}</b> : 'не указано'
     }
 ]
 
