@@ -170,75 +170,7 @@ body, html {
 /*---------------------------------*/
 
 
-/*------------- task --------------*/
-.task {
-    line-height: 1.2;
-}
 
-.task-container {
-    padding: 10px;
-    display: flex;
-    gap: var(--task-content-gap);
-    background-color: var(--task-bg-color);
-    border-color: var(--task-border-color);
-}
-
-.task-container + .task-container {
-    border-top: 1px solid var(--task-border-color);
-}
-
-.task-container.closed{
-    filter: brightness(0.96);
-}
-
-.task-date-container {
-    flex: none;
-    width: 60px;
-    justify-self: flex-start;
-    display: flex;
-    flex-direction: column;
-    font-size: 1rem;
-    line-height: 1.4;
-}
-
-.task-date{
-    font-size: 0.7rem;
-}
-
-.task-deadline{
-    font-size: 0.65rem;
-}
-
-.task-content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--task-content-gap);
-}
-
-.task-title {
-    color: var(--task-title-color);
-    font-size: 0.85rem;
-    font-weight: 500;
-}
-
-.task-description {
-    font-size: 0.7rem;
-    font-weight: 300;
-    line-clamp: 2;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-    -webkit-box-orient: vertical;
-}
-
-.task-button {
-    align-self: flex-start;
-    color: var(--text-button-color);
-    border: none;
-    padding: 0;
-    font-weight: 500;
-}
-
-/*---------------------------------*/
 
 
 /*------------ Modal --------------*/

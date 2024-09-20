@@ -48,5 +48,9 @@
     --btn-color: var(--ui-color);
 
     --textarea-padding: 4px;
-    --checbox-width: 16px
+    --checbox-width: 16px;
+
+    --placeholder-color: #e3e3e3;
+    --placeholder-height: .7rem;
+    --placeholder-flash-colort: rgba(255,255,255, .5);
 }

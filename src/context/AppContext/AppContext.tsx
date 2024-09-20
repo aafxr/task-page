@@ -37,7 +37,7 @@ const defaultState: AppContextState = {
     openCalendar: false,
     selectedDay: new Date(),
     tasksLoading: false,
-    tasks: tasks,
+    tasks: window.location.origin.includes('localhost') ? tasks : [],
     error: null,
     selectedTask: null,
     updateAppContext: () => {}

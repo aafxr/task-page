@@ -15,11 +15,10 @@ function App() {
 
     useEffect(() => {
         TaskService.getTasks(s)
-            .then(tl => s.updateAppContext(({...s, tasks: tl, tasksLoading: false})))
-            .catch(e => s.updateAppContext(({...s, tasksLoading: false, error: e})))
     }, [s.selectedDay]);
 
 
+    console.log(s)
 
     return (
         <Routes>

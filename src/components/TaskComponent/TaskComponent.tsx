@@ -5,6 +5,8 @@ import React, {useMemo, UIEvent} from 'react';
 import {dateFormatter} from "../../utils/dateFormatter";
 import {Task} from "../../classes/Task";
 
+import './TaskPlaceholder'
+
 
 type TaskComponentProps = {
     task: Task

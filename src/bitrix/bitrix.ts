@@ -3,7 +3,7 @@ import {BXAuth} from "./BXAuth";
 import {ajax} from "./ajax";
 
 const HOST_NAME = process.env.REACT_APP_HOST_NAME || ''
-const PATH_NAME = process.env.REACT_APP_PATH_NAME || ''
+// const PATH_NAME = process.env.REACT_APP_PATH_NAME || ''
 
 const CLIENT_ID = process.env.REACT_APP_CLIENT_ID || ''
 const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET || ''

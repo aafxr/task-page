@@ -1,9 +1,8 @@
-import {TaskComponent} from "../../components/TaskComponent";
+import {TasksComponent} from "../../components/TasksComponent";
 import {dateFormatter} from "../../utils/dateFormatter";
 import {useAppContext} from "../../context/AppContext";
 import {Container} from "../../components/Container";
 import {Calendar} from "../../components/Calendar";
-import {Loader} from "../../components/Loader";
 import {Modal} from "../../components/Moadl";
 
 export function Main() {
@@ -38,17 +37,7 @@ export function Main() {
                 >
                     <Calendar date={s.selectedDay} onSelect={handleChangeSelectedDay}/>
                 </Modal>
-
-                {s.tasksLoading
-                    ? <Loader/>
-                    : (
-                        <div className='tasks-list'>
-                            {s.tasks.map(t => (
-                                <TaskComponent key={t.id} task={t}/>
-                            ))}
-                        </div>
-                    )
-                }
+                <TasksComponent />
             </Container>
         </div>
     );

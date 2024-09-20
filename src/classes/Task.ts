@@ -20,7 +20,7 @@ export class Task {
     changedDate: Date | null = null
     statusChangedBy: string = ''
     statusChangedDate: Date | null = null
-    closedBy: any | null = null
+    closedBy: string | null = null
     closedDate: Date | null = null
     dateStart: Date | null = null
     deadline: Date | null = null
@@ -28,7 +28,7 @@ export class Task {
     endDatePlan: Date | null = null
     guid: string = ''
     xmlId: any | null = null
-    commentsCount: any | null = null
+    commentsCount: number | null = null
     taskControl: string = ''
     addInReport: string = ''
     forkedByTemplateId: any | null = null
@@ -44,8 +44,8 @@ export class Task {
     exchangeId: any | null = null
     outlookVersion: string = ''
     viewedDate: Date | null = null
-    sorting: string = ''
-    durationPlan: string = ''
+    sorting: string | null = null
+    durationPlan: any | null = null
     durationFact: any | null = null
     durationType: string = ''
     descriptionInBbcode: string = ''
@@ -64,11 +64,15 @@ export class Task {
     creator: TaskPerson | null = null
     responsible: TaskPerson | null = null
 
+    flowId: any | null = null
+    serviceCommentsCount: number | null = null
+
     constructor(t: Partial<Task> = {}) {
         Object.keys(t)
-            .forEach(k => {
-                if (k in this) {
-                    if (k.startsWith('date') || k.includes('Date') || k === 'deadline'){
+            .forEach((k) => {
+                //@ts-ignore
+                if (t[k] && (k in this)) {
+                    if (k.startsWith('date') || k.includes('Date') || k === 'deadline') {
                         //@ts-ignore
                         this[k] = new Date(t[k])
                         return
