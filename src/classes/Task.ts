@@ -82,4 +82,13 @@ export class Task {
                 }
             })
     }
+
+
+    isClosed(){
+        return !!this.closedDate && this.closedDate.valueOf() > 0
+    }
+
+    isExpired(){
+        return !!this.deadline && this.deadline.valueOf() < new Date().valueOf()
+    }
 }

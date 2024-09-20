@@ -8,14 +8,26 @@ const tasks = [
         id: '1',
         title: 'задача 1',
         description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque error expedita illum iusto magni minus modi molestiae neque quisquam sed.',
-        deadline: new Date('2024.08.12')
+        deadline: new Date('2024.08.12'),
+        createdDate: new Date(),
+        changedDate: new Date('2024.9.20')
     }),
     new Task({
         id: '2',
         title: 'задача 2',
         description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque error expedita illum iusto magni minus modi molestiae neque quisquam sed.',
         deadline: new Date('2024.08.11'),
-        closedDate: new Date('2024.08.10')
+        closedDate: new Date('2024.08.10'),
+        createdDate: new Date(),
+        changedDate: new Date('2024.9.20')
+    }),
+    new Task({
+        id: '3',
+        title: 'задача 3',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque error expedita illum iusto magni minus modi molestiae neque quisquam sed.',
+        deadline: new Date('2024.08.11'),
+        createdDate: new Date(),
+        changedDate: new Date('2024.9.20')
     }),
 ]
 

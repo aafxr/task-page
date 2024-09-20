@@ -4,6 +4,7 @@
 }
 
 .task-container {
+    min-height: 100px;
     padding: 10px;
     display: flex;
     gap: var(--task-content-gap);
@@ -56,6 +57,10 @@
     -webkit-line-clamp: 2;
     overflow: hidden;
     -webkit-box-orient: vertical;
+}
+
+.task-btns{
+    margin-top: auto;
 }
 
 .task-button {

@@ -8,9 +8,9 @@ export function TasksComponent() {
     return s.tasksLoading
         ? (
             <div className='tasks-list'>
-                <TaskPlaceholder/>
-                <TaskPlaceholder/>
-                <TaskPlaceholder/>
+                {Array.from({length: 6}).map((_, i) => (
+                    <TaskPlaceholder key={i}/>
+                ))}
             </div>
         )
         : (

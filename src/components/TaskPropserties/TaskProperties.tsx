@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {ReactNode} from 'react';
 
 import './TaskProperties.css'
 
     type TaskProperty = {
         property: string;
-        value: string;
+        value: ReactNode;
     }
 
 type TaskPropertiesProps = {

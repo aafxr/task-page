@@ -20,25 +20,31 @@ export function Main() {
 
 
     return (
-        <div>
-            <Container>
-                <div>
-                    <button className='dayBtn' onClick={handleToggleCalendar}>{dateFormatter.format(s.selectedDay)}</button>
-                </div>
-                {!!s.error && (
-                    <div className='app-error'>
-                        <p>{s.error.message}</p>
+        <div className='wrapper'>
+            <div className='wrapper-header'>
+                <Container style={{paddingBottom: 'var(--padding)'}}>
+                    <div>
+                        <button className='dayBtn' onClick={handleToggleCalendar}>{dateFormatter.format(s.selectedDay)}</button>
                     </div>
-                )}
-                <Modal
-                    className='calendar-modal'
-                    open={s.openCalendar}
-                    onClose={handleToggleCalendar}
-                >
-                    <Calendar date={s.selectedDay} onSelect={handleChangeSelectedDay}/>
-                </Modal>
-                <TasksComponent />
-            </Container>
+                    {!!s.error && (
+                        <div className='app-error'>
+                            <p>{s.error.message}</p>
+                        </div>
+                    )}
+                    <Modal
+                        className='calendar-modal'
+                        open={s.openCalendar}
+                        onClose={handleToggleCalendar}
+                    >
+                        <Calendar date={s.selectedDay} onSelect={handleChangeSelectedDay}/>
+                    </Modal>
+                </Container>
+            </div>
+            <div className='wrapper-content'>
+                <Container >
+                    <TasksComponent />
+                </Container>
+            </div>
         </div>
     );
 }
