@@ -45,6 +45,11 @@ const properties: TaskPropertyVisualize[] = [
         value: (k, task) => task[k]
     },
     {
+        property: "createdBy",
+        propertyName: 'Постановщик',
+        value: (k, task) => task.createdBy || ''
+    },
+    {
         property: "responsible",
         propertyName: 'Исполнитель',
         value: (k, task) => task.responsible?.name || ''
@@ -68,6 +73,22 @@ const properties: TaskPropertyVisualize[] = [
         property: "deadline",
         propertyName: 'Крайний срок',
         value: (k, task) => task[k] ? <b>{dateFormatter.format(task[k])}</b> : 'не указано'
+    },
+    {
+        property: "status",
+        propertyName: 'Статус',
+        value: (k, task) => {
+            switch(task[k]){
+                case 1: return 'Новая'
+                case 2: return 'Ожидание'
+                case 3: return 'Выполняется'
+                case 4: return 'Предварительно выполнена'
+                case 5: return 'Выполнена'
+                case 6: return 'Отложена'
+                case 7: return 'Отклонена'
+                default: return ''
+            }
+        }
     }
 ]
 

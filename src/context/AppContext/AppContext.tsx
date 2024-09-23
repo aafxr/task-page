@@ -1,5 +1,6 @@
 import React, {createContext, PropsWithChildren, useContext, useState} from 'react';
 import {Task} from "../../classes/Task";
+import {TaskPerson} from "../../classes/TaskPerson";
 
 
 
@@ -39,6 +40,7 @@ export interface AppContextState {
     tasksLoading: boolean
     error: Error | null
     selectedTask: Task | null
+    persons: Map<string, TaskPerson>
 
 
     updateAppContext: React.Dispatch<React.SetStateAction<AppContextState>>
@@ -52,7 +54,8 @@ const defaultState: AppContextState = {
     tasks: window.location.origin.includes('localhost') ? tasks : [],
     error: null,
     selectedTask: null,
-    updateAppContext: () => {}
+    updateAppContext: () => {},
+    persons: new Map()
 }
 
 
