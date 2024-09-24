@@ -14,6 +14,7 @@ import {TaskReport} from "../../classes/TaskReport";
 import {Select} from "../../components/Select";
 import {NextTask} from "../../classes/NextTask";
 import {DateSelect} from "../../components/DateSelect";
+import {Title} from "../../components/Title";
 
 const d = new Date()
 d.setHours(23, 59, 59, 999)
@@ -107,6 +108,7 @@ export function TaskEditePage() {
     function handleSelectDate(e: ChangeEvent<HTMLInputElement>){
         const d = e.target.valueAsDate
         if (!d) return
+        d.setHours(23,59,59,999)
         const nextState = new NextTask(nextTask)
         nextState.deadLine = d
         setNextTask(nextState)
@@ -148,11 +150,10 @@ export function TaskEditePage() {
     }
 
 
-
     return (
         <div className='report report-container wrapper overlay'>
             <div className='wrapper-header'>
-                <div className='report-title title'>Отчет по задаче</div>
+                <Title >Отчет по задаче</Title>
             </div>
             <div className='wrapper-content'>
                 <Container className='report-content'>
@@ -192,7 +193,7 @@ export function TaskEditePage() {
                             </div>
                             <div className='ui-form-row'>
                                 <Text>Срок:</Text>
-                                <DateSelect value={nextTask.deadLine.toISOString()} onChange={handleSelectDate}/>
+                                <DateSelect value={nextTask.deadLine.toISOString().split('T')[0]} onChange={handleSelectDate}/>
                             </div>
 
                             <div className='ui-form-row'>

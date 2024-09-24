@@ -1,6 +1,8 @@
 import React, {InputHTMLAttributes} from 'react';
 import clsx from "clsx";
 
+import './Range.css'
+
 
 interface RangeProps extends InputHTMLAttributes<HTMLInputElement>{
     full?: boolean

@@ -1,0 +1,6 @@
+.pageTitle{
+    padding: var(--padding);
+    font-weight: 600;
+
+    background-color: var(--bg-header);
+}

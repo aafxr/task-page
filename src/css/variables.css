@@ -2,12 +2,14 @@
     --vh: 1vh;
     --text-color: #7e7e7e;
     --text-accent-color: #478EE4;
-    --text-error-color: #F44336;
+    --text-error-color:#D8454A;
     --text-button-color: var(--text-error-color);
     --confirm-color: #b0dd86;
+    --succesfull-color: #107000;
     --border-color: #c1c1c1;
     --border-radius: 8px;
     --bg-main: #fff;
+    --bg-header: #e2ebee;
     --bg-secondery: #eee;
     --offset: 10px;
     --padding: var(--offset);

@@ -9,7 +9,7 @@ interface DateSelectProps extends InputHTMLAttributes<HTMLInputElement>{
 
 export function DateSelect({full,...props}: DateSelectProps) {
     return (
-        <input type='date' className={clsx('dateSelect', {full}, props.className)}/>
+        <input {...props} type='date' className={clsx('dateSelect', {full}, props.className)}/>
     );
 }
 
