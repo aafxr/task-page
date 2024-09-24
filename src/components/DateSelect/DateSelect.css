@@ -1,0 +1,7 @@
+.dateSelect{
+    padding: 0 8px;
+    height: var(--ui-height);
+    border: 1px solid var(--ui-border-color);
+    border-radius: var(--ui-radius);
+    background-color: var(--ui-bg-color);
+}

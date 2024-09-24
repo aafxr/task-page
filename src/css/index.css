@@ -316,3 +316,9 @@ body, html {
     margin-bottom: var(--margin);
     overflow: hidden;
 }
+
+.next-task-container{
+    padding: var(--padding);
+    background-color: #e2e8e8;
+}
+

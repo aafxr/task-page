@@ -18,9 +18,12 @@
     --ui-radius: 4px;
     --ui-color: var(--text-color);
     --ui-border-color: var(--border-color);
+    --ui-height: 40px;
+    --ui-bg-color: var(--bg-main);
 
-    --calendar-day-width: 40px;
-    --calendar-day-height: 40px;
+
+    --calendar-day-width: var(--ui-height);
+    --calendar-day-height: var(--ui-height);
     --calendar-day-selected-color: var(--confirm-color);
     --calendar-day-selected-border-radius: 4px;
     --calendar-header-bg-color: #d3e1ed;
@@ -39,11 +42,11 @@
 
     --error-bg-color: var(--bg-main);
 
-    --loader-width: 40px;
-    --loader-height: 40px;
+    --loader-width: var(--ui-height);
+    --loader-height: var(--ui-height);
     --loader-color: var(--text-accent-color);
 
-    --btn-height: 40px;
+    --btn-height: var(--ui-height);
     --btn-radius: var(--ui-radius);
     --btn-color: var(--ui-color);
 

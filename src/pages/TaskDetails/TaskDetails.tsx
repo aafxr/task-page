@@ -4,8 +4,6 @@ import {useNavigate, useParams} from "react-router-dom";
 import {useAppContext} from "../../context/AppContext";
 import {useTask} from "../../hooks";
 import {Button} from "../../components/Button";
-import {BxSelect} from "../../components/BxSelect";
-import {Checkbox} from "../../components/Checkbox/Checkbox";
 import {TaskProperties} from "../../components/TaskPropserties";
 import {Task} from "../../classes/Task";
 import {Container} from "../../components/Container";

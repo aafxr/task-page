@@ -1,7 +1,7 @@
 import {useEffect} from "react";
 import {Navigate, Route, Routes} from "react-router-dom";
 
-import {TaskEditePage, TaskDetails} from "./pages";
+import {TaskDetails, TaskEditePage} from "./pages";
 import {useAppContext} from "./context/AppContext";
 import {TaskService} from "./services";
 import {Main} from "./pages";
@@ -17,8 +17,6 @@ function App() {
         TaskService.getTasks(s)
     }, [s.selectedDay]);
 
-
-    console.log(s)
 
     return (
         <Routes>
