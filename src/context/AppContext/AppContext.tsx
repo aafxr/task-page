@@ -1,6 +1,7 @@
 import React, {createContext, PropsWithChildren, useContext, useState} from 'react';
 import {Task} from "../../classes/Task";
 import {TaskPerson} from "../../classes/TaskPerson";
+import {TaskReport} from "../../classes/TaskReport";
 
 
 
@@ -38,6 +39,8 @@ export interface AppContextState {
     selectedDay: Date
     tasks: Task[]
     tasksLoading: boolean
+    reports: TaskReport[]
+    reportsLoading: boolean
     error: Error | null
     selectedTask: Task | null
     persons: Map<string, TaskPerson>
@@ -51,7 +54,9 @@ const defaultState: AppContextState = {
     openCalendar: false,
     selectedDay: new Date(),
     tasksLoading: false,
+    reportsLoading: false,
     tasks: window.location.origin.includes('localhost') ? tasks : [],
+    reports: [],
     error: null,
     selectedTask: null,
     updateAppContext: () => {},

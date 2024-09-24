@@ -2,6 +2,7 @@ import React from 'react';
 import clsx from "clsx";
 
 import './Checkbox.css'
+import {Text} from "../Text";
 
 interface BitrixCheckboxProps extends React.HTMLAttributes<HTMLInputElement> {
     checked?: boolean
@@ -19,7 +20,7 @@ export const Checkbox = ({ checked = false, onChange, label = '', className = ''
                 className="bx-checkbox-input"
                 {...rest}
             />
-            <span className="bx-checkbox-label">{label}</span>
+            <Text className="bx-checkbox-label">{label}</Text>
         </label>
     );
 };

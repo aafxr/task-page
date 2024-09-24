@@ -3,6 +3,8 @@ import {ErrorService} from "./ErrorService";
 import {Task} from "../classes/Task";
 import {fetchTasks} from "../api";
 import {bitrix} from "../bitrix";
+import App from "../App";
+import {TaskReport} from "../classes/TaskReport";
 
 let nextTasks = 0
 
@@ -91,6 +93,17 @@ export class TaskService {
             ErrorService.handleError(ctx)(e as Error)
         }
     }
+
+
+
+    static async updateReport(ctx: AppContextState, r: TaskReport){
+        try {
+
+        } catch (e) {
+            ErrorService.handleError(ctx)(e as Error)
+        }
+    }
+
 
 
 }
