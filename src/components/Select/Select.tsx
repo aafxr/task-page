@@ -27,7 +27,7 @@ export const Select = <T extends number | string>({
 
     function handleChange(e: ChangeEvent<HTMLSelectElement>){
         const v = e.target.value
-        const option = options.find(o => o.value === v)
+        const option = options.find(o => o.value == v)
         if(option) handleSelect(option)
 
     }
@@ -38,7 +38,7 @@ export const Select = <T extends number | string>({
         onChange(option.value);
     };
 
-
+    console.log(selectedValue)
 
     return (
         <select

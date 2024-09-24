@@ -5,7 +5,8 @@ require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_befo
 $user = new CAllUser;
 if (!$user->IsAuthorized()) {
     $returnUrl = '/pub/test/';
-    header("Location: /auth/?returnUrl=$returnUrl");
+//     LocalRedirect($returnUrl);
+    header("Location: /auth/?backurl=$returnUrl");
     exit; //  Прекратить выполнение скрипта
 }
 

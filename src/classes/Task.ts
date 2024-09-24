@@ -1,6 +1,14 @@
 import {TaskPerson} from "./TaskPerson";
 
 export class Task {
+    static STATE_NEW = 1;
+    static STATE_PENDING = 2;
+    static STATE_IN_PROGRESS = 3;
+    static STATE_SUPPOSEDLY_COMPLETED = 4;
+    static STATE_COMPLETED = 5;
+    static STATE_DEFERRED = 6;
+    static STATE_DECLINED = 7;
+
     id: string = ''
     parentId: any | null = null
     title: string = ''

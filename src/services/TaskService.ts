@@ -107,3 +107,18 @@ export class TaskService {
 
 
 }
+
+
+const dateStart = new Date()
+dateStart.setHours(0,0,0,0)
+const dateEnd= new Date (dateStart)
+dateEnd.setHours(23,59,59,999)
+
+const request = {
+    filter: {
+        '>=DEADLINE': dateStart.valueOf(),
+        '<DEADLINE': dateEnd.valueOf(),
+        '!REAL_STATUS': Task.STATE_COMPLETED,
+        'RESPONSIBLE_ID': 212
+    }
+}
