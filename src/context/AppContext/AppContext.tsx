@@ -2,6 +2,7 @@ import React, {createContext, PropsWithChildren, useContext, useState} from 'rea
 import {Task} from "../../classes/Task";
 import {TaskPerson} from "../../classes/TaskPerson";
 import {TaskReport} from "../../classes/TaskReport";
+import {BXPerson} from "../../classes/BXPerson";
 
 
 
@@ -43,7 +44,7 @@ export interface AppContextState {
     reportsLoading: boolean
     error: Error | null
     selectedTask: Task | null
-    persons: Map<string, TaskPerson>
+    persons: Map<string, BXPerson>
 
 
     updateAppContext: React.Dispatch<React.SetStateAction<AppContextState>>
@@ -72,6 +73,9 @@ export function AppContextProvider({children}: PropsWithChildren) {
 
 
     s.updateAppContext = setState
+
+    // @ts-ignore
+    window.ctx = s
 
 
     return (

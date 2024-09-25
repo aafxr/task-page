@@ -7,6 +7,7 @@ import {Button} from "../../components/Button";
 import {TaskProperties} from "../../components/TaskPropserties";
 import {Task} from "../../classes/Task";
 import {Container} from "../../components/Container";
+import {BASE_URL} from "../../App";
 
 
 const options = [
@@ -108,7 +109,7 @@ export function TaskDetails() {
 
 
     function handleBackClick(){
-        navigate('/')
+        navigate(BASE_URL)
     }
 
     function handleSelectChange(text: string){

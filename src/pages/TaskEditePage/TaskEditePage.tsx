@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
+import React, {ChangeEvent, useEffect, useMemo, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
 
 import {useAppContext} from "../../context/AppContext";
@@ -15,6 +15,9 @@ import {Select} from "../../components/Select";
 import {NextTask} from "../../classes/NextTask";
 import {DateSelect} from "../../components/DateSelect";
 import {Title} from "../../components/Title";
+import {BASE_URL} from "../../App";
+import {BXPerson} from "../../classes/BXPerson";
+import {ContactService} from "../../services/ContactService";
 
 const d = new Date()
 d.setHours(23, 59, 59, 999)
@@ -41,6 +44,16 @@ export function TaskEditePage() {
     const task = useTask(taskID)!
     const [report, setReport] = useState(defaultState)
     const [nextTask, setNextTask] = useState<NextTask>()
+    const [contacts, setContacts] = useState<BXPerson[]>([])
+
+    const selectPersonData = useMemo(() => {
+        return Array.from(s.persons.values()).map(p => ({value: p.ID, label: `${p.NAME} ${p.LAST_NAME}`}))
+    }, [s.persons])
+
+
+    const selectContactsData = useMemo(() => {
+        return contacts.map(c => ({value: c.ID, label: `${c.NAME} ${c.LAST_NAME}`}))
+    }, [contacts])
 
 
     useEffect(() => {
@@ -54,11 +67,17 @@ export function TaskEditePage() {
     }, [task]);
 
 
+    // загрузка контактов
+    useEffect(() => {
+        ContactService.getContacts(s, task).then(setContacts)
+    }, [task]);
+
+
     function handleSave(e: React.UIEvent) {
         e.stopPropagation()
         if (!task || !report) return
         TaskService.updateReport(s, report)
-            .then(() => navigate('/'))
+            .then(() => navigate(BASE_URL))
     }
 
 
@@ -71,7 +90,7 @@ export function TaskEditePage() {
 
     const handleCloseClick = (e: React.UIEvent) => {
         e.stopPropagation()
-        navigate('/')
+        navigate(BASE_URL)
     }
 
     /** цель достигнута */
@@ -208,11 +227,11 @@ export function TaskEditePage() {
                                 </div>
                                 <div className='ui-form-row'>
                                     <Text>Сотрудник</Text>
-                                    <Select full options={[]} value={nextTask.user} onChange={handleResponsiblePerson}/>
+                                    <Select full options={selectPersonData}  value={nextTask.user} onChange={handleResponsiblePerson}/>
                                 </div>
                                 <div className='ui-form-row'>
                                     <Text>Контактное лицо</Text>
-                                    <Select full options={[]} value={nextTask.contact} onChange={handleContact}/>
+                                    <Select full options={selectContactsData} value={nextTask.contact} onChange={handleContact}/>
                                 </div>
                                 <div className='ui-form-row'>
                                     <Text>Желаемый результат:</Text>

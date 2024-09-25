@@ -57,6 +57,13 @@ export class Task {
     durationFact: any | null = null
     durationType: string = ''
     descriptionInBbcode: string = ''
+    auditors: Array<any> = []
+    accomplices: Array<any> = []
+    newCommentsCount: number = -1
+    subStatus: string = ''
+    creator: TaskPerson | null = null
+    responsible: TaskPerson | null = null
+
     ufCrmTask: Array<any> = []
     ufTaskWebdavFiles: number[] = []
     ufAuto915658270214: any | null = null
@@ -65,12 +72,19 @@ export class Task {
     ufMailMessage: any | null = null
     ufAuto226929532613: string = ''
     ufAuto187628303463: any | null = null
-    auditors: Array<any> = []
-    accomplices: Array<any> = []
-    newCommentsCount: number = -1
-    subStatus: string = ''
-    creator: TaskPerson | null = null
-    responsible: TaskPerson | null = null
+    ufAuto251545709641: any | null = null
+    ufAuto274474131393: any | null = null
+    ufAuto280393729397: any | null = null
+    ufAuto616972454340: any | null = null
+    ufAuto645211693582: any | null = null
+    ufAuto719191965958: any | null = null
+    ufAuto851551329931: any | null = null
+    ufColor: any | null = null
+    ufCrmTaskContact: any | false = false
+    ufNextTask: any | null = null
+    ufPreviewText: any | null = null
+    ufTaskReport: any | null = null
+    ufTaskTime: any | null = null
 
     flowId: any | null = null
     serviceCommentsCount: number | null = null
@@ -79,7 +93,7 @@ export class Task {
         Object.keys(t)
             .forEach((k) => {
                 //@ts-ignore
-                if (t[k] && (k in this)) {
+                if (t[k] !== undefined) {
                     if (k.startsWith('date') || k.includes('Date') || k === 'deadline') {
                         //@ts-ignore
                         this[k] = new Date(t[k])
@@ -98,5 +112,28 @@ export class Task {
 
     isExpired(){
         return !!this.deadline && this.deadline.valueOf() < new Date().valueOf()
+    }
+
+    hasContact(){
+        return this['ufCrmTask'] && !!this['ufCrmTask'].length
+    }
+
+    getContact(){
+        return this['ufCrmTask']?.[0]
+    }
+
+    getContactType(){
+        const [prefix, _] = this['ufCrmTask']?.[0].split('_') || []
+        switch (prefix){
+            case 'CO':
+                return 'COMPANY'
+            default:
+                return ''
+        }
+    }
+
+    getContactId(){
+        const [_, id] = this['ufCrmTask']?.[0].split('_') || []
+        return id || ''
     }
 }

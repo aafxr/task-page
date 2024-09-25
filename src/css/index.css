@@ -166,6 +166,21 @@ body, html {
     color: var(--calendar-weekend-text-color);
 }
 
+.calendar-btn-dayReset{
+    margin-right: 8px;
+    padding: 0 4px;
+    display: block;
+    margin-left: auto;
+    height: var(--ui-height);
+    background-color: inherit;
+    color: var(--text-accent-color);
+    border: none;
+}
+
+.calendar-btn-dayReset:disabled{
+    color: var(--text-color);
+}
+
 /*---------------------------------*/
 
 

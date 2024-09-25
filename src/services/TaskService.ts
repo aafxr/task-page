@@ -5,6 +5,7 @@ import {fetchTasks} from "../api";
 import {bitrix} from "../bitrix";
 import App from "../App";
 import {TaskReport} from "../classes/TaskReport";
+import {IBXSuccessResponse} from "../bitrix/@types";
 
 let nextTasks = 0
 
@@ -20,32 +21,88 @@ export class TaskService {
             try {
                 ctx.updateAppContext(({...ctx, /*tasks: [], */ tasksLoading: true}))
 
-                if (!next) nextTasks = 0;
+                const d = new Date()
 
-                const user_id = (await bitrix.getAuth()).user_id
+                const dateStart = new Date(ctx.selectedDay)
+                dateStart.setHours(0, 0, 0, 0)
+                const dateEnd = new Date(dateStart)
+                dateEnd.setHours(23, 59, 59, 999)
 
-                const filter = {
-                    filter: {
-                        RESPONSIBLE_ID: user_id,
-                        '<STATUS': 5
-                    },
-                    order: {
-                        DEADLINE: 'desc',
-                        CREATED_DATE: 'desc',
-                    },
-                    start: nextTasks
+
+                /**
+                 *  условия
+                 *  1. дата отбора < текущей = показываем только закрытые задачи, за заданный период
+                 *  2. дата отбора = текущей = показываем задачи на сегодня, и все не закрытые задачи за прошлые даты
+                 *  3. дата отбора > текущей = показываем все задачи на заданный период
+                 */
+
+                let periodType = 2
+
+                d.setHours(0,0,0,0)
+                if(dateEnd.valueOf() < d.valueOf()) periodType = 1
+
+                d.setHours(23,59,59,999)
+                if(dateStart.valueOf() > d.valueOf()) periodType = 3
+
+                let request: any = {}
+
+                if(periodType === 1){
+                    // прошедшие задачи
+                    request = {
+                        filter: {
+                            '>=CLOSED_DATE': dateStart.toISOString(),
+                            '<=CLOSED_DATE': dateEnd.toISOString(),
+                            RESPONSIBLE_ID: 212
+                        },
+                        order: {
+                            CREATED_DATE: 'DESC',
+                        },
+                        select: ['*', 'UF_*']
+                    }
+                } else if(periodType === 2){
+                    // задачи на сегодня
+                    request = {
+                        filter: {
+                            '%<=DEADLINE': dateEnd.toISOString(),
+                            '<REAL_STATUS': 5,
+                            RESPONSIBLE_ID: 212
+                        },
+                        order: {
+                            CREATED_DATE: 'DESC',
+                        },
+                        select: ['*', 'UF_*']
+                    }
+
+                } else{
+                    //задачи на завтра
+                    request = {
+                        filter: {
+                            '<=DEADLINE': dateEnd.toISOString(),
+                            '<REAL_STATUS': 5,
+                            RESPONSIBLE_ID: 212
+                        },
+                        order: {
+                            CREATED_DATE: 'DESC',
+                        },
+                        select: ['*', 'UF_*']
+                    }
+
                 }
 
-                const response = await fetchTasks(filter)
-                nextTasks = response.next
+                // загрузка всех задач
+                let next = 0
+                let res:  IBXSuccessResponse<{tasks: Task[] }>
+                let tasks: Task[] = []
 
-                const tasks = response.result.tasks.map(t => new Task(t))
+                do {
+                    request.start = next
+                    res = await fetchTasks(request)
+                    next = res.next
+                    tasks = tasks.concat(res.result.tasks.map(t => new Task(t)))
+                }while(next < res.total)
 
-                ctx.updateAppContext(s => ({
-                    ...s,
-                    tasks: nextTasks ? [...ctx.tasks, ...tasks] : tasks,
-                    tasksLoading: false
-                }))
+                ctx.updateAppContext(s => ({...s, tasks}))
+
             } catch (e) {
                 ErrorService.handleError(ctx)(e as Error)
             } finally {
@@ -95,8 +152,7 @@ export class TaskService {
     }
 
 
-
-    static async updateReport(ctx: AppContextState, r: TaskReport){
+    static async updateReport(ctx: AppContextState, r: TaskReport) {
         try {
 
         } catch (e) {
@@ -105,20 +161,4 @@ export class TaskService {
     }
 
 
-
-}
-
-
-const dateStart = new Date()
-dateStart.setHours(0,0,0,0)
-const dateEnd= new Date (dateStart)
-dateEnd.setHours(23,59,59,999)
-
-const request = {
-    filter: {
-        '>=DEADLINE': dateStart.valueOf(),
-        '<DEADLINE': dateEnd.valueOf(),
-        '!REAL_STATUS': Task.STATE_COMPLETED,
-        'RESPONSIBLE_ID': 212
-    }
 }

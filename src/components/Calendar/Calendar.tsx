@@ -15,6 +15,8 @@ const montFormatter = new Intl.DateTimeFormat(navigator.language, {
 
 const weekDays = ['Пн','Вт', 'Ср','Чт','Пт','Сб','Вс']
 
+const today = new Date()
+today.setHours(0, 0, 0, 0)
 
 export function Calendar({date, onSelect}: CalendarProps) {
     const [day, setDay] = useState(new Date())
@@ -40,6 +42,12 @@ export function Calendar({date, onSelect}: CalendarProps) {
         const d = new Date(ptr)
         d.setMonth(ptr.getMonth() + dir)
         setPtr(d)
+    }
+
+
+    function resetDay(){
+        onSelect?.(today)
+        setPtr(today)
     }
 
 
@@ -72,6 +80,11 @@ export function Calendar({date, onSelect}: CalendarProps) {
                     )
                 }
             </div>
+            <button
+                className='calendar-btn-dayReset'
+                disabled={today.toISOString().slice(0,10) === ptr.toISOString().slice(0,10)}
+                onClick={resetDay}
+            >Сегодня</button>
         </div>
     );
 }

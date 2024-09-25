@@ -16,11 +16,12 @@ type SelectProps  <T extends number | string> = {
     options?: SelectOption<T>[]
     placeholder?: string
     value?: T
+    size?: number
     onChange?: (value: T) => unknown
 }
 
 export const Select = <T extends number | string>({
-                                                className, options = [], placeholder = '', value, onChange = () => {}, full
+                                                className, options = [], placeholder = '', value, onChange = () => {}, full, size = 8
                                             }: SelectProps<T>) => {
     const [selectedValue, setSelectedValue] = useState<T | undefined>(value);
 
@@ -44,6 +45,7 @@ export const Select = <T extends number | string>({
         <select
             className={clsx("bx-select", {full}, className)}
             value={selectedValue?.toString()}
+            size={size}
             onChange={handleChange}
         >
             {options.map((o, i) => (
