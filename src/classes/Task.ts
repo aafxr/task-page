@@ -72,24 +72,59 @@ export class Task {
     ufMailMessage: any | null = null
     ufAuto226929532613: string = ''
     ufAuto187628303463: any | null = null
+
     /** флаг задача выполнена успешно */
     ufAuto251545709641: '0' | '1' | null = null
+    set success(v: boolean) { this.ufAuto251545709641 = v ? '1':'0'}
+    get success(){return this.ufAuto251545709641 === '1'}
+
     /** тип следующей задачи */
     ufAuto274474131393: string | null = null
+    set nextTaskType(v:string){this.ufAuto274474131393 = v}
+    get nextTaskType(){return this.ufAuto274474131393 || ''}
+
     /** результат выполнения задачи */
     ufAuto280393729397: string | null = null
+    set report(v:string){this.ufAuto280393729397 = v}
+    get report(){return this.ufAuto280393729397 || ''}
+
     ufAuto616972454340: any | null = null
     ufAuto645211693582: any | null = null
     ufAuto719191965958: any | null = null
     /** важная / не важная, срочная, не срочная */
-    ufAuto851551329931: string | null = null
+    ufAuto851551329931: string = 'не важная, не срочная'
+    set importenet(v: boolean){
+        const [_, urg] = this.ufAuto851551329931.split(',')
+        this.ufAuto851551329931 = v ? 'важная' : 'не важная'
+        this.ufAuto851551329931 += ',' + urg
+    }
+
+    get importenet(){
+        return this.ufAuto851551329931.startsWith('важная')
+    }
+
+    set urgent(v: boolean){
+        const [imp, _] = this.ufAuto851551329931.split(',')
+        this.ufAuto851551329931 = imp + ', ' + v ? 'важная' : 'не важная'
+    }
+
+    get urgent(){
+        return this.ufAuto851551329931.endsWith('важная')
+    }
+
     ufColor: any | null = null
     ufCrmTaskContact: any | false = false
     ufNextTask: any | null = null
     ufPreviewText: any | null = null
     ufTaskReport: any | null = null
+
     /** время затраченное на задачу */
     ufTaskTime: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12'  = '0'
+    set taskTime(v:Task['ufTaskTime']){
+        this.ufTaskTime = v
+    }
+
+    get taskTime(){return this.ufTaskTime}
 
     flowId: any | null = null
     serviceCommentsCount: number | null = null
