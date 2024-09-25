@@ -18,6 +18,7 @@ import {Title} from "../../components/Title";
 import {BASE_URL} from "../../App";
 import {BXPerson} from "../../classes/BXPerson";
 import {ContactService} from "../../services/ContactService";
+import {TaskType} from "../../classes/TaskType";
 
 const d = new Date()
 d.setHours(23, 59, 59, 999)
@@ -45,6 +46,7 @@ export function TaskEditePage() {
     const [report, setReport] = useState(defaultState)
     const [nextTask, setNextTask] = useState<NextTask>()
     const [contacts, setContacts] = useState<BXPerson[]>([])
+    const [taskTypes, setTaskTypes] = useState<TaskType[]>([])
 
     const selectPersonData = useMemo(() => {
         return Array.from(s.persons.values()).map(p => ({value: p.ID, label: `${p.NAME} ${p.LAST_NAME}`}))
@@ -54,6 +56,10 @@ export function TaskEditePage() {
     const selectContactsData = useMemo(() => {
         return contacts.map(c => ({value: c.ID, label: `${c.NAME} ${c.LAST_NAME}`}))
     }, [contacts])
+
+    const selectTaskTypes = useMemo(() => {
+        return taskTypes.map(t => ({value: +t.ID, label: `${t.UF_CODE} ${t.UF_NAME}`}))
+    }, [taskTypes])
 
 
     useEffect(() => {
@@ -70,6 +76,11 @@ export function TaskEditePage() {
     // загрузка контактов
     useEffect(() => {
         ContactService.getContacts(s, task).then(setContacts)
+    }, [task]);
+
+    // загрузка типо следующей задачи
+    useEffect(() => {
+        TaskService.getTaskTypes(s, task).then(setTaskTypes)
     }, [task]);
 
 
@@ -208,7 +219,7 @@ export function TaskEditePage() {
                     <div className='next-task-container'>
                         <div className='ui-form-row'>
                             <Text>Запланировать далее:</Text>
-                            <Select full options={[{value: -1, label: ''}, {value: 1, label: 'asd'}]} onChange={nextDeal}/>
+                            <Select full options={selectTaskTypes} onChange={nextDeal}/>
                         </div>
                         {!!nextTask && (
                             <>

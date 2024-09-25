@@ -29,6 +29,31 @@ if (!$userId || !$taskId) {
     exit;
 }
 
+function getCompanyType($userId) {
+        $projectDep = \CIntranetUtils::GetDeparmentsTree(32, true);
+
+
+        $resUsers = \Bitrix\Intranet\Util::getDepartmentEmployees([
+            'DEPARTMENTS' => $projectDep,
+            'RECURSIVE'   => 'Y',
+        ]);
+
+        $projectUsers = [];
+        while($arUser = $resUsers->fetch() ) {
+            $projectUsers[] = $arUser['ID'];
+        }
+
+        if(in_array($userId, $projectUsers)) {
+            $companyType = 'COMPETITOR';
+        } else {
+            $companyType = 'SUPPLIER';
+        }
+
+        return $companyType;
+}
+
+
+
 // Получение задачи
 $arTask = CTasks::GetList([], ['ID' => $taskId], ['*', 'UF_*'])->fetch();
 
@@ -49,7 +74,7 @@ if ($isCompleted != "Y") {
     // Получение списка типов задач
     $taskTypesList = [];
     $user = CUser::GetByID($userId)->Fetch();
-    $companyTypeId = $user['UF_COMPANY_TYPE'];
+    $companyTypeId = getCompanyType($userId);
     CModule::IncludeModule("highloadblock");
     $hlbl = 2; // ID HighLoadBlock
     $hlblock = Bitrix\Highloadblock\HighloadBlockTable::getById($hlbl)->fetch();
@@ -57,7 +82,7 @@ if ($isCompleted != "Y") {
 
     $taskTypesRes = $taskTypesClass::getList([
         'order' => ['UF_CODE' => 'ASC', 'UF_NAME' => 'ASC'],
-//         'filter' => ['UF_COMPANY_TYPE' => $companyTypeId]
+        'filter' => ['UF_COMPANY_TYPE' => $companyTypeId]
     ]);
     while ($taskTypeData = $taskTypesRes->Fetch()) {
         $taskTypesList[$taskTypeData['ID']] = $taskTypeData;
@@ -66,10 +91,9 @@ if ($isCompleted != "Y") {
     // Формирование ответа
     $result['TASK_TYPES'] = $taskTypesList;
     $result['ok'] = true;
-    $result['companyTypeId'] = $companyTypeId;
 } else {
     // Формирование ответа для завершенной задачи
-    $result['ok'] = true;
+    $result['ok'] = false;
     $result['message'] = 'task is completed';
 }
 

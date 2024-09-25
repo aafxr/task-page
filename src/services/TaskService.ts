@@ -6,6 +6,8 @@ import {bitrix} from "../bitrix";
 import App from "../App";
 import {TaskReport} from "../classes/TaskReport";
 import {IBXSuccessResponse} from "../bitrix/@types";
+import {TaskType} from "../classes/TaskType";
+import {fetchTaskTypes} from "../api/fetchTaskTypes";
 
 let nextTasks = 0
 
@@ -158,6 +160,12 @@ export class TaskService {
         } catch (e) {
             ErrorService.handleError(ctx)(e as Error)
         }
+    }
+
+
+    static async getTaskTypes(ctx: AppContextState, task: Task): Promise<TaskType[]> {
+        const types = await fetchTaskTypes(task.responsibleId, task.id)
+        return types.map(t => new TaskType(t))
     }
 
 
