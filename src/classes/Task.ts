@@ -72,19 +72,24 @@ export class Task {
     ufMailMessage: any | null = null
     ufAuto226929532613: string = ''
     ufAuto187628303463: any | null = null
-    ufAuto251545709641: any | null = null
-    ufAuto274474131393: any | null = null
-    ufAuto280393729397: any | null = null
+    /** флаг задача выполнена успешно */
+    ufAuto251545709641: '0' | '1' | null = null
+    /** тип следующей задачи */
+    ufAuto274474131393: string | null = null
+    /** результат выполнения задачи */
+    ufAuto280393729397: string | null = null
     ufAuto616972454340: any | null = null
     ufAuto645211693582: any | null = null
     ufAuto719191965958: any | null = null
-    ufAuto851551329931: any | null = null
+    /** важная / не важная, срочная, не срочная */
+    ufAuto851551329931: string | null = null
     ufColor: any | null = null
     ufCrmTaskContact: any | false = false
     ufNextTask: any | null = null
     ufPreviewText: any | null = null
     ufTaskReport: any | null = null
-    ufTaskTime: any | null = null
+    /** время затраченное на задачу */
+    ufTaskTime: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12'  = '0'
 
     flowId: any | null = null
     serviceCommentsCount: number | null = null
@@ -106,25 +111,25 @@ export class Task {
     }
 
 
-    isClosed(){
+    isClosed() {
         return !!this.closedDate && this.closedDate.valueOf() > 0
     }
 
-    isExpired(){
+    isExpired() {
         return !!this.deadline && this.deadline.valueOf() < new Date().valueOf()
     }
 
-    hasContact(){
+    hasContact() {
         return this['ufCrmTask'] && !!this['ufCrmTask'].length
     }
 
-    getContact(){
+    getContact() {
         return this['ufCrmTask']?.[0]
     }
 
-    getContactType(){
+    getContactType() {
         const [prefix, _] = this['ufCrmTask']?.[0].split('_') || []
-        switch (prefix){
+        switch (prefix) {
             case 'CO':
                 return 'COMPANY'
             default:
@@ -132,7 +137,7 @@ export class Task {
         }
     }
 
-    getContactId(){
+    getContactId() {
         const [_, id] = this['ufCrmTask']?.[0].split('_') || []
         return id || ''
     }
