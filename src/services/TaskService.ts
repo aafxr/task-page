@@ -2,23 +2,22 @@ import {AppContextState} from "../context/AppContext";
 import {ErrorService} from "./ErrorService";
 import {Task} from "../classes/Task";
 import {fetchRestAPI, fetchTasks} from "../api";
-import {TaskReport} from "../classes/TaskReport";
 import {IBXSuccessResponse} from "../bitrix/@types";
 import {TaskType} from "../classes/TaskType";
 import {fetchTaskTypes} from "../api/fetchTaskTypes";
-
-let nextTasks = 0
+import {bitrix} from "../bitrix";
 
 
 export class TaskService {
     /**
      * список задач на дату
      * @param ctx
-     * @param next
      */
-    static getTasks(ctx: AppContextState, next = false) {
+    static getTasks(ctx: AppContextState) {
         (async () => {
             try {
+                const auth = await bitrix.getAuth()
+                const user_id = auth.user_id
                 ctx.updateAppContext(({...ctx, /*tasks: [], */ tasksLoading: true}))
 
                 const d = new Date()
@@ -52,7 +51,7 @@ export class TaskService {
                         filter: {
                             '>=CLOSED_DATE': dateStart.toISOString(),
                             '<=CLOSED_DATE': dateEnd.toISOString(),
-                            RESPONSIBLE_ID: 212
+                            RESPONSIBLE_ID: user_id
                         },
                         order: {
                             CREATED_DATE: 'DESC',
@@ -64,8 +63,9 @@ export class TaskService {
                     request = {
                         filter: {
                             '%<=DEADLINE': dateEnd.toISOString(),
+                            '%>=DEADLINE': dateStart.toISOString(),
                             '<REAL_STATUS': 5,
-                            RESPONSIBLE_ID: 212
+                            RESPONSIBLE_ID: user_id
                         },
                         order: {
                             CREATED_DATE: 'DESC',
@@ -79,7 +79,7 @@ export class TaskService {
                         filter: {
                             '<=DEADLINE': dateEnd.toISOString(),
                             '<REAL_STATUS': 5,
-                            RESPONSIBLE_ID: 212
+                            RESPONSIBLE_ID: user_id
                         },
                         order: {
                             CREATED_DATE: 'DESC',
@@ -146,7 +146,13 @@ export class TaskService {
      */
     static async add(ctx: AppContextState, task: Task) {
         try {
-            const bxTask = Task.transformToBitrixFields(task)
+            const partTask = Object.entries(task).reduce((a, [k,v]) => {
+                if(v) a[k] = v
+                return a
+            }, {} as Record<string, any>)
+
+            const bxTask = Task.transformToBitrixFields(partTask)
+            console.log('add task fields: ', bxTask)
             const res = await fetchRestAPI<{task:Task}>('tasks.task.add', {fields: bxTask})
             return res.result.task.id
         } catch (e) {
@@ -176,10 +182,12 @@ export class TaskService {
                 if(task[k] !== originTask[k]) partTaskFields[k] = task[k]
             }
 
-            await fetchRestAPI('tasks.task.update', {
-                taskId:originTask.id,
-                fields: Task.transformToBitrixFields(partTaskFields)
-            })
+            const fields = Task.transformToBitrixFields(partTaskFields)
+            console.log("update fields: ", fields)
+
+            console.log('update method result: ',
+                await fetchRestAPI('tasks.task.update', {taskId:originTask.id, fields})
+                )
             return true
         } catch (e) {
             ErrorService.handleError(ctx)(e as Error)
@@ -195,7 +203,13 @@ export class TaskService {
     static async closeAndUpdate(ctx: AppContextState, task: Task, nextTask?: Task) {
         try {
             task.status = Task.STATE_COMPLETED
-            return await TaskService.update(ctx, task, nextTask)
+            task.closedDate = new Date()
+            if(task.closePrevDay) {
+                task.closedDate.setDate(task.closedDate.getDate() - 1)
+            }
+            const res = await TaskService.update(ctx, task, nextTask)
+            if (res) TaskService.getTasks(ctx)
+            return res
         } catch (e) {
             ErrorService.handleError(ctx)(e as Error)
         }

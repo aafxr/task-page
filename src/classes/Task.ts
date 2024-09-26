@@ -1,14 +1,14 @@
 import {TaskPerson} from "./TaskPerson";
 
 const toBxField = {
-    id: 'ID',
-    parentId: 'PARENT_ID',
-    title: 'TITLE',
-    description: 'DESCRIPTION',
+    // id: 'ID',
+    parentId: 'PARENT_ID',// ++++
+    title: 'TITLE',// ++++
+    description: 'DESCRIPTION',// ++++
     mark: 'MARK',
-    priority:'PRIORITY',
-    status:'STATTUS',
-    multitask:'MULTITASK',
+    priority:'PRIORITY',// ++++
+    status:'STATUS',// ++++
+    multitask:'MULTITASK',// ++++
     // notViewed
     // replicate
     groupId:'GROUP_ID',
@@ -23,13 +23,13 @@ const toBxField = {
     closedBy: 'CLOSED_BY',
     closedDate:'CLOSED_DATE',
     dateStart:'DATE_START',
-    deadline:'DEADLINE',
-    startDatePlan:'START_DATE_PLAN',
-    endDatePlan:'END_DATE_PLAN',
+    deadline:'DEADLINE',// ++++
+    startDatePlan:'START_DATE_PLAN',// ++++
+    endDatePlan:'END_DATE_PLAN',// ++++
     guid: 'GUID',
     // xmlId
     commentsCount:'COMMENTS_COUNT',
-    taskControl:'TASK_CONTROL',
+    taskControl:'TASK_CONTROL',// ++++
     addInReport:'ADD_IN_REPORT',
     forkedByTemplateId:'FORKED_BY_TEMPLATE_ID',
     timeEstimate:'TIME_ESTIMATE',
@@ -49,8 +49,11 @@ const toBxField = {
     durationFact:'DURATION_FACT',
     durationType:'DURATION_TYPE',
     descriptionInBbcode:'DESCRIPTION_IN_BBCODE',
-    auditors:'AUDITORS',
-    accomplices:'ACCOMPLICES',
+    auditors:'AUDITORS',// ++++
+    auditor:'AUDITOR',// ++++
+    accomplices:'ACCOMPLICES',// ++++
+    tags: 'TAGS', // ++++
+    allowChangeDeadline: 'ALLOW_CHANGE_DEADLINE', // ++++
     // newCommentsCount
     // subStatus
     // creator:'CREATOR',
@@ -160,9 +163,9 @@ export class Task {
     get success(){return this.ufAuto251545709641 === '1'}
 
     /** тип следующей задачи */
-    ufAuto274474131393: string | null = null
-    set nextTaskType(v:string){this.ufAuto274474131393 = v}
-    get nextTaskType(){return this.ufAuto274474131393 || ''}
+    ufAuto274474131393: number | null = null
+    set nextTaskType(v:number){this.ufAuto274474131393 = v}
+    get nextTaskType(){return this.ufAuto274474131393 || -1}
 
     /** результат выполнения задачи */
     ufAuto280393729397: string | null = null
@@ -188,11 +191,11 @@ export class Task {
     set urgent(v: boolean){
         const [imp, _] = this.ufAuto851551329931.split(',')
         this.ufAuto851551329931 = imp + ', '
-        this.ufAuto851551329931 += v ? 'важная' : 'не важная'
+        this.ufAuto851551329931 += v ? 'срочная' : 'не срочная'
     }
 
     get urgent(){
-        return !this.ufAuto851551329931.endsWith('не важная')
+        return !this.ufAuto851551329931.endsWith('не срочная')
     }
 
     ufColor: any | null = null
@@ -218,7 +221,7 @@ export class Task {
         Object.keys(t)
             .forEach((k) => {
                 //@ts-ignore
-                if (t[k] !== undefined) {
+                if (t[k] ) {
                     if (k.startsWith('date') || k.includes('Date') || k === 'deadline') {
                         //@ts-ignore
                         this[k] = new Date(t[k])
@@ -270,6 +273,11 @@ export class Task {
 
         Object.entries(task).forEach(([k,v]) => {
             if (k in toBxField) {
+                if(k.toLowerCase().includes('date')) {
+                    // @ts-ignore
+                    result[toBxField[k]] = v.toISOString()
+                    return
+                }
                 // @ts-ignore
                 result[toBxField[k]] = v
             }

@@ -27,8 +27,10 @@ export class PersonService{
                 }while(next < res.total)
 
                 const map = new Map<string, BXPerson>()
+                persons = persons.map(p => new BXPerson(p))
+                persons.sort((a,b) => a.LAST_NAME < b.LAST_NAME ? -1 : a.LAST_NAME > b.LAST_NAME ? 1 : 0)
                 persons.forEach(p => map.set(p.ID, p))
-                ctx.updateAppContext(s => ({...s, persons: map}))
+                ctx.updateAppContext(s => ({...s, personsMap: map, persons}))
 
             } catch (e) {
                 ErrorService.handleError(ctx)(e as Error)

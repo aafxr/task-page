@@ -5,7 +5,6 @@
     --text-error-color:#D8454A;
     --text-button-color: var(--text-error-color);
     --confirm-color: #b0dd86;
-    --succesfull-color: #107000;
     --border-color: #c1c1c1;
     --border-radius: 8px;
     --bg-main: #fff;
@@ -16,6 +15,7 @@
     --margin: var(--offset);
     --z-modal: 1000;
     --z-page-overlay: 100;
+
 
     --ui-radius: 4px;
     --ui-color: var(--text-color);
@@ -35,14 +35,16 @@
     --calendar-weekend-text-color: #d44e4e;
     --calendar-border-radius: var(--border-radius);
 
+    --error-bg-color: var(--bg-main);
     --task-bg-color: var(--bg-main);
     --task-content-gap: var(--padding);
     --task-border-color: var(--border-color);
     --task-title-color: var(--text-accent-color);
     --task-text-color: var(--text-color);
     --task-border-radius: var(--border-radius);
+    --task-success-color: #107000;
+    --task-report-color: var(--text-error-color);
 
-    --error-bg-color: var(--bg-main);
 
     --loader-width: var(--ui-height);
     --loader-height: var(--ui-height);

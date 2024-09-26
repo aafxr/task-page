@@ -23,7 +23,7 @@ export function Main() {
         <div className='wrapper'>
             <div className='wrapper-header'>
                 <Container style={{paddingBottom: 'var(--padding)'}}>
-                    <div>
+                    <div className='mainPage-header'>
                         <button className='dayBtn' onClick={handleToggleCalendar}>{dateFormatter.format(s.selectedDay)}</button>
                     </div>
                     {!!s.error && (

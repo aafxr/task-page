@@ -45,8 +45,14 @@ export function TaskEditePage() {
     const [contacts, setContacts] = useState<BXPerson[]>([])
     const [taskTypes, setTaskTypes] = useState<TaskType[]>([])
 
+    const currentDay = useMemo(() => {
+        const d = new Date(s.selectedDay)
+        d.setHours(23,59,59,999)
+        return d
+    }, [s.selectedDay])
+
     const selectPersonData = useMemo(() => {
-        return Array.from(s.persons.values()).map(p => ({value: p.ID, label: `${p.NAME} ${p.LAST_NAME}`}))
+        return Array.from(s.persons.values()).map(p => ({value: p.ID, label: `${p.LAST_NAME} ${p.NAME}`}))
     }, [s.persons])
 
 
@@ -55,14 +61,17 @@ export function TaskEditePage() {
     }, [contacts])
 
     const selectTaskTypes = useMemo(() => {
-        return [{value: '-1', label: 'Не планировать дальнейщую работу'}].concat(taskTypes.map(t => ({value: t.ID, label: `${t.UF_CODE} ${t.UF_NAME}`})))
+        return [{value: '-1', label: 'Не планировать дальнейщую работу'}].concat(taskTypes.map(t => ({
+            value: t.ID,
+            label: `${t.UF_CODE} ${t.UF_NAME}`
+        })))
     }, [taskTypes])
 
 
     // загрузка контактов
     useEffect(() => {
         ContactService.getContacts(s, task).then(cl => {
-            cl.sort((a,b) => a.LAST_NAME < b.LAST_NAME ? -1 : 1)
+            cl.sort((a, b) => a.LAST_NAME < b.LAST_NAME ? -1 : a.LAST_NAME > b.LAST_NAME ? 1 : 0)
             setContacts(cl)
         })
     }, [task]);
@@ -76,7 +85,12 @@ export function TaskEditePage() {
     function handleSave(e: React.UIEvent) {
         e.stopPropagation()
         if (!task || !report) return
+        if (!report.report || !report.nextTaskType){
+            alert('Добавьте отчет и следующую задачу')
+            return
+        }
         TaskService.closeAndUpdate(s, report, nextTask)
+            .then(r => console.log('closeAndUpdate finish with result: ', r))
             .then(() => navigate(BASE_URL))
     }
 
@@ -116,12 +130,19 @@ export function TaskEditePage() {
 
 
     function nextDeal(v: string) {
-        if (v.toString() === report.nextTaskType) return
+        if (+v === report.nextTaskType) return
         const nextReport = new Task(report)
-        nextReport.nextTaskType = v
+        nextReport.nextTaskType = +v
         setReport(nextReport)
 
-        v === '-1' ? setNextTask(undefined) : setNextTask(new Task())
+        const nt = new Task(nextTask)
+        const tt = taskTypes.find(tt => tt.ID === v)
+        if (tt) {
+            nt.title = tt.UF_CODE + ' ' + tt.UF_NAME
+            setNextTask(nt)
+        }
+
+        if (+v === -1) setNextTask(undefined)
     }
 
 
@@ -170,11 +191,6 @@ export function TaskEditePage() {
     }
 
 
-    console.log({report, nextTask})
-
-    //@ts-ignore
-    window.nextTask = nextTask
-
     return (
         <div className='report report-container wrapper overlay'>
             <div className='wrapper-header'>
@@ -200,15 +216,18 @@ export function TaskEditePage() {
                         <Checkbox label='цель достигнута' checked={report.success}
                                   onChange={handleSuccess}/>
                     </div>
-                    <div className='ui-form-row'>
-                        <Checkbox label='Закрыть вчерашней датой' checked={report.closePrevDay}
-                                  onChange={handleClosePrevDay}/>
-                    </div>
-
-                    <div className='ui-form-row'>
-                        <Text>{updateTimeLabel(report.taskTime)}</Text>
-                        <Range full min={0} max={12} value={+report.taskTime} onChange={handleSpentTime}/>
-                    </div>
+                    {!task.isClosed() && (
+                        <>
+                            <div className='ui-form-row'>
+                                <Checkbox label='Закрыть вчерашней датой' checked={report.closePrevDay}
+                                          onChange={handleClosePrevDay}/>
+                            </div>
+                            <div className='ui-form-row'>
+                                <Text>{updateTimeLabel(report.taskTime)}</Text>
+                                <Range full min={0} max={12} value={+report.taskTime} onChange={handleSpentTime}/>
+                            </div>
+                        </>
+                    )}
 
                     <div className='next-task-container'>
                         <div className='ui-form-row'>
@@ -219,7 +238,7 @@ export function TaskEditePage() {
                             <>
                                 <div className='ui-form-row'>
                                     <Text>Срок:</Text>
-                                    <DateSelect value={nextTask.deadline?.toISOString().split('T')[0]}
+                                    <DateSelect value={(nextTask.deadline || currentDay)?.toISOString().split('T')[0]}
                                                 onChange={handleSelectDate}/>
                                 </div>
 
@@ -232,11 +251,13 @@ export function TaskEditePage() {
                                 </div>
                                 <div className='ui-form-row'>
                                     <Text>Сотрудник</Text>
-                                    <Select full options={selectPersonData}  value={nextTask.responsibleId} onChange={handleResponsiblePerson}/>
+                                    <Select full options={selectPersonData} value={nextTask.responsibleId}
+                                            onChange={handleResponsiblePerson}/>
                                 </div>
                                 <div className='ui-form-row'>
                                     <Text>Контактное лицо</Text>
-                                    <Select full options={selectContactsData} value={nextTask.ufCrmTaskContact} onChange={handleContact}/>
+                                    <Select full options={selectContactsData} value={nextTask.ufCrmTaskContact}
+                                            onChange={handleContact}/>
                                 </div>
                                 <div className='ui-form-row'>
                                     <Text>Желаемый результат:</Text>

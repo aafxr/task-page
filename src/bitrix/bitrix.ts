@@ -33,7 +33,12 @@ export const bitrix = {
     ) {
         new Promise(async (resolve, rej) => {
             if (!bxAuth.isAuthenticated()) {
-                if (!await bxAuth.refresh()) {
+                let i = 0
+                for (; i < 3; i++){
+                    if (await bxAuth.refresh()) break
+                }
+
+                if (i >= 3) {
                     fail(new Error(errors.UNAUTHORIZED))
                     return
                 }

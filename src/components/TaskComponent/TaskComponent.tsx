@@ -14,6 +14,14 @@ type TaskComponentProps = {
 }
 
 
+const formatter = new Intl.DateTimeFormat(navigator.language, {
+    day: "2-digit",
+    month: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+});
+
+
 export function TaskComponent({task}: TaskComponentProps) {
     const navigate = useNavigate()
     const isClosed = task.isClosed()
@@ -30,21 +38,30 @@ export function TaskComponent({task}: TaskComponentProps) {
 
 
     return (
-        <div className={clsx('task task-container', {closed: isClosed})} onClick={handleTaskClick}>
+        <div
+            className={clsx('task task-container', {
+                closed: isClosed,
+                'task-urgent': task.urgent,
+                'task-highPriority': task.important
+            })}
+            onClick={handleTaskClick}
+        >
             <div className='task-date-container'>
-                <span className='task-deadline'>{isClosed ? 'Закрыта' : closeDate ? 'Крайний срок:' : 'Без срока'}</span>
+                <span
+                    className='task-deadline'>{isClosed ? 'Закрыта' : closeDate ? 'Крайний срок:' : 'Без срока'}</span>
                 {!!closeDate && <span className='task-date'>{dateFormatter.format(closeDate)}</span>}
             </div>
             <div className='task-content'>
                 <p className='task-title'>{task.title}</p>
                 <p className='task-description'>{task.description}</p>
                 <div className='task-btns'>
-                    {isClosed
-                        ? <button className='task-button task-button-closed'>Задача закрыта ... ???</button>
-                        : <button className='task-button' onClick={handleReportClick}>
-                            {task.description ? 'Редактировать отчет' : 'Написать отчет'}
-                        </button>
-                    }
+                    <button className='task-button' onClick={handleReportClick}>
+                        {task.report
+                            ? <span
+                                className='task-closed'>{task.closedDate ? `${formatter.format(task.closedDate)} редактировать` : 'Редактировать'}</span>
+                            : <span className='task-report'>Написать отчет</span>
+                        }
+                    </button>
                 </div>
             </div>
         </div>

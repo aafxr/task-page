@@ -287,6 +287,10 @@ body, html {
     padding: 0 var(--padding) 0;
 }
 
+.mainPage-header{
+    padding: var(--padding) 0;
+}
+
 .dayBtn {
     padding: 8px 12px;
     color: var(--text-color);
@@ -297,7 +301,6 @@ body, html {
 }
 
 .tasks-list {
-    margin-top: var(--padding);
     border-radius: var(--task-border-radius);
     overflow: hidden;
 }

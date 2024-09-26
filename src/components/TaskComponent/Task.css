@@ -16,9 +16,19 @@
     border-top: 1px solid var(--task-border-color);
 }
 
-.task-container.closed {
-    filter: brightness(0.96);
+.task-urgent{
+    background: linear-gradient(65deg, var(--task-report-color), var(--task-bg-color) 25%, var(--task-bg-color));
 }
+
+.task-highPriority{
+    background: linear-gradient(65deg, var(--confirm-color), var(--task-bg-color) 25%, var(--task-bg-color));
+}
+
+
+
+/*.task-container.closed {*/
+/*    filter: brightness(0.96);*/
+/*}*/
 
 .task-date-container {
     flex: none;
@@ -126,6 +136,13 @@
     display: flex;
     flex-direction: column;
     gap: var(--offset);
+}
+
+.task-closed{
+    color: var(--task-success-color);
+}
+.task-report{
+    color: var(--task-report-color);
 }
 
 
