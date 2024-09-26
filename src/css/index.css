@@ -197,7 +197,7 @@ body, html {
     top: 0;
     right: 0;
     bottom: 0;
-    background-color: transparent;
+    background-color: rgba(0,0,0,0.3);
     z-index: calc(var(--z-modal) - 1);
 }
 
@@ -276,6 +276,10 @@ body, html {
 /*---------------------------------*/
 
 /*------------- task property -----*/
+.taskDetails{
+    background-color: var(--bg-main);
+}
+
 .taskDetails-property-accent{
     color: var(--text-error-color);
     font-weight: 600;

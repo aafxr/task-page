@@ -8,6 +8,7 @@ import {TaskProperties} from "../../components/TaskPropserties";
 import {Task} from "../../classes/Task";
 import {Container} from "../../components/Container";
 import {BASE_URL} from "../../App";
+import {Title} from "../../components/Title";
 
 
 
@@ -118,9 +119,7 @@ export function TaskDetails() {
     return (
         <div className='taskDetails wrapper'>
             <div className='wrapper-header'>
-                <div className='taskDetails-title title'>
-                    Детали
-                </div>
+                    <Title>Детали</Title>
             </div>
             <div className='wrapper-content'>
                 {/*<BxSelect value={'132'} options={options} onChange={handleSelectChange}/>*/}
