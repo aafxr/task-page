@@ -57,7 +57,7 @@ export function TaskEditePage() {
 
 
     const selectContactsData = useMemo(() => {
-        return contacts.map(c => ({value: c.ID, label: `${c.LAST_NAME} ${c.NAME}`}))
+        return [{value: '-1', label: '-'}].concat(contacts.map(c => ({value: c.ID, label: `${c.LAST_NAME} ${c.NAME}`})))
     }, [contacts])
 
     const selectTaskTypes = useMemo(() => {
