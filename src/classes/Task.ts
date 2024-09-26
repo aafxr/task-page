@@ -260,9 +260,8 @@ export class Task {
         }
     }
 
-    getContactId() {
-        const [_, id] = this['ufCrmTask']?.[0].split('_') || []
-        return id || ''
+    getContactsId() {
+        return this['ufCrmTask']?.map(c => c.split('_')[1]) || []
     }
 
 
