@@ -1,5 +1,86 @@
 import {TaskPerson} from "./TaskPerson";
 
+const toBxField = {
+    id: 'ID',
+    parentId: 'PARENT_ID',
+    title: 'TITLE',
+    description: 'DESCRIPTION',
+    mark: 'MARK',
+    priority:'PRIORITY',
+    status:'STATTUS',
+    multitask:'MULTITASK',
+    // notViewed
+    // replicate
+    groupId:'GROUP_ID',
+    stageId:'STAGE_ID',
+    createdBy:'CREATE_BY',
+    createdDate: 'CREATE_DATE',
+    responsibleId: 'RESPONSIBLE_ID',
+    changedBy:'CHANGED_BY',
+    changedDate: 'CHANGED_DATE',
+    statusChangedBy:'STATUS_CHANGED_BY',
+    statusChangedDate: 'STATUS_CHANGED_DATE',
+    closedBy: 'CLOSED_BY',
+    closedDate:'CLOSED_DATE',
+    dateStart:'DATE_START',
+    deadline:'DEADLINE',
+    startDatePlan:'START_DATE_PLAN',
+    endDatePlan:'END_DATE_PLAN',
+    guid: 'GUID',
+    // xmlId
+    commentsCount:'COMMENTS_COUNT',
+    taskControl:'TASK_CONTROL',
+    addInReport:'ADD_IN_REPORT',
+    forkedByTemplateId:'FORKED_BY_TEMPLATE_ID',
+    timeEstimate:'TIME_ESTIMATE',
+    timeSpentInLogs:'TIME_SPENT_IN_LOGS',
+    // matchWorkTime
+    forumTopicId:'FORUM_TOPIC_ID',
+    forumId: 'FORUM_ID',
+    siteId:'FORUM_ID',
+    subordinate:'SUBORDINATE',
+    favorite:'FAVORITE',
+    exchangeModified:'EXCHANGE_MODIFIED',
+    exchangeId:'EXCHANGE_ID',
+    // outlookVersion
+    viewedDate:'VIEWED_DATE',
+    // sorting
+    durationPlan:'DURATION_PLAN',
+    durationFact:'DURATION_FACT',
+    durationType:'DURATION_TYPE',
+    descriptionInBbcode:'DESCRIPTION_IN_BBCODE',
+    auditors:'AUDITORS',
+    accomplices:'ACCOMPLICES',
+    // newCommentsCount
+    // subStatus
+    // creator:'CREATOR',
+    // responsible:'RES'
+
+
+    ufCrmTask:'UF_CRM_TASK',
+    ufTaskWebdavFiles: 'UF_TASK_WEBDAV_FILES',
+    ufAuto915658270214: 'UF_AUTO_915658270214',
+    ufAuto244510721805: 'UF_AUTO_244510721805',
+    ufAuto637823431651: 'UF_AUTO_637823431651',
+    ufMailMessage:'UF_MAIL_MESSAGE',
+    ufAuto226929532613: 'UF_AUTO_226929532613',
+    ufAuto187628303463: 'UF_AUTO_187628303463',
+
+    ufAuto251545709641: 'UF_AUTO_251545709641',
+    ufAuto274474131393: 'UF_AUTO_274474131393',
+    ufAuto280393729397: 'UF_AUTO_280393729397',
+    ufAuto616972454340: 'UF_AUTO_616972454340',
+    ufAuto645211693582: 'UF_AUTO_645211693582',
+    ufAuto719191965958: 'UF_AUTO_719191965958',
+    ufAuto851551329931: 'UF_AUTO_851551329931',
+
+    ufColor:'UF_COLOR',
+    ufCrmTaskContact:'UF_CRM_TASK_CONTACT',
+    ufNextTask:'UF_NEXT_TASK',
+    ufPreviewText:'UF_PREVIEW_TEXT',
+    ufTaskReport:'UF_TASK_REPORT'
+}
+
 export class Task {
     static STATE_NEW = 1;
     static STATE_PENDING = 2;
@@ -15,7 +96,7 @@ export class Task {
     description: string = ''
     mark: any | null = null
     priority: string = ''
-    status: string = ''
+    status: number = 1
     multitask: string = ''
     notViewed: string = ''
     replicate: string = ''
@@ -91,25 +172,27 @@ export class Task {
     ufAuto616972454340: any | null = null
     ufAuto645211693582: any | null = null
     ufAuto719191965958: any | null = null
+
     /** важная / не важная, срочная, не срочная */
     ufAuto851551329931: string = 'не важная, не срочная'
-    set importenet(v: boolean){
+    set important(v: boolean){
         const [_, urg] = this.ufAuto851551329931.split(',')
         this.ufAuto851551329931 = v ? 'важная' : 'не важная'
         this.ufAuto851551329931 += ',' + urg
     }
 
-    get importenet(){
-        return this.ufAuto851551329931.startsWith('важная')
+    get important(){
+        return !this.ufAuto851551329931.startsWith('не важная')
     }
 
     set urgent(v: boolean){
         const [imp, _] = this.ufAuto851551329931.split(',')
-        this.ufAuto851551329931 = imp + ', ' + v ? 'важная' : 'не важная'
+        this.ufAuto851551329931 = imp + ', '
+        this.ufAuto851551329931 += v ? 'важная' : 'не важная'
     }
 
     get urgent(){
-        return this.ufAuto851551329931.endsWith('важная')
+        return !this.ufAuto851551329931.endsWith('не важная')
     }
 
     ufColor: any | null = null
@@ -128,6 +211,8 @@ export class Task {
 
     flowId: any | null = null
     serviceCommentsCount: number | null = null
+
+    closePrevDay: boolean = false
 
     constructor(t: Partial<Task> = {}) {
         Object.keys(t)
@@ -175,5 +260,20 @@ export class Task {
     getContactId() {
         const [_, id] = this['ufCrmTask']?.[0].split('_') || []
         return id || ''
+    }
+
+
+
+
+    static transformToBitrixFields(task:Partial<Task>){
+        const result: any = {}
+
+        Object.entries(task).forEach(([k,v]) => {
+            if (k in toBxField) {
+                // @ts-ignore
+                result[toBxField[k]] = v
+            }
+        })
+        return result
     }
 }

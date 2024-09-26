@@ -10,24 +10,21 @@ import {TaskService} from "../../services";
 import {Text} from "../../components/Text";
 import {Checkbox} from "../../components/Checkbox";
 import {Range} from "../../components/Range";
-import {TaskReport} from "../../classes/TaskReport";
 import {Select} from "../../components/Select";
-import {NextTask} from "../../classes/NextTask";
 import {DateSelect} from "../../components/DateSelect";
 import {Title} from "../../components/Title";
 import {BASE_URL} from "../../App";
 import {BXPerson} from "../../classes/BXPerson";
 import {ContactService} from "../../services/ContactService";
 import {TaskType} from "../../classes/TaskType";
+import {Task} from "../../classes/Task";
 
 const d = new Date()
 d.setHours(23, 59, 59, 999)
 
-const defaultState = new TaskReport()
 
-
-function updateTimeLabel(v: TaskReport['fields']['UF_FIELD_TIME']) {
-    let t = v * 20;
+function updateTimeLabel(v: Task['taskTime']) {
+    let t = +v * 20;
     let h = Math.floor(t / 60);
     let m = t % 60;
     let label = m + " мин";
@@ -43,8 +40,8 @@ export function TaskEditePage() {
     const {taskID} = useParams()
     const s = useAppContext()
     const task = useTask(taskID)!
-    const [report, setReport] = useState(defaultState)
-    const [nextTask, setNextTask] = useState<NextTask>()
+    const [report, setReport] = useState(new Task(task))
+    const [nextTask, setNextTask] = useState<Task>()
     const [contacts, setContacts] = useState<BXPerson[]>([])
     const [taskTypes, setTaskTypes] = useState<TaskType[]>([])
 
@@ -54,28 +51,20 @@ export function TaskEditePage() {
 
 
     const selectContactsData = useMemo(() => {
-        return contacts.map(c => ({value: c.ID, label: `${c.NAME} ${c.LAST_NAME}`}))
+        return contacts.map(c => ({value: c.ID, label: `${c.LAST_NAME} ${c.NAME}`}))
     }, [contacts])
 
     const selectTaskTypes = useMemo(() => {
-        return taskTypes.map(t => ({value: +t.ID, label: `${t.UF_CODE} ${t.UF_NAME}`}))
+        return [{value: '-1', label: 'Не планировать дальнейщую работу'}].concat(taskTypes.map(t => ({value: t.ID, label: `${t.UF_CODE} ${t.UF_NAME}`})))
     }, [taskTypes])
-
-
-    useEffect(() => {
-        if (!task) return
-        const r = s.reports.find(r => r.taskId === task.id)
-        if (r) setReport(r)
-        if (!task.isClosed()) {
-            const nt = new NextTask(report.nextTask || {})
-            setNextTask(nt)
-        }
-    }, [task]);
 
 
     // загрузка контактов
     useEffect(() => {
-        ContactService.getContacts(s, task).then(setContacts)
+        ContactService.getContacts(s, task).then(cl => {
+            cl.sort((a,b) => a.LAST_NAME < b.LAST_NAME ? -1 : 1)
+            setContacts(cl)
+        })
     }, [task]);
 
     // загрузка типо следующей задачи
@@ -87,14 +76,14 @@ export function TaskEditePage() {
     function handleSave(e: React.UIEvent) {
         e.stopPropagation()
         if (!task || !report) return
-        TaskService.updateReport(s, report)
+        TaskService.closeAndUpdate(s, report, nextTask)
             .then(() => navigate(BASE_URL))
     }
 
 
     function handleReportChange(e: ChangeEvent<HTMLTextAreaElement>) {
-        const nextReport = new TaskReport(report)
-        nextReport.fields.UF_FIELD_RESULT = e.target.value
+        const nextReport = new Task(report)
+        nextReport.report = e.target.value
         setReport(nextReport)
     }
 
@@ -106,33 +95,33 @@ export function TaskEditePage() {
 
     /** цель достигнута */
     function handleSuccess(e: ChangeEvent<HTMLInputElement>) {
-        const nextReport = new TaskReport(report)
-        nextReport.fields.UF_FIELD_SUCCESS = e.target.checked
+        const nextReport = new Task(report)
+        nextReport.success = e.target.checked
         setReport(nextReport)
     }
 
 
     function handleClosePrevDay(e: ChangeEvent<HTMLInputElement>) {
-        const nextReport = new TaskReport(report)
-        nextReport.taskClosePrevDate = e.target.checked
+        const nextReport = new Task(report)
+        nextReport.closePrevDay = e.target.checked
         setReport(nextReport)
     }
 
 
     function handleSpentTime(e: ChangeEvent<HTMLInputElement>) {
-        const nextReport = new TaskReport(report)
-        nextReport.fields.UF_FIELD_TIME = +e.target.value
+        const nextReport = new Task(report)
+        nextReport.taskTime = e.target.value as Task['taskTime']
         setReport(nextReport)
     }
 
 
-    function nextDeal(v: number) {
-        if (v === report.taskNextTypeId) return
-        const nextReport = new TaskReport(report)
-        nextReport.taskNextTypeId = v
+    function nextDeal(v: string) {
+        if (v.toString() === report.nextTaskType) return
+        const nextReport = new Task(report)
+        nextReport.nextTaskType = v
         setReport(nextReport)
 
-        v === -1 ? setNextTask(undefined) : setNextTask(new NextTask(nextTask))
+        v === '-1' ? setNextTask(undefined) : setNextTask(new Task())
     }
 
 
@@ -140,46 +129,51 @@ export function TaskEditePage() {
         const d = e.target.valueAsDate
         if (!d) return
         d.setHours(23, 59, 59, 999)
-        const nextState = new NextTask(nextTask)
-        nextState.deadLine = d
+        const nextState = new Task(nextTask)
+        nextState.deadline = d
         setNextTask(nextState)
     }
 
 
     function handleImportant(e: ChangeEvent<HTMLInputElement>) {
-        const nextState = new NextTask(nextTask)
+        const nextState = new Task(nextTask)
         nextState.important = e.target.checked
         setNextTask(nextState)
     }
 
 
     function handleUrgent(e: ChangeEvent<HTMLInputElement>) {
-        const nextState = new NextTask(nextTask)
+        const nextState = new Task(nextTask)
         nextState.urgent = e.target.checked
         setNextTask(nextState)
     }
 
 
     function handleResponsiblePerson(personID: string) {
-        const nextState = new NextTask(nextTask)
-        nextState.user = personID
+        const nextState = new Task(nextTask)
+        nextState.responsibleId = personID
         setNextTask(nextState)
     }
 
 
     function handleContact(contactID: string) {
-        const nextState = new NextTask(nextTask)
-        nextState.contact = contactID
+        const nextState = new Task(nextTask)
+        nextState.ufCrmTaskContact = contactID
         setNextTask(nextState)
     }
 
 
     function handleExpectResult(e: ChangeEvent<HTMLTextAreaElement>) {
-        const nextState = new NextTask(nextTask)
+        const nextState = new Task(nextTask)
         nextState.description = e.target.value
         setNextTask(nextState)
     }
 
+
+    console.log({report, nextTask})
+
+    //@ts-ignore
+    window.nextTask = nextTask
 
     return (
         <div className='report report-container wrapper overlay'>
@@ -197,23 +191,23 @@ export function TaskEditePage() {
                             className='report-text'
                             cols={40}
                             rows={6}
-                            value={report.fields.UF_FIELD_RESULT}
+                            value={report.report}
                             placeholder={'Отчет по задаче'}
                             onChange={handleReportChange}
                         />
                     </div>
                     <div className='ui-form-row'>
-                        <Checkbox label='цель достигнута' checked={report.fields.UF_FIELD_SUCCESS}
+                        <Checkbox label='цель достигнута' checked={report.success}
                                   onChange={handleSuccess}/>
                     </div>
                     <div className='ui-form-row'>
-                        <Checkbox label='Закрыть вчерашней датой' checked={report.taskClosePrevDate}
+                        <Checkbox label='Закрыть вчерашней датой' checked={report.closePrevDay}
                                   onChange={handleClosePrevDay}/>
                     </div>
 
                     <div className='ui-form-row'>
-                        <Text>{updateTimeLabel(report.fields.UF_FIELD_TIME)}</Text>
-                        <Range full min={1} max={12} value={report.fields.UF_FIELD_TIME} onChange={handleSpentTime}/>
+                        <Text>{updateTimeLabel(report.taskTime)}</Text>
+                        <Range full min={0} max={12} value={+report.taskTime} onChange={handleSpentTime}/>
                     </div>
 
                     <div className='next-task-container'>
@@ -225,7 +219,7 @@ export function TaskEditePage() {
                             <>
                                 <div className='ui-form-row'>
                                     <Text>Срок:</Text>
-                                    <DateSelect value={nextTask.deadLine.toISOString().split('T')[0]}
+                                    <DateSelect value={nextTask.deadline?.toISOString().split('T')[0]}
                                                 onChange={handleSelectDate}/>
                                 </div>
 
@@ -238,11 +232,11 @@ export function TaskEditePage() {
                                 </div>
                                 <div className='ui-form-row'>
                                     <Text>Сотрудник</Text>
-                                    <Select full options={selectPersonData}  value={nextTask.user} onChange={handleResponsiblePerson}/>
+                                    <Select full options={selectPersonData}  value={nextTask.responsibleId} onChange={handleResponsiblePerson}/>
                                 </div>
                                 <div className='ui-form-row'>
                                     <Text>Контактное лицо</Text>
-                                    <Select full options={selectContactsData} value={nextTask.contact} onChange={handleContact}/>
+                                    <Select full options={selectContactsData} value={nextTask.ufCrmTaskContact} onChange={handleContact}/>
                                 </div>
                                 <div className='ui-form-row'>
                                     <Text>Желаемый результат:</Text>

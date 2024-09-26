@@ -1,9 +1,7 @@
 import {AppContextState} from "../context/AppContext";
 import {ErrorService} from "./ErrorService";
 import {Task} from "../classes/Task";
-import {fetchTasks} from "../api";
-import {bitrix} from "../bitrix";
-import App from "../App";
+import {fetchRestAPI, fetchTasks} from "../api";
 import {TaskReport} from "../classes/TaskReport";
 import {IBXSuccessResponse} from "../bitrix/@types";
 import {TaskType} from "../classes/TaskType";
@@ -140,23 +138,64 @@ export class TaskService {
         }
     }
 
+
     /**
-     * Метод обновляет задачу.
+     * добавить задачу
      * @param ctx
      * @param task
      */
-    static async update(ctx: AppContextState, task: Task) {
+    static async add(ctx: AppContextState, task: Task) {
         try {
-
+            const bxTask = Task.transformToBitrixFields(task)
+            const res = await fetchRestAPI<{task:Task}>('tasks.task.add', {fields: bxTask})
+            return res.result.task.id
         } catch (e) {
             ErrorService.handleError(ctx)(e as Error)
         }
     }
 
 
-    static async updateReport(ctx: AppContextState, r: TaskReport) {
+    /**
+     * Метод обновляет задачу.
+     * @param ctx
+     * @param task
+     * @param nextTask
+     */
+    static async update(ctx: AppContextState, task: Task, nextTask?: Task) {
         try {
+            const originTask = ctx.tasks.find(t => t.id === task.id)
+            if(!originTask) return false
 
+            if(nextTask){
+                task.ufNextTask = await TaskService.add(ctx, nextTask)
+            }
+            let partTaskFields: any = {}
+
+            for(const k in task){
+                //@ts-ignore
+                if(task[k] !== originTask[k]) partTaskFields[k] = task[k]
+            }
+
+            await fetchRestAPI('tasks.task.update', {
+                taskId:originTask.id,
+                fields: Task.transformToBitrixFields(partTaskFields)
+            })
+            return true
+        } catch (e) {
+            ErrorService.handleError(ctx)(e as Error)
+        }
+    }
+
+    /**
+     * Закрывает текущуюзадачу (task), обновлет изменентя в task и создает nextTask
+     * @param ctx
+     * @param task
+     * @param nextTask
+     */
+    static async closeAndUpdate(ctx: AppContextState, task: Task, nextTask?: Task) {
+        try {
+            task.status = Task.STATE_COMPLETED
+            return await TaskService.update(ctx, task, nextTask)
         } catch (e) {
             ErrorService.handleError(ctx)(e as Error)
         }

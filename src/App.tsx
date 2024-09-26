@@ -25,9 +25,9 @@ function App() {
     return (
         <Routes>
             <Route path={BASE_URL} element={<Main />} />
-            <Route path={'/task/:taskID'} element={<TaskDetails />} />
-            <Route path={'/task/:taskID/edite'} element={<TaskEditePage />} />
-            <Route path={'*'} element={<Navigate to={BASE_URL} />} />
+            <Route path={BASE_URL + 'task/:taskID'} element={<TaskDetails />} />
+            <Route path={BASE_URL + 'task/:taskID/edite'} element={<TaskEditePage />} />
+            <Route path={BASE_URL + '*'} element={<Navigate to={BASE_URL} />} />
         </Routes>
     )
 }

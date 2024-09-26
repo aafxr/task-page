@@ -6,6 +6,7 @@ import {dateFormatter} from "../../utils/dateFormatter";
 import {Task} from "../../classes/Task";
 
 import './TaskPlaceholder'
+import {BASE_URL} from "../../App";
 
 
 type TaskComponentProps = {
@@ -19,12 +20,12 @@ export function TaskComponent({task}: TaskComponentProps) {
     const closeDate = useMemo(() => isClosed ? task.closedDate : task.deadline, [isClosed, task])
 
 
-    const handleTaskClick = () => navigate(`/task/${task.id}`)
+    const handleTaskClick = () => navigate(BASE_URL + `task/${task.id}`)
 
 
     function handleReportClick(e: UIEvent) {
         e.stopPropagation()
-        navigate(`/task/${task.id}/edite`)
+        navigate(`${BASE_URL}task/${task.id}/edite`)
     }
 
 

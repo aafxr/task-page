@@ -89,7 +89,7 @@ if ($isCompleted != "Y") {
     }
 
     // Формирование ответа
-    $result['TASK_TYPES'] = $taskTypesList;
+    $result['result'] = $taskTypesList;
     $result['ok'] = true;
 } else {
     // Формирование ответа для завершенной задачи

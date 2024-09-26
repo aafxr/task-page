@@ -10,12 +10,6 @@ import {Container} from "../../components/Container";
 import {BASE_URL} from "../../App";
 
 
-const options = [
-    { value: 'option1', label: 'Вариант 1' },
-    { value: 'option2', label: 'Вариант 2' },
-    { value: 'option3', label: 'Вариант 3' },
-];
-
 
 const dateFormatter = new Intl.DateTimeFormat(navigator.language, {
     day: '2-digit',

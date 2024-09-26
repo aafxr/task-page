@@ -38,7 +38,6 @@ export const Select = <T extends number | string>({
         onChange(option.value);
     };
 
-    console.log(selectedValue)
 
     return (
         <select
