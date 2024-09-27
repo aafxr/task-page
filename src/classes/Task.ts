@@ -250,8 +250,14 @@ export class Task {
         return this['ufCrmTask']?.[0]
     }
 
-    getContactType() {
-        const [prefix, _] = this['ufCrmTask']?.[0].split('_') || []
+    getContactType(contactID: string) {
+        let prefix: string = ''
+        if(contactID.includes('_')){
+            prefix = contactID.split('_')[1]
+        } else{
+            prefix = this['ufCrmTask'].find(e => e.endsWith(contactID))?.split('_')[1] || ''
+        }
+
         switch (prefix) {
             case 'CO':
                 return 'COMPANY'

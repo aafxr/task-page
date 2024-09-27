@@ -1,6 +1,8 @@
 import {errors} from "../errors";
 import {BXAuth} from "./BXAuth";
 import {ajax} from "./ajax";
+import {appFetch} from "../axios";
+import {AxiosResponse} from "axios";
 
 const HOST_NAME = process.env.REACT_APP_HOST_NAME || ''
 // const PATH_NAME = process.env.REACT_APP_PATH_NAME || ''
@@ -11,7 +13,7 @@ const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET || ''
 const baseURL = `https://${HOST_NAME}`
 
 
-const bxAuth = new BXAuth(baseURL, CLIENT_ID, CLIENT_SECRET)
+export const bxAuth = new BXAuth(baseURL, CLIENT_ID, CLIENT_SECRET)
 
 
 // @ts-ignore
@@ -44,10 +46,8 @@ export const bitrix = {
                 }
             }
 
-            const res = await fetch(bitrix._callMethodURL(methodName, params))
-                .then(res => res.json())
-                .catch(fail)
-            cb(res)
+            const res = await appFetch(bitrix._callMethodURL(methodName, params)).catch(fail) as AxiosResponse
+            if (res.status >=200 && res.status < 300) cb(res.data)
         })
             .catch(fail)
     },
@@ -61,19 +61,6 @@ export const bitrix = {
             return bxAuth.oauthData!
         }
         else throw new Error(errors.UNAUTHORIZED)
-        // return bxAuth.oauthData || {
-        //     access_token: '',
-        //     expires: 0,
-        //     expires_in: 0,
-        //     scope: '',
-        //     domain: '',
-        //     server_endpoint: '',
-        //     status: '',
-        //     client_endpoint: '',
-        //     member_id: '',
-        //     user_id: 0,
-        //     refresh_token: '',
-        // }
     },
 
     _callMethodURL(methodName: string, params: Record<string, any>) {

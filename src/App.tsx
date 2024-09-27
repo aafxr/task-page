@@ -30,6 +30,7 @@ function App() {
 
     useEffect(() => {
         Telegram.WebApp.ready()
+        Telegram.WebApp.disableVerticalSwipes()
         Telegram.WebApp.expand()
         Telegram.WebApp.BackButton.onClick(() => navigate(-1))
     }, []);
