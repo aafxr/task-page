@@ -82,6 +82,7 @@ export class TaskService {
                     request.filter = {
                         '<DEADLINE': dateStart.toISOString(),
                         '<REAL_STATUS': 5,
+                        RESPONSIBLE_ID: user_id
                     }
 
                     request.order = {
@@ -93,6 +94,7 @@ export class TaskService {
                     request.filter = {
                         '=DEADLINE': null,
                         '<REAL_STATUS': 5,
+                        RESPONSIBLE_ID: user_id
                     }
 
                     request.order = {
