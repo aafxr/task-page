@@ -4,7 +4,7 @@ import {Task} from "../classes/Task";
 import {fetchRestAPI, fetchTasks} from "../api";
 import {IBXSuccessResponse} from "../bitrix/@types";
 import {TaskType} from "../classes/TaskType";
-import {fetchTaskTypes} from "../api/fetchTaskTypes";
+import {fetchTaskTypes} from "../api";
 import {bitrix} from "../bitrix";
 
 

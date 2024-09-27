@@ -60,7 +60,9 @@ export class BXAuth {
 
         const authResponse: any = await fetch(`${this.baseURL}/oauth/authorize/?client_id=${this.client_id}&state=JJHgsdgfkdaslg7lbadsfg`).catch(console.error)
 
-        if (authResponse && authResponse.url) {
+        if(!authResponse) return false
+
+        if (authResponse.url) {
             this.appCredentials = BXAuth.parseCredentials(authResponse.url)
         }
 

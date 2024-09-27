@@ -1,0 +1,27 @@
+.client{
+    color: var(--text-color);
+    font-weight: 300;
+}
+
+.client-container{
+    padding: 10px;
+    border-radius: var(--ui-radius);
+    background-color: var(--bg-main);
+}
+
+.client-title{
+    font-size: 1rem;
+}
+
+.client-field{
+    margin-top: var(--margin);
+}
+
+.client-field-descr{
+    font-size: 0.6rem;
+}
+
+.client-field-val{
+    font-size: 0.8rem;
+
+}

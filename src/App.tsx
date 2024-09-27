@@ -29,6 +29,7 @@ function App() {
     }, [s.selectedDay]);
 
 
+
     useEffect(() => {
         Telegram.WebApp.ready()
         Telegram.WebApp.disableVerticalSwipes()
@@ -48,8 +49,9 @@ function App() {
         <Routes>
             <Route path={BASE_URL} element={<Main/>}/>
             <Route path={BASE_URL + 'task/:taskID'} element={<TaskDetails/>}/>
+            <Route path={BASE_URL + 'task/:taskID/:contactID'} element={<TaskDetails/>}/>
             <Route path={BASE_URL + 'task/:taskID/edite'} element={<TaskEditePage/>}/>
-            <Route path={BASE_URL + '*'} element={<Navigate to={BASE_URL}/>}/>
+            <Route path={'*'} element={<Navigate to={BASE_URL}/>}/>
         </Routes>
     )
 }

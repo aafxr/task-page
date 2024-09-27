@@ -15,12 +15,6 @@ type TaskPropertiesProps = {
 export const TaskProperties = ({ data }: TaskPropertiesProps) => {
     return (
         <table className="bx-table">
-            {/*<thead>*/}
-            {/*<tr>*/}
-            {/*    <th className="bx-table-header">Свойство</th>*/}
-            {/*    <th className="bx-table-header">Значение</th>*/}
-            {/*</tr>*/}
-            {/*</thead>*/}
             <tbody>
             {data.map((item, index) => (
                 <tr key={index} className="bx-table-row">

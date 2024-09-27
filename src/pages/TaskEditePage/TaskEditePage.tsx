@@ -14,10 +14,10 @@ import {Select} from "../../components/Select";
 import {DateSelect} from "../../components/DateSelect";
 import {Title} from "../../components/Title";
 import {BASE_URL} from "../../App";
-import {BXPerson} from "../../classes/BXPerson";
 import {ContactService} from "../../services/ContactService";
 import {TaskType} from "../../classes/TaskType";
 import {Task} from "../../classes/Task";
+import {BXContact} from "../../classes/BXContact";
 
 const d = new Date()
 d.setHours(23, 59, 59, 999)
@@ -42,7 +42,7 @@ export function TaskEditePage() {
     const task = useTask(taskID)!
     const [report, setReport] = useState(new Task(task))
     const [nextTask, setNextTask] = useState<Task>()
-    const [contacts, setContacts] = useState<BXPerson[]>([])
+    const [contacts, setContacts] = useState<BXContact[]>([])
     const [taskTypes, setTaskTypes] = useState<TaskType[]>([])
 
     const currentDay = useMemo(() => {
