@@ -21,6 +21,9 @@
     "jsx": "react-jsx",
     "typeRoots": [
       "./@types"
+    ],
+    "types": [
+      "./node_modules/telegram-webapps"
     ]
   },
   "include": [
