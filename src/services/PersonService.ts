@@ -4,6 +4,9 @@ import {IBXSuccessResponse} from "../bitrix/@types";
 import {fetchUsers} from "../api";
 import {BXPerson} from "../classes/BXPerson";
 
+let persons:BXPerson[] = []
+const map = new Map<string, BXPerson>()
+
 export class PersonService{
     static async byID(ctx: AppContextState, personID: string){
 
@@ -12,12 +15,12 @@ export class PersonService{
     static getList(ctx: AppContextState){
         (async () => {
             try {
+                if(persons.length) return persons
 
                 let request: any = {}
                 // загрузка всех задач
                 let next = 0
                 let res:  IBXSuccessResponse<BXPerson[]>
-                let persons: BXPerson[] = []
 
                 do {
                     request.start = next
@@ -26,7 +29,6 @@ export class PersonService{
                     persons = persons.concat(res.result.map(p => new BXPerson(p)))
                 }while(next < res.total)
 
-                const map = new Map<string, BXPerson>()
                 persons = persons.map(p => new BXPerson(p))
                 persons.sort((a,b) => a.LAST_NAME < b.LAST_NAME ? -1 : a.LAST_NAME > b.LAST_NAME ? 1 : 0)
                 persons.forEach(p => map.set(p.ID, p))

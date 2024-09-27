@@ -289,4 +289,10 @@ export class Task {
         })
         return result
     }
+
+    expired(){
+        const d = new Date()
+        if(!this.deadline) return false
+        return this.deadline.valueOf() - d.valueOf() < 0 && this.status < Task.STATE_COMPLETED
+    }
 }

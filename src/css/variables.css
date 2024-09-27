@@ -22,6 +22,7 @@
     --ui-border-color: var(--border-color);
     --ui-height: 40px;
     --ui-bg-color: var(--bg-main);
+    --ui-bg-error: #ff9a97;
 
 
     --calendar-day-width: var(--ui-height);
@@ -35,7 +36,7 @@
     --calendar-weekend-text-color: #d44e4e;
     --calendar-border-radius: var(--border-radius);
 
-    --error-bg-color: var(--bg-main);
+    --error-bg-color: var(--text-error-color);
     --task-bg-color: var(--bg-main);
     --task-content-gap: var(--padding);
     --task-border-color: var(--border-color);

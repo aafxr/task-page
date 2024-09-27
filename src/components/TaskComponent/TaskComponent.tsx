@@ -50,6 +50,7 @@ export function TaskComponent({task}: TaskComponentProps) {
                 <span
                     className='task-deadline'>{isClosed ? 'Закрыта' : closeDate ? 'Крайний срок:' : 'Без срока'}</span>
                 {!!closeDate && <span className='task-date'>{dateFormatter.format(closeDate)}</span>}
+                {task.expired() && <span className='task-expired'>просрочена</span>}
             </div>
             <div className='task-content'>
                 <p className='task-title'>{task.title}</p>

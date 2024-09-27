@@ -9,6 +9,7 @@ import {Main} from "./pages";
 import './css/App.css';
 import {PersonService} from "./services/PersonService";
 import {bitrix} from "./bitrix";
+import {ContactPage} from "./pages/ContactPage";
 
 export const BASE_URL = process.env.REACT_APP_BACKEND_URL || '/';
 
@@ -49,7 +50,7 @@ function App() {
         <Routes>
             <Route path={BASE_URL} element={<Main/>}/>
             <Route path={BASE_URL + 'task/:taskID'} element={<TaskDetails/>}/>
-            <Route path={BASE_URL + 'task/:taskID/:contactID'} element={<TaskDetails/>}/>
+            <Route path={BASE_URL + 'task/:taskID/:contactID'} element={<ContactPage/>}/>
             <Route path={BASE_URL + 'task/:taskID/edite'} element={<TaskEditePage/>}/>
             <Route path={'*'} element={<Navigate to={BASE_URL}/>}/>
         </Routes>

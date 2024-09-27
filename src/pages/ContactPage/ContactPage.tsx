@@ -1,17 +1,28 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {BXContact} from "../../classes/BXContact";
 import {useParams} from "react-router-dom";
+
+import {ContactService} from "../../services/ContactService";
+import {useAppContext} from "../../context/AppContext";
 
 import './ContactPage.css'
 
 const UNSET = 'Не усьановлено'
 
 export function ContactPage() {
-    const [contact, setContact] = useState<BXContact | undefined>()
+    const s = useAppContext()
     const {taskID, contactID} = useParams()
+    const [contact, setContact] = useState<BXContact | undefined>()
 
 
-
+    useEffect(() => {
+        const t = s.tasks.find(t => t.id === taskID)
+        if(t){
+            ContactService.getContacts(s,t)
+                .then(cl => setContact(cl.find(c =>c.ID === contactID)))
+                .catch(console.error)
+        }
+    }, [taskID, contactID]);
 
 
     return (

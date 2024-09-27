@@ -45,6 +45,8 @@ export class TaskService {
 
                 let request: any = {}
 
+                let tasks: Task[] = []
+
                 if(periodType === 1){
                     // прошедшие задачи
                     request = {
@@ -58,26 +60,52 @@ export class TaskService {
                         },
                         select: ['*', 'UF_*']
                     }
+
+                    tasks = await TaskService._loadTasks(request)
+
                 } else if(periodType === 2){
                     // задачи на сегодня
                     request = {
                         filter: {
-                            '%<=DEADLINE': dateEnd.toISOString(),
-                            '%>=DEADLINE': dateStart.toISOString(),
+                            '<DEADLINE': dateEnd.toISOString(),
+                            '>=DEADLINE': dateStart.toISOString(),
                             '<REAL_STATUS': 5,
                             RESPONSIBLE_ID: user_id
                         },
                         order: {
-                            CREATED_DATE: 'DESC',
+                            DEADLINE: 'DESC',
                         },
                         select: ['*', 'UF_*']
                     }
+
+                    tasks = await TaskService._loadTasks(request)
+                    request.filter = {
+                        '<DEADLINE': dateStart.toISOString(),
+                        '<REAL_STATUS': 5,
+                    }
+
+                    request.order = {
+                        DEADLINE: 'ASC',
+                    }
+
+                    tasks = [...tasks, ...await TaskService._loadTasks(request)]
+
+                    request.filter = {
+                        '=DEADLINE': null,
+                        '<REAL_STATUS': 5,
+                    }
+
+                    request.order = {
+                        CREATED_DATE: 'DESC',
+                    }
+                    tasks = [...tasks, ...await TaskService._loadTasks(request)]
 
                 } else{
                     //задачи на завтра
                     request = {
                         filter: {
                             '<=DEADLINE': dateEnd.toISOString(),
+                            '>=DEADLINE': dateStart.toISOString(),
                             '<REAL_STATUS': 5,
                             RESPONSIBLE_ID: user_id
                         },
@@ -86,20 +114,20 @@ export class TaskService {
                         },
                         select: ['*', 'UF_*']
                     }
-
+                    tasks = await TaskService._loadTasks(request)
                 }
 
-                // загрузка всех задач
-                let next = 0
-                let res:  IBXSuccessResponse<{tasks: Task[] }>
-                let tasks: Task[] = []
 
-                do {
-                    request.start = next
-                    res = await fetchTasks(request)
-                    next = res.next
-                    tasks = tasks.concat(res.result.tasks.map(t => new Task(t)))
-                }while(next < res.total)
+
+                // сортировка задач без дедлайн ------------------------------
+                // const idx = tasks.findIndex(t => !t.deadline)
+                // if(idx !== -1){
+                //     const subtasks =tasks.slice(idx)
+                //     //@ts-ignore
+                //     subtasks.sort((a,b) => (a.createdDate - b.createdDate) * -1)
+                //     tasks.splice(idx, tasks.length - idx, ...subtasks)
+                // }
+                // сортировка задач без дедлайн ------------------------------
 
                 ctx.updateAppContext(s => ({...s, tasks}))
 
@@ -109,6 +137,21 @@ export class TaskService {
                 ctx.updateAppContext(s => ({...s, tasksLoading: false}))
             }
         })()
+    }
+
+    static async _loadTasks(request: any = {}){
+        // загрузка всех задач
+        let next = 0
+        let res:  IBXSuccessResponse<{tasks: Task[] }>
+        let tasks: Task[] = []
+
+        do {
+            request.start = next
+            res = await fetchTasks(request)
+            next = res.next
+            tasks = tasks.concat(res.result.tasks.map(t => new Task(t)))
+        }while(next < res.total)
+        return tasks
     }
 
 
@@ -203,10 +246,13 @@ export class TaskService {
     static async closeAndUpdate(ctx: AppContextState, task: Task, nextTask?: Task) {
         try {
             task.status = Task.STATE_COMPLETED
-            task.closedDate = new Date()
-            if(task.closePrevDay) {
-                task.closedDate.setDate(task.closedDate.getDate() - 1)
+            if (!task.isClosed()) {
+                task.closedDate = new Date()
+                if(task.closePrevDay) {
+                    task.closedDate.setDate(task.closedDate.getDate() - 1)
+                }
             }
+
             const res = await TaskService.update(ctx, task, nextTask)
             if (res) TaskService.getTasks(ctx)
             return res
