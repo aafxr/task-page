@@ -23,7 +23,8 @@
       "./@types"
     ],
     "types": [
-      "./node_modules/telegram-webapps"
+      "./node_modules/telegram-webapps",
+      "@types"
     ]
   },
   "include": [

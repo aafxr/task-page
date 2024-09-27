@@ -1,5 +1,6 @@
 import axios, {AxiosInstance} from "axios";
 import {bxAuth} from "../bitrix";
+import {errors} from "../errors";
 
 interface AxiosInstanceWithFlag extends AxiosInstance {
     refresh: boolean
@@ -16,10 +17,8 @@ appFetch.interceptors.response.use(r => r, async (err) => {
         try {
             if (await bxAuth.refresh()) return appFetch(originalRequest)
         } catch (e) {
-            return Promise.reject(e)
+            return Promise.reject(new Error(errors.UNAUTHORIZED))
         }
     }
     return Promise.reject(err)
 })
-
-axios.get('')

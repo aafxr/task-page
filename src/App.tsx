@@ -25,6 +25,7 @@ function App() {
                 TaskService.getTasks(s)
                 PersonService.getList(s)
             })
+            .catch(console.error)
     }, [s.selectedDay]);
 
 

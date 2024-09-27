@@ -46,8 +46,8 @@ export const bitrix = {
                 }
             }
 
-            const res = await appFetch(bitrix._callMethodURL(methodName, params)).catch(fail) as AxiosResponse
-            if (res.status >=200 && res.status < 300) cb(res.data)
+            const res = await appFetch(bitrix._callMethodURL(methodName, params)) as AxiosResponse
+            if (res && res.status >=200 && res.status < 300) cb(res.data)
         })
             .catch(fail)
     },
