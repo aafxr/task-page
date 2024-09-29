@@ -1,15 +1,14 @@
 import {useEffect} from "react";
 import {Navigate, Route, Routes, useLocation, useNavigate} from "react-router-dom";
 
+import {PersonService} from "./services/PersonService";
 import {TaskDetails, TaskEditePage} from "./pages";
 import {useAppContext} from "./context/AppContext";
+import {ContactPage} from "./pages/ContactPage";
 import {TaskService} from "./services";
 import {Main} from "./pages";
 
 import './css/App.css';
-import {PersonService} from "./services/PersonService";
-import {bitrix} from "./bitrix";
-import {ContactPage} from "./pages/ContactPage";
 
 export const BASE_URL = process.env.REACT_APP_BACKEND_URL || '/';
 
@@ -21,12 +20,8 @@ function App() {
 
     // init app
     useEffect(() => {
-        bitrix.getAuth()
-            .then(() => {
-                TaskService.getTasks(s)
-                PersonService.getList(s)
-            })
-            .catch(console.error)
+        TaskService.getTasks(s)
+        PersonService.getList(s)
     }, [s.selectedDay]);
 
 

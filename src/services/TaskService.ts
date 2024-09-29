@@ -52,7 +52,7 @@ export class TaskService {
                     request = {
                         filter: {
                             '>=CLOSED_DATE': dateStart.toISOString(),
-                            '<=CLOSED_DATE': dateEnd.toISOString(),
+                            '<CLOSED_DATE': dateEnd.toISOString(),
                             RESPONSIBLE_ID: user_id
                         },
                         order: {
@@ -67,38 +67,30 @@ export class TaskService {
                     // задачи на сегодня
                     request = {
                         filter: {
-                            '<DEADLINE': dateEnd.toISOString(),
-                            '>=DEADLINE': dateStart.toISOString(),
-                            '<REAL_STATUS': 5,
-                            RESPONSIBLE_ID: user_id
+                            "<DEADLINE": dateEnd.toISOString(),
+                            '<REAL_STATUS': Task.STATE_COMPLETED,
+                            RESPONSIBLE_ID:user_id,
                         },
                         order: {
                             DEADLINE: 'DESC',
+                            CREATED_DATE: 'DESC'
                         },
                         select: ['*', 'UF_*']
                     }
 
                     tasks = await TaskService._loadTasks(request)
-                    request.filter = {
-                        '<DEADLINE': dateStart.toISOString(),
-                        '<REAL_STATUS': 5,
-                        RESPONSIBLE_ID: user_id
-                    }
 
-                    request.order = {
-                        DEADLINE: 'ASC',
-                    }
-
-                    tasks = [...tasks, ...await TaskService._loadTasks(request)]
-
-                    request.filter = {
-                        '=DEADLINE': null,
-                        '<REAL_STATUS': 5,
-                        RESPONSIBLE_ID: user_id
-                    }
-
-                    request.order = {
-                        CREATED_DATE: 'DESC',
+                    request = {
+                        filter: {
+                            "DEADLINE": '',
+                            '<REAL_STATUS': Task.STATE_COMPLETED,
+                            RESPONSIBLE_ID:user_id,
+                        },
+                        order: {
+                            DEADLINE: 'DESC',
+                            CREATED_DATE: 'DESC'
+                        },
+                        select: ['*', 'UF_*']
                     }
                     tasks = [...tasks, ...await TaskService._loadTasks(request)]
 
@@ -106,12 +98,13 @@ export class TaskService {
                     //задачи на завтра
                     request = {
                         filter: {
-                            '<=DEADLINE': dateEnd.toISOString(),
+                            '<DEADLINE': dateEnd.toISOString(),
                             '>=DEADLINE': dateStart.toISOString(),
-                            '<REAL_STATUS': 5,
+                            '<REAL_STATUS': Task.STATE_COMPLETED,
                             RESPONSIBLE_ID: user_id
                         },
                         order: {
+                            DEADLINE: 'DESC',
                             CREATED_DATE: 'DESC',
                         },
                         select: ['*', 'UF_*']
