@@ -49,13 +49,17 @@
 }
 
 .task-expired{
-    padding: 0 8px;
-    font-size: 0.65rem;
+    padding: 2px 8px;
+    align-self: flex-start;
+    font-size: 0.55rem;
+    letter-spacing: 0.95px;
     font-weight: 600;
     color: #800602;
     background-color: var(--ui-bg-error);
     border-radius: var(--ui-height);
-    /*overflow: hidden;*/
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .task-content {

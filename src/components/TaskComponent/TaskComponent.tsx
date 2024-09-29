@@ -30,6 +30,20 @@ export function TaskComponent({task}: TaskComponentProps) {
 
     const handleTaskClick = () => navigate(BASE_URL + `task/${task.id}`)
 
+    const expiredText = useMemo(() => {
+        if (!task.deadline) return ''
+        const date = new Date()
+        const v = date.valueOf() - task.deadline.valueOf()
+        let text = '-'
+        const d = Math.floor(v / 86_400_000)
+        const h = Math.floor(v / 3600_000 % 24)
+        const m = Math.floor(v / 60_000 % 60)
+        if (d) text += `${d}д `
+        if (h) text += `${h}ч` + (d ? '' : ':')
+        if (!d) text += `${m}мин`
+        return text
+    }, [task])
+
 
     function handleReportClick(e: UIEvent) {
         e.stopPropagation()
@@ -50,7 +64,7 @@ export function TaskComponent({task}: TaskComponentProps) {
                 <span
                     className='task-deadline'>{isClosed ? 'Закрыта' : closeDate ? 'Крайний срок:' : 'Без срока'}</span>
                 {!!closeDate && <span className='task-date'>{dateFormatter.format(closeDate)}</span>}
-                {task.expired() && <span className='task-expired'>просрочена</span>}
+                {task.expired() && <span className='task-expired'>{expiredText}</span>}
             </div>
             <div className='task-content'>
                 <p className='task-title'>{task.title}</p>

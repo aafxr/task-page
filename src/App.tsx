@@ -20,8 +20,8 @@ function App() {
 
     // init app
     useEffect(() => {
-        TaskService.getTasks(s)
-        PersonService.getList(s)
+        // TaskService.getTasks(s)
+        // PersonService.getList(s)
     }, [s.selectedDay]);
 
 
