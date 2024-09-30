@@ -5,7 +5,7 @@
     height: var(--ui-height);
     border: 1px solid var(--ui-border-color); /* Граница */
     border-radius: var(--ui-radius); /* Скругленные углы */
-    background-color: #fff; /* Фон */
+    background-color: var(--bg-main); /* Фон */
 }
 
 .bx-select.full{

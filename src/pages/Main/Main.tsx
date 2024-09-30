@@ -1,13 +1,41 @@
-import {TasksComponent} from "../../components/TasksComponent";
+import {TaskFilter, TasksComponent} from "../../components/TasksComponent";
 import {dateFormatter} from "../../utils/dateFormatter";
 import {useAppContext} from "../../context/AppContext";
 import {Container} from "../../components/Container";
 import {Calendar} from "../../components/Calendar";
 import {Modal} from "../../components/Moadl";
 import {ErrorMessageComponent} from "../../components/ErrorMessageComponent";
+import {Button} from "../../components/Button";
+import {useState} from "react";
+
+
+
+type FilterType = {
+    title: string
+    filter: TaskFilter
+}
+
+const filters : FilterType[] = [
+    {
+        filter: "all",
+        title: 'Все'
+    },
+    {
+        filter: "closed",
+        title: 'Закрытые'
+    },
+    {
+        filter: "expired",
+        title: 'Просроченные'
+    }
+]
+
+
+
 
 export function Main() {
     const s = useAppContext()
+    const [f, setFilter] = useState(filters[0])
 
 
     function handleChangeSelectedDay(d: Date) {
@@ -29,7 +57,16 @@ export function Main() {
             <div className='wrapper-header'>
                 <Container style={{paddingBottom: 'var(--padding)'}}>
                     <div className='mainPage-header'>
-                        <button className='dayBtn' onClick={handleToggleCalendar}>{dateFormatter.format(s.selectedDay)}</button>
+                        <Button onClick={handleToggleCalendar}>{dateFormatter.format(s.selectedDay)}</Button>
+                        <div className='mainPage-filter'>
+                            {filters.map(e =>
+                                <Button
+                                    key={e.filter}
+                                    className={e=== f ? 'active-btn' : ''}
+                                    onClick={() => setFilter(e)}
+                                >{e.title}</Button>
+                            )}
+                        </div>
                     </div>
                     {!!s.error && (
                         <ErrorMessageComponent onClose={handleResetError}>
@@ -47,7 +84,7 @@ export function Main() {
             </div>
             <div className='wrapper-content'>
                 <Container >
-                    <TasksComponent />
+                    <TasksComponent filter={f.filter}/>
                 </Container>
             </div>
         </div>

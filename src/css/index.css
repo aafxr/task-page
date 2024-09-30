@@ -236,10 +236,7 @@ body, html {
     font-weight: 600;
 }
 
-.report-content{
-    /*padding: var(--padding);*/
-    height: calc(100% - var(--padding) *2);
-}
+
 
 .report-text{
     /*flex: 1 1;*/
@@ -247,9 +244,9 @@ body, html {
     /*height: 100%;*/
 }
 
-.confirm-btn{
+.active-btn{
     color: var(--text-color);
-    background-color: var(--confirm-color);
+    background-color: var(--text-accent-color);
 }
 /*---------------------------------*/
 
@@ -295,14 +292,24 @@ body, html {
     padding: var(--padding) 0;
 }
 
-.dayBtn {
-    padding: 8px 12px;
-    color: var(--text-color);
-    font-weight: 600;
-    background-color: var(--bg-main);
-    border-radius: 4px;
-    border: none;
+.mainPage-filter{
+    margin-left: var(--padding);
+    display: inline-flex;
+    flex-wrap: nowrap;
+    gap: var(--offset);
+    overflow-x: auto;
 }
+
+
+
+/*.dayBtn {*/
+/*    padding: 8px 12px;*/
+/*    color: var(--text-color);*/
+/*    font-weight: 600;*/
+/*    background-color: var(--bg-main);*/
+/*    border-radius: 4px;*/
+/*    border: none;*/
+/*}*/
 
 .tasks-list {
     border-radius: var(--task-border-radius);
@@ -340,11 +347,14 @@ body, html {
 
 .next-task-container{
     padding: var(--padding);
-    background-color: #e2e8e8;
+    background-color: var(--bg-main);
     border-right: var(--border-radius);
 }
 
 .report-content{
+    height: calc(100% - var(--padding) *2);
     padding-top: var(--padding);
-    background-color: #f5f9f9;
+    background-color: var(--bg-secondery);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--margin);
 }

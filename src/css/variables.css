@@ -1,6 +1,7 @@
 :root{
     --vh: 1vh;
-    --text-color: #7e7e7e;
+    --text-color: #6e6e6e;
+    --text-color-secondary: #8e8e8e;
     --text-accent-color: #478EE4;
     --text-error-color:#D8454A;
     --text-button-color: var(--text-error-color);
@@ -29,11 +30,11 @@
     --calendar-day-height: var(--ui-height);
     --calendar-day-selected-color: var(--confirm-color);
     --calendar-day-selected-border-radius: 4px;
-    --calendar-header-bg-color: #d3e1ed;
-    --calendar-arrow-bg-color: #eaf6ff;
+    --calendar-header-bg-color: var(--text-accent-color);/*#d3e1ed;*/
+    --calendar-arrow-bg-color: var(--text-accent-color);/*#eaf6ff;*/
     --calendar-bg-color: var(--bg-main); /* #eaf6ff */
-    --calendar-arrow-color: #8ba7be;
-    --calendar-weekend-text-color: #d44e4e;
+    --calendar-arrow-color: var(--text-color);/*#8ba7be;*/
+    --calendar-weekend-text-color: var(--text-error-color); /*#d44e4e;*/
     --calendar-border-radius: var(--border-radius);
 
     --error-bg-color: var(--text-error-color);
