@@ -45,6 +45,19 @@ export function TaskEditePage() {
     const [contacts, setContacts] = useState<BXContact[]>([])
     const [taskTypes, setTaskTypes] = useState<TaskType[]>([])
 
+
+    //установка флага "задача выполнена успешно" если она не закрыта
+    useEffect(() => {
+        if(!task) return
+        if(!report.closedDate) {
+            report.ufAuto251545709641 = "1"
+            report.ufTaskTime = "1"
+            setReport(new Task(report))
+        }
+    }, []);
+
+
+
     const currentDay = useMemo(() => {
         const d = new Date(s.selectedDay)
         d.setHours(23,59,59,999)
@@ -218,13 +231,13 @@ export function TaskEditePage() {
                     </div>
                     {!task.isClosed() && (
                         <>
-                            <div className='ui-form-row'>
-                                <Checkbox label='Закрыть вчерашней датой' checked={report.closePrevDay}
-                                          onChange={handleClosePrevDay}/>
-                            </div>
+                            {/*<div className='ui-form-row'>*/}
+                            {/*    <Checkbox label='Закрыть вчерашней датой' checked={report.closePrevDay}*/}
+                            {/*              onChange={handleClosePrevDay}/>*/}
+                            {/*</div>*/}
                             <div className='ui-form-row'>
                                 <Text>{updateTimeLabel(report.taskTime)}</Text>
-                                <Range full min={0} max={12} value={+report.taskTime} onChange={handleSpentTime}/>
+                                <Range full min={1} max={12} value={+report.taskTime} onChange={handleSpentTime}/>
                             </div>
                         </>
                     )}

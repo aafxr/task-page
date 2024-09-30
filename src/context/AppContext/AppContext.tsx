@@ -1,4 +1,4 @@
-import React, {createContext, PropsWithChildren, useContext, useState} from 'react';
+import React, {createContext, PropsWithChildren, ReactNode, useContext, useState} from 'react';
 import {Task} from "../../classes/Task";
 import {BXPerson} from "../../classes/BXPerson";
 
@@ -38,7 +38,7 @@ export interface AppContextState {
     selectedDay: Date
     tasks: Task[]
     tasksLoading: boolean
-    error: Error | null
+    error: ReactNode | null
     selectedTask: Task | null
     persons: BXPerson[],
     personsMap: Map<string, BXPerson>

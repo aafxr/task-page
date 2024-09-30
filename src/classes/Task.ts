@@ -158,7 +158,7 @@ export class Task {
     ufAuto187628303463: any | null = null
 
     /** флаг задача выполнена успешно */
-    ufAuto251545709641: '0' | '1' | null = null
+    ufAuto251545709641: '0' | '1' | null = '1'
     set success(v: boolean) { this.ufAuto251545709641 = v ? '1':'0'}
     get success(){return this.ufAuto251545709641 === '1'}
 
@@ -205,7 +205,7 @@ export class Task {
     ufTaskReport: any | null = null
 
     /** время затраченное на задачу */
-    ufTaskTime: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12'  = '0'
+    ufTaskTime: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12'  = '1'
     set taskTime(v:Task['ufTaskTime']){
         this.ufTaskTime = v
     }

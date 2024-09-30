@@ -33,7 +33,7 @@ export function Main() {
                     </div>
                     {!!s.error && (
                         <ErrorMessageComponent onClose={handleResetError}>
-                            {s.error.message}
+                            {s.error}
                         </ErrorMessageComponent>
                     )}
                     <Modal

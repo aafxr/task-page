@@ -94,6 +94,20 @@ export class TaskService {
                     }
                     tasks = [...tasks, ...await TaskService._loadTasks(request)]
 
+                    request = {
+                        filter: {
+                            '<CLOSED_DATE': dateEnd.toISOString(),
+                            '>=CLOSED_DATE': dateStart.toISOString(),
+                            RESPONSIBLE_ID: user_id
+                        },
+                        order: {
+                            CLOSED_DATE: 'DESC',
+                        },
+                        select: ['*', 'UF_*']
+                    }
+
+                    tasks = [...tasks, ...await TaskService._loadTasks(request)]
+
                 } else{
                     //задачи на завтра
                     request = {
