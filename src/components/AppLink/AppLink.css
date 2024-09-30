@@ -1,0 +1,8 @@
+.appLink{
+    color: var(--text-accent-color);
+    cursor: pointer;
+}
+
+.appLink + .appLink{
+    margin-left: var(--margin);
+}

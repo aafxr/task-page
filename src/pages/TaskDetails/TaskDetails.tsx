@@ -14,6 +14,7 @@ import {BXContact} from "../../classes/BXContact";
 
 import './TaskDetails.css'
 import {ContactService} from "../../services/ContactService";
+import {AppLink} from "../../components/AppLink";
 
 
 const dateFormatter = new Intl.DateTimeFormat(navigator.language, {
@@ -151,6 +152,14 @@ export function TaskDetails() {
                     <>
                         <div className="client client-container">
                             <div className="client-field">
+                                <div className="client-field-descr">Контакты</div>
+                                <div className="client-field-val">{
+                                    contacts.map(c => (
+                                        <AppLink key={c.ID} to={`${BASE_URL}${task.id}/${c.ID}`}>{`${c.NAME || ''} ${c.LAST_NAME || ''}`}</AppLink>
+                                    ))
+                                }</div>
+                            </div>
+                            <div className="client-field">
                                 <div className="client-field-descr">Название</div>
                                 <div className="client-field-val">{task.title || UNSET}</div>
                             </div>
@@ -180,14 +189,7 @@ export function TaskDetails() {
                                         <strong>{dateFormatter.format(task.changedDate!)}</strong></div>
                                 </div>
                             )}
-                            <div className="client-field">
-                                <div className="client-field-descr">Контакты</div>
-                                <div className="client-field-val">{
-                                    contacts.map(c => (
-                                        <Link to={`${BASE_URL}${task.id}/${c.ID}`}>{`${c.NAME || ''} ${c.LAST_NAME || ''}`}</Link>
-                                    ))
-                                }</div>
-                            </div>
+
                         </div>
                     </>
                 )}
