@@ -1,5 +1,4 @@
 .block{
-    padding: var(--padding);
     background-color: var(--bg-main);
     border-radius: var(--border-radius);
     overflow: hidden;

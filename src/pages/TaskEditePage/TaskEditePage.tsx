@@ -18,6 +18,7 @@ import {ContactService} from "../../services/ContactService";
 import {TaskType} from "../../classes/TaskType";
 import {Task} from "../../classes/Task";
 import {BXContact} from "../../classes/BXContact";
+import {Block} from "../../components/Block";
 
 const d = new Date()
 d.setHours(23, 59, 59, 999)
@@ -48,8 +49,8 @@ export function TaskEditePage() {
 
     //установка флага "задача выполнена успешно" если она не закрыта
     useEffect(() => {
-        if(!task) return
-        if(!report.closedDate) {
+        if (!task) return
+        if (!report.closedDate) {
             report.ufAuto251545709641 = "1"
             report.ufTaskTime = "1"
             setReport(new Task(report))
@@ -57,10 +58,9 @@ export function TaskEditePage() {
     }, []);
 
 
-
     const currentDay = useMemo(() => {
         const d = new Date(s.selectedDay)
-        d.setHours(23,59,59,999)
+        d.setHours(23, 59, 59, 999)
         return d
     }, [s.selectedDay])
 
@@ -98,7 +98,7 @@ export function TaskEditePage() {
     function handleSave(e: React.UIEvent) {
         e.stopPropagation()
         if (!task || !report) return
-        if (!report.report || !report.nextTaskType){
+        if (!report.report || !report.nextTaskType) {
             alert('Добавьте отчет и следующую задачу')
             return
         }
@@ -210,39 +210,43 @@ export function TaskEditePage() {
                 <Title>Отчет по задаче</Title>
             </div>
             <div className='wrapper-content'>
-                <Container className='report-content'>
-                    <div className='ui-form-row'>
-                        <Text>{task.isClosed() ? 'Задача закрыта' : 'Желаемый результат: ' + task.description}</Text>
-                    </div>
-                    <div className='ui-form-row'>
-                        <Text>Результат:</Text>
-                        <TextArea
-                            className='report-text'
-                            cols={40}
-                            rows={6}
-                            value={report.report}
-                            placeholder={'Отчет по задаче'}
-                            onChange={handleReportChange}
-                        />
-                    </div>
-                    <div className='ui-form-row'>
-                        <Checkbox label='цель достигнута' checked={report.success}
-                                  onChange={handleSuccess}/>
-                    </div>
-                    {!task.isClosed() && (
-                        <>
-                            {/*<div className='ui-form-row'>*/}
-                            {/*    <Checkbox label='Закрыть вчерашней датой' checked={report.closePrevDay}*/}
-                            {/*              onChange={handleClosePrevDay}/>*/}
-                            {/*</div>*/}
-                            <div className='ui-form-row'>
-                                <Text>{updateTimeLabel(report.taskTime)}</Text>
-                                <Range full min={1} max={12} value={+report.taskTime} onChange={handleSpentTime}/>
-                            </div>
-                        </>
-                    )}
+                <Container >
 
-                    <div className='next-task-container'>
+                    <Block className='report-content'>
+                        <div className='ui-form-row'>
+                            <Text>{task.isClosed() ? 'Задача закрыта' : 'Желаемый результат: ' + task.description}</Text>
+                        </div>
+                        <div className='ui-form-row'>
+                            <Text>Результат:</Text>
+                            <TextArea
+                                className='report-text'
+                                cols={40}
+                                rows={6}
+                                value={report.report}
+                                placeholder={'Отчет по задаче'}
+                                onChange={handleReportChange}
+                            />
+                        </div>
+                        <div className='ui-form-row'>
+                            <Checkbox label='цель достигнута' checked={report.success}
+                                      onChange={handleSuccess}/>
+                        </div>
+                        {!task.isClosed() && (
+                            <>
+                                {/*<div className='ui-form-row'>*/}
+                                {/*    <Checkbox label='Закрыть вчерашней датой' checked={report.closePrevDay}*/}
+                                {/*              onChange={handleClosePrevDay}/>*/}
+                                {/*</div>*/}
+                                <div className='ui-form-row'>
+                                    <Text>{updateTimeLabel(report.taskTime)}</Text>
+                                    <Range full min={1} max={12} value={+report.taskTime} onChange={handleSpentTime}/>
+                                </div>
+                            </>
+                        )}
+                    </Block>
+
+
+                    <Block className='next-task-container'>
                         <div className='ui-form-row'>
                             <Text>Запланировать далее:</Text>
                             <Select full options={selectTaskTypes} onChange={nextDeal}/>
@@ -251,8 +255,9 @@ export function TaskEditePage() {
                             <>
                                 <div className='ui-form-row'>
                                     <Text>Срок:</Text>
-                                    <DateSelect value={(nextTask.deadline || currentDay)?.toISOString().split('T')[0]}
-                                                onChange={handleSelectDate}/>
+                                    <DateSelect
+                                        value={(nextTask.deadline || currentDay)?.toISOString().split('T')[0]}
+                                        onChange={handleSelectDate}/>
                                 </div>
 
                                 <div className='ui-form-row'>
@@ -260,7 +265,8 @@ export function TaskEditePage() {
                                               onChange={handleImportant}/>
                                 </div>
                                 <div className='ui-form-row'>
-                                    <Checkbox label='Срочная задача' checked={nextTask.urgent} onChange={handleUrgent}/>
+                                    <Checkbox label='Срочная задача' checked={nextTask.urgent}
+                                              onChange={handleUrgent}/>
                                 </div>
                                 <div className='ui-form-row'>
                                     <Text>Сотрудник</Text>
@@ -284,7 +290,7 @@ export function TaskEditePage() {
                                 </div>
                             </>
                         )}
-                    </div>
+                    </Block>
 
                 </Container>
             </div>

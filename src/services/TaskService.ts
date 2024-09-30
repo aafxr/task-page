@@ -37,17 +37,17 @@ export class TaskService {
 
                 let periodType = 2
 
-                d.setHours(0,0,0,0)
-                if(dateEnd.valueOf() < d.valueOf()) periodType = 1
+                d.setHours(0, 0, 0, 0)
+                if (dateEnd.valueOf() < d.valueOf()) periodType = 1
 
-                d.setHours(23,59,59,999)
-                if(dateStart.valueOf() > d.valueOf()) periodType = 3
+                d.setHours(23, 59, 59, 999)
+                if (dateStart.valueOf() > d.valueOf()) periodType = 3
 
                 let request: any = {}
 
                 let tasks: Task[] = []
 
-                if(periodType === 1){
+                if (periodType === 1) {
                     // прошедшие задачи
                     request = {
                         filter: {
@@ -63,13 +63,13 @@ export class TaskService {
 
                     tasks = await TaskService._loadTasks(request)
 
-                } else if(periodType === 2){
+                } else if (periodType === 2) {
                     // задачи на сегодня
                     request = {
                         filter: {
                             "<DEADLINE": dateEnd.toISOString(),
                             '<REAL_STATUS': Task.STATE_COMPLETED,
-                            RESPONSIBLE_ID:user_id,
+                            RESPONSIBLE_ID: user_id,
                         },
                         order: {
                             DEADLINE: 'DESC',
@@ -84,7 +84,7 @@ export class TaskService {
                         filter: {
                             "DEADLINE": '',
                             '<REAL_STATUS': Task.STATE_COMPLETED,
-                            RESPONSIBLE_ID:user_id,
+                            RESPONSIBLE_ID: user_id,
                         },
                         order: {
                             DEADLINE: 'DESC',
@@ -108,7 +108,7 @@ export class TaskService {
 
                     tasks = [...tasks, ...await TaskService._loadTasks(request)]
 
-                } else{
+                } else {
                     //задачи на завтра
                     request = {
                         filter: {
@@ -125,7 +125,6 @@ export class TaskService {
                     }
                     tasks = await TaskService._loadTasks(request)
                 }
-
 
 
                 // сортировка задач без дедлайн ------------------------------
@@ -148,10 +147,10 @@ export class TaskService {
         })()
     }
 
-    static async _loadTasks(request: any = {}){
+    static async _loadTasks(request: any = {}) {
         // загрузка всех задач
         let next = 0
-        let res:  IBXSuccessResponse<{tasks: Task[] }>
+        let res: IBXSuccessResponse<{ tasks: Task[] }>
         let tasks: Task[] = []
 
         do {
@@ -159,7 +158,7 @@ export class TaskService {
             res = await fetchTasks(request)
             next = res.next
             tasks = tasks.concat(res.result.tasks.map(t => new Task(t)))
-        }while(next < res.total)
+        } while (next < res.total)
         return tasks
     }
 
@@ -198,14 +197,14 @@ export class TaskService {
      */
     static async add(ctx: AppContextState, task: Task) {
         try {
-            const partTask = Object.entries(task).reduce((a, [k,v]) => {
-                if(v) a[k] = v
+            const partTask = Object.entries(task).reduce((a, [k, v]) => {
+                if (v) a[k] = v
                 return a
             }, {} as Record<string, any>)
 
             const bxTask = Task.transformToBitrixFields(partTask)
             console.log('add task fields: ', bxTask)
-            const res = await fetchRestAPI<{task:Task}>('tasks.task.add', {fields: bxTask})
+            const res = await fetchRestAPI<{ task: Task }>('tasks.task.add', {fields: bxTask})
             return res.result.task.id
         } catch (e) {
             ErrorService.handleError(ctx)(e as Error)
@@ -222,24 +221,24 @@ export class TaskService {
     static async update(ctx: AppContextState, task: Task, nextTask?: Task) {
         try {
             const originTask = ctx.tasks.find(t => t.id === task.id)
-            if(!originTask) return false
+            if (!originTask) return false
 
-            if(nextTask){
+            if (nextTask) {
                 task.ufNextTask = await TaskService.add(ctx, nextTask)
             }
             let partTaskFields: any = {}
 
-            for(const k in task){
+            for (const k in task) {
                 //@ts-ignore
-                if(task[k] !== originTask[k]) partTaskFields[k] = task[k]
+                if (task[k] !== originTask[k]) partTaskFields[k] = task[k]
             }
 
             const fields = Task.transformToBitrixFields(partTaskFields)
             console.log("update fields: ", fields)
 
             console.log('update method result: ',
-                await fetchRestAPI('tasks.task.update', {taskId:originTask.id, fields})
-                )
+                await fetchRestAPI('tasks.task.update', {taskId: originTask.id, fields})
+            )
             return true
         } catch (e) {
             ErrorService.handleError(ctx)(e as Error)
@@ -257,7 +256,7 @@ export class TaskService {
             task.status = Task.STATE_COMPLETED
             if (!task.isClosed()) {
                 task.closedDate = new Date()
-                if(task.closePrevDay) {
+                if (task.closePrevDay) {
                     task.closedDate.setDate(task.closedDate.getDate() - 1)
                 }
             }
@@ -272,8 +271,14 @@ export class TaskService {
 
 
     static async getTaskTypes(ctx: AppContextState, task: Task): Promise<TaskType[]> {
-        const types = await fetchTaskTypes(task.responsibleId, task.id)
-        return types.map(t => new TaskType(t))
+        try {
+
+            const types = await fetchTaskTypes(task.responsibleId, task.id)
+            return types.map(t => new TaskType(t))
+        } catch (e) {
+            ErrorService.handleError(ctx)(e as Error)
+            return []
+        }
     }
 
 

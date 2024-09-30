@@ -1,6 +1,7 @@
 import {useEffect} from "react";
 import {Navigate, Route, Routes, useLocation, useNavigate} from "react-router-dom";
 
+import {setTGThemeColor} from "./utils/setTGThemeColor";
 import {PersonService} from "./services/PersonService";
 import {TaskDetails, TaskEditePage} from "./pages";
 import {useAppContext} from "./context/AppContext";
@@ -9,7 +10,6 @@ import {TaskService} from "./services";
 import {Main} from "./pages";
 
 import './css/App.css';
-import {setTGThemeColor} from "./utils/setTGThemeColor";
 
 export const BASE_URL = process.env.REACT_APP_BACKEND_URL || '/';
 

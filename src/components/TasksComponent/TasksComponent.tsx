@@ -60,7 +60,7 @@ export function TasksComponent({filter = 'all'}: TasksComponentProps) {
                         ? tasks.map(t => (
                         <TaskComponent key={t.id} task={t}/>
                     ))
-                    : 'Спичок задач пуст'}
+                    : <div className='tasks-empty'>Спичок задач пуст</div>}
                 </div>
             </Block>
         )

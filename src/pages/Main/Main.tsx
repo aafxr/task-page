@@ -6,7 +6,7 @@ import {Calendar} from "../../components/Calendar";
 import {Modal} from "../../components/Moadl";
 import {ErrorMessageComponent} from "../../components/ErrorMessageComponent";
 import {Button} from "../../components/Button";
-import {useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 
 
 
@@ -38,6 +38,21 @@ export function Main() {
     const [f, setFilter] = useState(filters[0])
 
 
+    const today = useMemo(() => {
+        const d = s.selectedDay
+        const dateStart = new Date()
+        dateStart.setHours(0,0,0,0)
+        const dateEnd = new Date()
+        dateEnd.setHours(23,59,59,999)
+        return d.valueOf() >= dateStart.valueOf() && d.valueOf() < dateEnd.valueOf()
+    }, [s.selectedDay])
+
+
+    useEffect(() => {
+        if (!today) setFilter(filters[0])
+    }, [today]);
+
+
     function handleChangeSelectedDay(d: Date) {
         s.updateAppContext(({...s, selectedDay: d, openCalendar: false}))
     }
@@ -55,11 +70,10 @@ export function Main() {
     return (
         <div className='wrapper'>
             <div className='wrapper-header'>
-                <Container style={{paddingBottom: 'var(--padding)'}}>
                     <div className='mainPage-header'>
-                        <Button onClick={handleToggleCalendar}>{dateFormatter.format(s.selectedDay)}</Button>
                         <div className='mainPage-filter'>
-                            {filters.map(e =>
+                            <Button onClick={handleToggleCalendar}>{dateFormatter.format(s.selectedDay)}</Button>
+                            {today && filters.map(e =>
                                 <Button
                                     key={e.filter}
                                     className={e=== f ? 'active-btn' : ''}
@@ -68,6 +82,7 @@ export function Main() {
                             )}
                         </div>
                     </div>
+                <Container style={{paddingBottom: 'var(--padding)'}}>
                     {!!s.error && (
                         <ErrorMessageComponent onClose={handleResetError}>
                             {s.error}

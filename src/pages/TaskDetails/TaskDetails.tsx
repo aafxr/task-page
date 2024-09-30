@@ -143,7 +143,7 @@ export function TaskDetails() {
         <div className='taskDetails wrapper'>
             <div className='wrapper-header'>
                 <Title>
-                    <h2 className="client-title">О задаче</h2>
+                    <h2 className="client-title">Задача {task ?`#${task.id}`: ''}</h2>
                 </Title>
             </div>
             <div className='wrapper-content'>
@@ -168,7 +168,7 @@ export function TaskDetails() {
                                     className="client-field-val">{task.createdDate ? dateFormatter.format(task.createdDate) : UNSET}</div>
                             </div>
                             <div className="client-field">
-                                <div className="client-field-descr">Дата создания</div>
+                                <div className="client-field-descr">Дата обновления</div>
                                 <div
                                     className="client-field-val">{task.changedDate ? dateFormatter.format(task.changedDate) : UNSET}</div>
                             </div>

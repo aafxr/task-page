@@ -6,7 +6,7 @@ $user = new CAllUser;
 if (!$user->IsAuthorized()) {
     $returnUrl = '/pub/test/';
     header("Location: /auth/?backurl=$returnUrl");
-    exit; //  Прекратить выполнение скрипта
+    exit;
 }
 
 echo file_get_contents("index.html");
