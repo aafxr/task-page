@@ -17,11 +17,11 @@
 }
 
 .task-urgent{
-    background: linear-gradient(90deg, var(--task-report-color), var(--task-bg-color) 5%, var(--task-bg-color));
+    background: linear-gradient(90deg, var(--confirm-color), var(--task-bg-color) 5%, var(--task-bg-color));
 }
 
 .task-highPriority{
-    background: linear-gradient(90deg, var(--confirm-color), var(--task-bg-color) 5%, var(--task-bg-color));
+    background: linear-gradient(90deg, var(--task-report-color), var(--task-bg-color) 5%, var(--task-bg-color));
 }
 
 .task-date-container {
