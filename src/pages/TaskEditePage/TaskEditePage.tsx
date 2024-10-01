@@ -60,7 +60,7 @@ export function TaskEditePage() {
 
     const currentDay = useMemo(() => {
         const d = new Date(s.selectedDay)
-        d.setHours(23, 59, 59, 999)
+        d.setHours(23, 59, 30, 0)
         return d
     }, [s.selectedDay])
 

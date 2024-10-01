@@ -160,7 +160,7 @@ export function TaskDetails() {
                                     <Accordion title={'Контакты'}>
                                         <div className='client-contacts'>
                                             {contacts.map(c => (
-                                                <ContactPreview key={c.ID} contact={c}/>
+                                                <ContactPreview key={c.ID} to={`${BASE_URL}task/${task.id}/${c.ID}`} contact={c}/>
                                             ))}
                                         </div>
                                     </Accordion>

@@ -1,0 +1,4 @@
+.newTask{
+    margin-top: var(--margin);
+    padding: var(--padding);
+}

@@ -128,7 +128,6 @@
     position: relative;
     justify-content: stretch;
     align-items: stretch;
-    overflow: hidden;
     height: 150px;
     padding: var(--padding);
     background-color: var(--bg-main);
