@@ -33,6 +33,7 @@ function App() {
         Telegram.WebApp.disableVerticalSwipes()
         Telegram.WebApp.expand()
         Telegram.WebApp.BackButton.onClick(() => navigate(-1))
+        Telegram.WebApp.onEvent('themeChanged', setTGThemeColor)
         setTGThemeColor()
     }, []);
 

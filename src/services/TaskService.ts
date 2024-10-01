@@ -65,7 +65,21 @@ export class TaskService {
 
                 } else if (periodType === 2) {
                     // задачи на сегодня
-                    request = {
+
+                    let requestDeadlineNotSet = {
+                        filter: {
+                            "DEADLINE": '',
+                            '<REAL_STATUS': Task.STATE_COMPLETED,
+                            RESPONSIBLE_ID: user_id,
+                        },
+                        order: {
+                            DEADLINE: 'DESC',
+                            CREATED_DATE: 'DESC'
+                        },
+                        select: ['*', 'UF_*']
+                    }
+
+                    let requestDeadline = {
                         filter: {
                             "<DEADLINE": dateEnd.toISOString(),
                             '<REAL_STATUS': Task.STATE_COMPLETED,
@@ -78,23 +92,9 @@ export class TaskService {
                         select: ['*', 'UF_*']
                     }
 
-                    tasks = await TaskService._loadTasks(request)
 
-                    request = {
-                        filter: {
-                            "DEADLINE": '',
-                            '<REAL_STATUS': Task.STATE_COMPLETED,
-                            RESPONSIBLE_ID: user_id,
-                        },
-                        order: {
-                            DEADLINE: 'DESC',
-                            CREATED_DATE: 'DESC'
-                        },
-                        select: ['*', 'UF_*']
-                    }
-                    tasks = [...tasks, ...await TaskService._loadTasks(request)]
 
-                    request = {
+                    let requestClosed = {
                         filter: {
                             '<CLOSED_DATE': dateEnd.toISOString(),
                             '>=CLOSED_DATE': dateStart.toISOString(),
@@ -106,8 +106,25 @@ export class TaskService {
                         select: ['*', 'UF_*']
                     }
 
-                    tasks = [...tasks, ...await TaskService._loadTasks(request)]
 
+                    await Promise.all([
+                        // TaskService._loadTasks(requestDeadlineNotSet)
+                        //     .then(t => ctx.updateAppContext(s => {
+                        //         if(!s.tasks.length) return {...s, tasks: t, tasksLoading: false}
+                        //         if(s.tasks[0].deadline){
+                        //             let i = 0
+                        //             while(s.tasks[i].deadline) i++
+                        //             return {...s, tasksLoading: false, tasks: [...s.tasks.slice(0,i), ...t, ...s.tasks.slice(i+1)]}
+                        //         }
+                        //         return {...s, tasksLoading: false, tasks: [ ...t, ...s.tasks]}
+                        //     })),
+                        TaskService._loadTasks(requestDeadline)
+                            .then(t => ctx.updateAppContext(s => ({...s, tasks: [...t, ...s.tasks], tasksLoading: false}))),
+                        TaskService._loadTasks(requestClosed)
+                            .then(t =>  ctx.updateAppContext(s => ({...s, tasks: [ ...s.tasks, ...t], tasksLoading: false})))
+                    ])
+
+                    return
                 } else {
                     //задачи на завтра
                     request = {

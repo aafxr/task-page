@@ -19,17 +19,18 @@
     position: absolute;
     right: calc(var(--ui-height) / 4);
     top: 50%;
-    width: calc(var(--ui-height) / 4);
-    height: calc(var(--ui-height) / 4);
-    border-left: 1px solid var(--ui-border-color);
-    border-bottom: 1px solid var(--ui-border-color);
-    transform: translate(-50%, -50%) rotate(315deg);
+    width: 0;
+    height: 0;
+    border-left: calc(var(--ui-height) / 8) solid var(--ui-border-color);
+    border-bottom: calc(var(--ui-height) / 8) solid var(--ui-border-color);
+    border-top: calc(var(--ui-height) / 8) solid transparent;
+    border-right: calc(var(--ui-height) / 8) solid transparent;
+    transform: translate(0, -50%) rotate(-45deg);
     transition: transform .3s;
-
 }
 
 .accordion.open .accordion-title::after{
-    transform: translate(-50%, -50%) rotate(135deg);
+    transform: translate(0, -50%) rotate(135deg);
 }
 
 .accordion-content{

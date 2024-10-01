@@ -28,7 +28,7 @@ export function ContactPreview({contact, className, to}: ContactPreviewProps) {
         <Block className={clsx('contact', className)} onClick={handleClick}>
             <div className='contact-name'>{`${contact.LAST_NAME} ${contact.NAME}`}</div>
             {contact.PHONE.length > 0 && contact.PHONE.map(p => (
-                <a className='contact-phone' href={`tel:${p.VALUE}`}>{p.VALUE}</a>
+                <a className='contact-phone' href={`tel:${p.VALUE}`} onClick={e => e.stopPropagation()}>{p.VALUE}</a>
             ))}
         </Block>
     );

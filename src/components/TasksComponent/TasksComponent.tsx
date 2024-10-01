@@ -3,7 +3,7 @@ import {TaskComponent, TaskPlaceholder} from "../TaskComponent";
 import {useAppContext} from "../../context/AppContext";
 import {Block} from "../Block";
 
-export type TaskFilter = 'all' | 'deadline' | 'expired' | 'closed'
+export type TaskFilter = 'all' | 'deadline' | 'expired' | 'closed' | 'no-closed'
 
 type TasksComponentProps = {
     filter?: TaskFilter
@@ -23,7 +23,9 @@ export function TasksComponent({filter = 'all'}: TasksComponentProps) {
                 return s.tasks.slice(i1, i2)
             }
             return []
-        } else if(filter === 'deadline'){
+        } else if(filter === 'no-closed'){
+
+        }else if(filter === 'deadline'){
             const i1 = s.tasks.findIndex(t => !!t.deadline)
             if(i1 !== -1){
                 let i2 = i1
