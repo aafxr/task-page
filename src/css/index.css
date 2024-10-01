@@ -271,7 +271,7 @@ body, html {
 
 /*------------- task property -----*/
 .taskDetails{
-    background-color: var(--bg-main);
+    /*background-color: var(--bg-main);*/
 }
 
 .taskDetails-property-accent{
@@ -285,12 +285,8 @@ body, html {
     padding: 0 var(--padding) 0;
 }
 
-.mainPage-header{
-    padding: var(--padding) 0;
-}
-
 .mainPage-filter{
-    padding: 0 var(--padding);
+    padding:  var(--padding);
     max-width: 100%;
     display: inline-flex;
     flex-wrap: nowrap;

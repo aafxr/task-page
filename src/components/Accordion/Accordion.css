@@ -1,0 +1,39 @@
+.accordion{
+    background-color: var(--bg-main);
+    border: 1px solid var(--ui-border-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.accordion-title{
+    height: var(--ui-height);
+    padding: var(--padding) var(--ui-height) var(--padding) var(--padding);
+    position: relative;
+    line-height: calc(var(--ui-height) - var(--padding) * 2);
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.accordion-title::after{
+    content: '';
+    position: absolute;
+    right: calc(var(--ui-height) / 4);
+    top: 50%;
+    width: calc(var(--ui-height) / 4);
+    height: calc(var(--ui-height) / 4);
+    border-left: 1px solid var(--ui-border-color);
+    border-bottom: 1px solid var(--ui-border-color);
+    transform: translate(-50%, -50%) rotate(315deg);
+    transition: transform .3s;
+
+}
+
+.accordion.open .accordion-title::after{
+    transform: translate(-50%, -50%) rotate(135deg);
+}
+
+.accordion-content{
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .3s;
+}

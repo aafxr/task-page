@@ -70,7 +70,6 @@ export function Main() {
     return (
         <div className='wrapper'>
             <div className='wrapper-header'>
-                    <div className='mainPage-header'>
                         <div className='mainPage-filter'>
                             <Button onClick={handleToggleCalendar}>{dateFormatter.format(s.selectedDay)}</Button>
                             {today && filters.map(e =>
@@ -81,7 +80,6 @@ export function Main() {
                                 >{e.title}</Button>
                             )}
                         </div>
-                    </div>
                 <Container style={{paddingBottom: 'var(--padding)'}}>
                     {!!s.error && (
                         <ErrorMessageComponent onClose={handleResetError}>

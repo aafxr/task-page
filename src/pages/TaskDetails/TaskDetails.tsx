@@ -15,6 +15,9 @@ import {BXContact} from "../../classes/BXContact";
 import './TaskDetails.css'
 import {ContactService} from "../../services/ContactService";
 import {AppLink} from "../../components/AppLink";
+import {Accordion} from "../../components/Accordion";
+import {Block} from "../../components/Block";
+import {ContactPreview} from "../../components/ContactPreview";
 
 
 const dateFormatter = new Intl.DateTimeFormat(navigator.language, {
@@ -101,13 +104,40 @@ const UNSET = 'Не установлено'
 //     }
 // ]
 
+const bxContactsDev: BXContact[] = [
+    new BXContact({
+        ID: '1',
+        NAME: 'ivan',
+        LAST_NAME: 'Ivanov',
+        PHONE:[
+            {
+                ID: '1',
+                TYPE_ID:'',
+                VALUE:'+78452121658',
+                VALUE_TYPE:''
+            },
+            {
+                ID: '2',
+                TYPE_ID:'',
+                VALUE:'+74885521658',
+                VALUE_TYPE:''
+            }
+        ]
+    }),
+    new BXContact({
+        ID: '2',
+        NAME: 'Petr',
+        LAST_NAME: 'Petrov',
+    })
+]
+
 
 export function TaskDetails() {
     const navigate = useNavigate()
     const {taskID} = useParams()
     const task = useTask(taskID)
     const s = useAppContext()
-    const [contacts, setContacts] = useState<BXContact[]>([])
+    const [contacts, setContacts] = useState<BXContact[]>(bxContactsDev)
 
 
     // const data = useMemo(() => {
@@ -120,7 +150,7 @@ export function TaskDetails() {
 
 
     useEffect(() => {
-        if(!task) return
+        if (!task) return
         ContactService.getContacts(s, task)
             .then(setContacts)
             .catch(console.error)
@@ -144,55 +174,62 @@ export function TaskDetails() {
         <div className='taskDetails wrapper'>
             <div className='wrapper-header'>
                 <Title>
-                    <h2 className="client-title">Задача {task ?`#${task.id}`: ''}</h2>
+                    <h2 className="client-title">Задача {task ? `#${task.id}` : ''}</h2>
                 </Title>
             </div>
             <div className='wrapper-content'>
-                {!!task && (
-                    <>
-                        <div className="client client-container">
-                            <div className="client-field">
-                                <div className="client-field-descr">Контакты</div>
-                                <div className="client-field-val">{
-                                    contacts.map(c => (
-                                        <AppLink key={c.ID} to={`${BASE_URL}${task.id}/${c.ID}`}>{`${c.NAME || ''} ${c.LAST_NAME || ''}`}</AppLink>
-                                    ))
-                                }</div>
-                            </div>
-                            <div className="client-field">
-                                <div className="client-field-descr">Название</div>
-                                <div className="client-field-val">{task.title || UNSET}</div>
-                            </div>
-                            <div className="client-field">
-                                <div className="client-field-descr">Ответственный</div>
-                                <div className="client-field-val">{task.responsible?.name || UNSET}</div>
-                            </div>
-                            <div className="client-field">
-                                <div className="client-field-descr">Отчет руководителю</div>
-                                <div className="client-field-val">{task.report || UNSET}</div>
-                            </div>
-                            <div className="client-field">
-                                <div className="client-field-descr">Дата создания</div>
-                                <div
-                                    className="client-field-val">{task.createdDate ? dateFormatter.format(task.createdDate) : UNSET}</div>
-                            </div>
-                            <div className="client-field">
-                                <div className="client-field-descr">Дата обновления</div>
-                                <div
-                                    className="client-field-val">{task.changedDate ? dateFormatter.format(task.changedDate) : UNSET}</div>
-                            </div>
+                <Container>
+                    {!!task && (
+                        <>
+                            <div className="client client-container">
+                                {contacts.length > 0 && (
+                                    <Accordion title={'Контакты'}>
+                                        <div className='client-contacts'>
+                                            {contacts.map(c => (
+                                                <ContactPreview key={c.ID} contact={c}/>
+                                            ))}
+                                        </div>
+                                    </Accordion>
+                                )}
 
-                            {task.deadline && (
-                                <div className="client-field">
-                                    <div className="client-field-descr">Крайний срок</div>
-                                    <div className="client-field-val">
-                                        <strong>{dateFormatter.format(task.changedDate!)}</strong></div>
-                                </div>
-                            )}
+                                <Block className='client-info'>
 
-                        </div>
-                    </>
-                )}
+                                    <div className="client-field">
+                                        <div className="client-field-descr">Название</div>
+                                        <div className="client-field-val">{task.title || UNSET}</div>
+                                    </div>
+                                    <div className="client-field">
+                                        <div className="client-field-descr">Ответственный</div>
+                                        <div className="client-field-val">{task.responsible?.name || UNSET}</div>
+                                    </div>
+                                    <div className="client-field">
+                                        <div className="client-field-descr">Отчет руководителю</div>
+                                        <div className="client-field-val">{task.report || UNSET}</div>
+                                    </div>
+                                    <div className="client-field">
+                                        <div className="client-field-descr">Дата создания</div>
+                                        <div
+                                            className="client-field-val">{task.createdDate ? dateFormatter.format(task.createdDate) : UNSET}</div>
+                                    </div>
+                                    <div className="client-field">
+                                        <div className="client-field-descr">Дата обновления</div>
+                                        <div
+                                            className="client-field-val">{task.changedDate ? dateFormatter.format(task.changedDate) : UNSET}</div>
+                                    </div>
+                                    {task.deadline && (
+                                        <div className="client-field">
+                                            <div className="client-field-descr">Крайний срок</div>
+                                            <div className="client-field-val">
+                                                <strong>{dateFormatter.format(task.changedDate!)}</strong></div>
+                                        </div>
+                                    )}
+                                </Block>
+
+
+                            </div>
+                        </>
+                    )}
+                </Container>
 
 
                 {/*<Container>*/}

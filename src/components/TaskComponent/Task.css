@@ -50,12 +50,12 @@
 }
 
 .task-expired{
-    padding: 2px 8px;
+    padding: 3px 8px 2px;
     align-self: flex-start;
     font-size: 0.55rem;
     letter-spacing: 0.95px;
     font-weight: 600;
-    color: #800602;
+    color: var(--text-error-color);
     background-color: var(--ui-bg-error);
     border-radius: var(--ui-height);
     text-overflow: ellipsis;

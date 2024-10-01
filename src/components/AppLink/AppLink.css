@@ -1,5 +1,6 @@
 .appLink{
     color: var(--text-accent-color);
+    font-size: 0.8rem;
     cursor: pointer;
 }
 

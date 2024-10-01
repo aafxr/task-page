@@ -1,18 +1,17 @@
-import React, {PropsWithChildren} from 'react';
+import React, {HTMLAttributes} from 'react';
 import clsx from "clsx";
 
 import './Block.css'
 
 
-interface BlockProps extends PropsWithChildren{
-    className?: string
+interface BlockProps extends HTMLAttributes<HTMLDivElement>{
 }
 
 
 
-export function Block({className, children} : BlockProps) {
+export function Block({className, children, ...rest} : BlockProps) {
     return (
-        <div className={clsx('block', className)}>{children}</div>
+        <div {...rest} className={clsx('block', className)}>{children}</div>
     );
 }
 

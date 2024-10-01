@@ -1,0 +1,25 @@
+.contact {
+    padding: var(--padding);
+    display: inline-flex;
+    gap: 5px;
+    flex-direction: column;
+    margin-left: var(--margin);
+    margin-top: var(--margin);
+    font-size: 0.8rem;
+}
+
+.contact:first-child {
+    margin-left: 0;
+}
+
+.contact-name{
+    color: var(--text-accent-color);
+    font-weight: 500;
+}
+
+.contact-phone{
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-error-color);
+    text-decoration: none;
+}

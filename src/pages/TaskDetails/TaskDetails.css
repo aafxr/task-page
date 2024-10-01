@@ -4,9 +4,8 @@
 }
 
 .client-container{
-    padding: 10px;
+    margin-top: var(--margin);
     border-radius: var(--ui-radius);
-    background-color: var(--bg-main);
 }
 
 .client-title{
@@ -24,5 +23,18 @@
 
 .client-field-val{
     font-size: 0.8rem;
+}
 
+.client-contacts{
+    padding: var(--padding);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--offset);
+
+}
+
+.client-info{
+    margin-top: var(--margin);
+    padding: var(--padding);
+    background-color: var(--bg-main);
 }
