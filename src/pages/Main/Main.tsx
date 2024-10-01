@@ -7,6 +7,11 @@ import {Modal} from "../../components/Moadl";
 import {ErrorMessageComponent} from "../../components/ErrorMessageComponent";
 import {Button} from "../../components/Button";
 import {useEffect, useMemo, useState} from "react";
+import {Block} from "../../components/Block";
+import {PlusIcon} from "../../components/svg";
+import {Text} from "../../components/Text";
+import {useNavigate} from "react-router-dom";
+import {BASE_URL} from "../../App";
 
 
 
@@ -34,6 +39,7 @@ const filters : FilterType[] = [
 
 
 export function Main() {
+    const navigate = useNavigate()
     const s = useAppContext()
     const [f, setFilter] = useState(filters[0])
 
@@ -62,8 +68,14 @@ export function Main() {
         s.updateAppContext(({...s, openCalendar: !s.openCalendar}))
     }
 
+
     function handleResetError(){
         s.updateAppContext(p => ({...p, error: null}))
+    }
+
+
+    function handleAddTask(){
+        navigate(`${BASE_URL}task/new`)
     }
 
 
@@ -97,6 +109,10 @@ export function Main() {
             </div>
             <div className='wrapper-content'>
                 <Container >
+                    <Block className='addTask' onClick={handleAddTask}>
+                        <PlusIcon className='icon' />
+                        <Text>добавить задачу</Text>
+                    </Block>
                     <TasksComponent filter={f.filter}/>
                 </Container>
             </div>

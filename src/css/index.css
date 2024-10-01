@@ -357,3 +357,31 @@ body, html {
     /*border-radius: var(--border-radius);*/
     /*margin-bottom: var(--margin);*/
 }
+
+.icon{
+    width: calc(var(--ui-height) / 3);
+    height: calc(var(--ui-height) / 3);
+}
+
+.addTask{
+    padding: var(--padding);
+    margin-bottom: var(--margin);
+    display: flex;
+    align-items: center;
+    gap: var(--offset);
+}
+
+.pd{
+    padding: var(--padding);
+}
+
+.mg{
+    margin: var(--margin);
+}
+
+.mt{
+    margin-top: var(--margin);
+}
+.mb{
+    margin-bottom: var(--margin);
+}

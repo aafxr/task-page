@@ -43,16 +43,16 @@ export function NewTask() {
 
 
     function handleTitleChange(e: ChangeEvent<HTMLTextAreaElement>) {
-        const nextReport = new Task(task)
-        nextReport.title = e.target.value
-        setTask(nextReport)
+        const nextState = new Task(task)
+        nextState.title = e.target.value
+        setTask(nextState)
     }
 
 
     function handleReportChange(e: ChangeEvent<HTMLTextAreaElement>) {
-        const nextReport = new Task(task)
-        nextReport.description = e.target.value
-        setTask(nextReport)
+        const nextState = new Task(task)
+        nextState.description = e.target.value
+        setTask(nextState)
     }
 
 
@@ -125,7 +125,7 @@ export function NewTask() {
                                 className='report-text'
                                 cols={40}
                                 rows={3}
-                                value={task.report}
+                                value={task.title}
                                 placeholder={'Название задачи'}
                                 onChange={handleTitleChange}
                             />
@@ -136,7 +136,7 @@ export function NewTask() {
                                 className='report-text'
                                 cols={40}
                                 rows={6}
-                                value={task.report}
+                                value={task.description}
                                 placeholder={'Цель задачи'}
                                 onChange={handleReportChange}
                             />
