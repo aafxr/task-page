@@ -17,18 +17,12 @@
 }
 
 .task-urgent{
-    background: linear-gradient(65deg, var(--task-report-color), var(--task-bg-color) 25%, var(--task-bg-color));
+    background: linear-gradient(90deg, var(--task-report-color), var(--task-bg-color) 5%, var(--task-bg-color));
 }
 
 .task-highPriority{
-    background: linear-gradient(65deg, var(--confirm-color), var(--task-bg-color) 25%, var(--task-bg-color));
+    background: linear-gradient(90deg, var(--confirm-color), var(--task-bg-color) 5%, var(--task-bg-color));
 }
-
-
-
-/*.task-container.closed {*/
-/*    filter: brightness(0.96);*/
-/*}*/
 
 .task-date-container {
     flex: none;
@@ -61,6 +55,11 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+}
+
+.task-expired-today{
+    color: #fff;
+    background: #FFA900;
 }
 
 .task-content {

@@ -104,32 +104,6 @@ const UNSET = 'Не установлено'
 //     }
 // ]
 
-const bxContactsDev: BXContact[] = [
-    new BXContact({
-        ID: '1',
-        NAME: 'ivan',
-        LAST_NAME: 'Ivanov',
-        PHONE:[
-            {
-                ID: '1',
-                TYPE_ID:'',
-                VALUE:'+78452121658',
-                VALUE_TYPE:''
-            },
-            {
-                ID: '2',
-                TYPE_ID:'',
-                VALUE:'+74885521658',
-                VALUE_TYPE:''
-            }
-        ]
-    }),
-    new BXContact({
-        ID: '2',
-        NAME: 'Petr',
-        LAST_NAME: 'Petrov',
-    })
-]
 
 
 export function TaskDetails() {
@@ -137,7 +111,7 @@ export function TaskDetails() {
     const {taskID} = useParams()
     const task = useTask(taskID)
     const s = useAppContext()
-    const [contacts, setContacts] = useState<BXContact[]>(bxContactsDev)
+    const [contacts, setContacts] = useState<BXContact[]>([])
 
 
     // const data = useMemo(() => {

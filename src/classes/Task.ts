@@ -107,7 +107,7 @@ export class Task {
     stageId: string = ''
     createdBy: string = ''
     createdDate: Date | null = null
-    responsibleId: string = ''
+    responsibleId: string = '-1'
     changedBy: string = ''
     changedDate: Date | null = null
     statusChangedBy: string = ''

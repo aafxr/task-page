@@ -65,7 +65,7 @@ export function TaskEditePage() {
     }, [s.selectedDay])
 
     const selectPersonData = useMemo(() => {
-        return Array.from(s.persons.values()).map(p => ({value: p.ID, label: `${p.LAST_NAME} ${p.NAME}`}))
+        return [{value: '-1', label: '-'}].concat(Array.from(s.persons.values()).map(p => ({value: p.ID, label: `${p.LAST_NAME} ${p.NAME}`})))
     }, [s.persons])
 
 
@@ -102,6 +102,11 @@ export function TaskEditePage() {
             alert('Добавьте отчет и следующую задачу')
             return
         }
+        if(nextTask && nextTask.responsibleId === '-1'){
+            alert('Укажите ответственного для следующей заддачи')
+            return
+        }
+
         TaskService.closeAndUpdate(s, report, nextTask)
             .then(r => console.log('closeAndUpdate finish with result: ', r))
             .then(() => navigate(BASE_URL))
