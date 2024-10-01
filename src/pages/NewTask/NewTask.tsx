@@ -108,6 +108,7 @@ export function NewTask() {
 
         TaskService.add(s, task)
             .then(() => navigate('/'))
+            .then(() => TaskService.getTasks(s))
     }
 
 

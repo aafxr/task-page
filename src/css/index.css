@@ -361,6 +361,7 @@ body, html {
 .icon{
     width: calc(var(--ui-height) / 3);
     height: calc(var(--ui-height) / 3);
+    color: var(--text-color);
 }
 
 .addTask{

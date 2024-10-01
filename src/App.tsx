@@ -6,11 +6,11 @@ import {PersonService} from "./services/PersonService";
 import {TaskDetails, TaskEditePage} from "./pages";
 import {useAppContext} from "./context/AppContext";
 import {ContactPage} from "./pages/ContactPage";
+import {NewTask} from "./pages/NewTask";
 import {TaskService} from "./services";
 import {Main} from "./pages";
 
 import './css/App.css';
-import {NewTask} from "./pages/NewTask/NewTask";
 
 export const BASE_URL = process.env.REACT_APP_BACKEND_URL || '/';
 
