@@ -264,8 +264,12 @@ export class Task {
         return !!this.deadline && this.deadline.valueOf() < new Date().valueOf()
     }
 
-    hasContact() {
-        return this['ufCrmTask'] && !!this['ufCrmTask'].length
+    hasCompanies() {
+        return this['ufCrmTask'] && !!this['ufCrmTask'].length && this['ufCrmTask'].some(id => id.startsWith('CO'))
+    }
+
+    hasContacts(){
+        return this.ufCrmTaskContact && !!this.ufCrmTaskContact.length
     }
 
     getContact() {
@@ -288,10 +292,15 @@ export class Task {
         }
     }
 
-    getContactsId() {
+    getCompaniesId() {
         return this['ufCrmTask']?.map(c => c.split('_'))
             .filter(([p, id]) => p === 'CO')
             .map(([_, id]) => id)|| []
+    }
+
+
+    getContactsId(){
+        return [...this.ufCrmTaskContact]
     }
 
 

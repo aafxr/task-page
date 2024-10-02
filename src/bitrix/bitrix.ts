@@ -28,22 +28,12 @@ export const bitrix = {
     callMethod(
         methodName: string,
         params: Record<string, any> = {},
-        cb: (res: any) => unknown = () => {
-        },
-        fail: (e: Error) => unknown = () => {
-        }
+        cb: (res: any) => unknown = () => {},
+        fail: (e: Error) => unknown = () => {}
     ) {
         new Promise(async (resolve, rej) => {
             if (!bxAuth.isAuthenticated()) {
-                let i = 0
-                for (; i < 3; i++){
-                    if (await bxAuth.refresh()) break
-                }
-
-                if (i >= 3) {
-                    fail(new Error(errors.UNAUTHORIZED))
-                    return
-                }
+                if (!await bxAuth.refresh()) fail(new Error(errors.UNAUTHORIZED))
             }
 
             const res = await appFetch(bitrix._callMethodURL(methodName, params)) as AxiosResponse

@@ -17,7 +17,8 @@ import {ContactService} from "../../services/ContactService";
 import {AppLink} from "../../components/AppLink";
 import {Accordion} from "../../components/Accordion";
 import {Block} from "../../components/Block";
-import {ContactPreview} from "../../components/ContactPreview";
+import {CompanyPreview} from "../../components/CompanyPreview";
+import {BXCompany} from "../../classes/BXCompany";
 
 
 const dateFormatter = new Intl.DateTimeFormat(navigator.language, {
@@ -111,7 +112,7 @@ export function TaskDetails() {
     const {taskID} = useParams()
     const task = useTask(taskID)
     const s = useAppContext()
-    const [contacts, setContacts] = useState<BXContact[]>([])
+    const [companies, setCompanies] = useState<BXCompany[]>([])
 
 
     // const data = useMemo(() => {
@@ -125,8 +126,8 @@ export function TaskDetails() {
 
     useEffect(() => {
         if (!task) return
-        ContactService.getContacts(s, task)
-            .then(setContacts)
+        ContactService.getCompanies(s, task)
+            .then(setCompanies)
             .catch(console.error)
     }, [task]);
 
@@ -156,11 +157,11 @@ export function TaskDetails() {
                     {!!task && (
                         <>
                             <div className="client client-container">
-                                {contacts.length > 0 && (
-                                    <Accordion title={'Контакты'}>
-                                        <div className='client-contacts'>
-                                            {contacts.map(c => (
-                                                <ContactPreview key={c.ID} to={`${BASE_URL}task/${task.id}/${c.ID}`} contact={c}/>
+                                {companies.length > 0 && (
+                                    <Accordion title={'Компании'}>
+                                        <div className='client-companies'>
+                                            {companies.map(c => (
+                                                <CompanyPreview key={c.ID} to={`${BASE_URL}task/${task.id}/${c.ID}`} company={c} contacts={[]}/>
                                             ))}
                                         </div>
                                     </Accordion>

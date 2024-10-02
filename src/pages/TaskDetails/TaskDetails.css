@@ -25,10 +25,16 @@
     font-size: 0.8rem;
 }
 
-.client-contacts{
+.client-phone{
+    font-size: 0.8rem;
+    color: var(--text-accent-color);
+    text-decoration: none;
+}
+
+.client-companies{
     padding: var(--padding);
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: var(--offset);
 
 }

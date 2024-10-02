@@ -5,7 +5,7 @@ import {setTGThemeColor} from "./utils/setTGThemeColor";
 import {PersonService} from "./services/PersonService";
 import {TaskDetails, TaskEditePage} from "./pages";
 import {useAppContext} from "./context/AppContext";
-import {ContactPage} from "./pages/ContactPage";
+import {CompanyPage} from "./pages/CompanyPage";
 import {NewTask} from "./pages/NewTask";
 import {TaskService} from "./services";
 import {Main} from "./pages";
@@ -29,6 +29,7 @@ function App() {
 
 
     useEffect(() => {
+        if(!('Telegram' in window)) window.location.reload()
         Telegram.WebApp.ready()
         Telegram.WebApp.disableVerticalSwipes()
         Telegram.WebApp.expand()
@@ -50,7 +51,7 @@ function App() {
             <Route path={BASE_URL} element={<Main/>}/>
             <Route path={BASE_URL + 'task/new'} element={<NewTask/>}/>
             <Route path={BASE_URL + 'task/:taskID'} element={<TaskDetails/>}/>
-            <Route path={BASE_URL + 'task/:taskID/:contactID'} element={<ContactPage/>}/>
+            <Route path={BASE_URL + 'task/:taskID/:companyID'} element={<CompanyPage/>}/>
             <Route path={BASE_URL + 'task/:taskID/edite'} element={<TaskEditePage/>}/>
             <Route path={'*'} element={<Navigate to={BASE_URL}/>}/>
         </Routes>

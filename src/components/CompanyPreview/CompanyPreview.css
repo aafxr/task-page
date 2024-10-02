@@ -1,0 +1,51 @@
+.company {
+    padding: var(--padding);
+    display: inline-flex;
+    gap: 5px;
+    flex-direction: column;
+    margin-left: var(--margin);
+    margin-top: var(--margin);
+    border: 1px solid var(--border-radius);
+    font-size: 0.8rem;
+}
+
+.company:first-child {
+    margin-left: 0;
+}
+
+.company-name{
+    color: var(--text-accent-color);
+    font-weight: 500;
+}
+
+.company-comment{
+    color: var(--text-color);
+}
+
+.company-phone{
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-error-color);
+    text-decoration: none;
+}
+
+.company-contacts{
+    padding: var(--padding);
+    display: flex;
+    flex-direction: column;
+    gap: var(--offset);
+}
+
+.company-contacts .contact:not(:last-child){
+    border-bottom: 1px solid var(--border-color);
+}
+
+.company-contacts .contact-name{
+    font-size: 0.8rem;
+}
+
+.company-contacts .contact-phone{
+    font-size: 0.8rem;
+    color: var(--text-accent-color);
+    text-decoration: none;
+}
