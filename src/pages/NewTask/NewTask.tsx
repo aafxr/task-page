@@ -59,7 +59,7 @@ export function NewTask() {
     function handleSelectDate(e: ChangeEvent<HTMLInputElement>) {
         const d = e.target.valueAsDate
         if (!d) return
-        d.setHours(23, 59, 59, 999)
+        d.setHours(23, 30, 0, 0)
         const nextState = new Task(task)
         nextState.deadline = d
         setTask(nextState)

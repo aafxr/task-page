@@ -300,7 +300,7 @@ export class Task {
 
 
     getContactsId(){
-        return [...this.ufCrmTaskContact]
+        return this.ufCrmTaskContact ? [...this.ufCrmTaskContact] : []
     }
 
 

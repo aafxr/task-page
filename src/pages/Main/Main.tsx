@@ -30,13 +30,13 @@ const filters : FilterType[] = [
         title: 'Открытые'
     },
     {
+        filter: "expired",
+        title: 'Просроченные'
+    },
+    {
         filter: "closed",
         title: 'Закрытые'
     },
-    {
-        filter: "expired",
-        title: 'Просроченные'
-    }
 ]
 
 

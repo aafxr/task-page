@@ -217,9 +217,9 @@ export function TaskDetails() {
 
             </div>
             <div className='wrapper-footer'>
-                <div className='footer-btns'>
-                    <Button full onClick={handleBackClick}>Назад</Button>
-                </div>
+                {/*<div className='footer-btns'>*/}
+                {/*    <Button full onClick={handleBackClick}>Назад</Button>*/}
+                {/*</div>*/}
             </div>
         </div>
     );

@@ -51,12 +51,16 @@ export function CompanyPage() {
                         {!!company && (
                             <>
                                 <div className="client-field">
-                                    <div className="client-field-descr">Название</div>
+                                    <div className="client-field-descr">Информация</div>
                                     <div className="client-field-val">{company.TITLE || UNSET}</div>
                                 </div>
                                 <div className="client-field">
-                                    <div className="client-field-descr">Комментарий</div>
-                                    <div className="client-field-val">{company.COMMENTS || UNSET}</div>
+                                    <div className="client-field-descr">Название компании</div>
+                                    <div className="client-field-val">{company.TITLE || UNSET}</div>
+                                </div>
+                                <div className="client-field">
+                                    <div className="client-field-descr">Тип компании</div>
+                                    <div className="client-field-val">{company.COMPANY_TYPE || UNSET}</div>
                                 </div>
                                 <div className="client-field">
                                     <div className="client-field-descr">Телефон</div>
@@ -70,8 +74,45 @@ export function CompanyPage() {
                                     }
                                 </div>
                                 <div className="client-field">
+                                    <div className="client-field-descr">E-mail</div>
+                                    <div className="client-field-val">{UNSET}</div>
+                                </div>
+                                <div className="client-field">
                                     <div className="client-field-descr">Город</div>
-                                    <div className="client-field-val">{company.UF_CRM_1712158211014 || UNSET}</div>
+                                    <div className="client-field-val">{company.UF_CITY || UNSET}</div>
+                                </div>
+                                <div className="client-field">
+                                    <div className="client-field-descr">Адрес
+                                        <span>Фактический адрес:</span></div>
+                                    <div className="client-field-val">
+                                        <span>{company.ADDRESS}</span><br/>
+                                        <span>{company.ADDRESS_CITY}</span><br/>
+                                        <span>{company.ADDRESS_COUNTRY}</span>
+                                    </div>
+                                </div>
+                                <div className="client-field">
+                                    <div className="client-field-descr">Сайт</div>
+                                    <div className="client-field-val">{ UNSET}</div>
+                                </div>
+                                <div className="client-field">
+                                    <div className="client-field-descr">Комментарий</div>
+                                    <div className="client-field-val">{company.COMMENTS || UNSET}</div>
+                                </div>
+                                <div className="client-field">
+                                    <div className="client-field-descr">Город</div>
+                                    <div className="client-field-val">{company.ADDRESS_CITY || UNSET}</div>
+                                </div>
+                                <div className="client-field">
+                                    <div className="client-field-descr">Источник привлечения</div>
+                                    <div className="client-field-val">{UNSET}</div>
+                                </div>
+                                <div className="client-field">
+                                    <div className="client-field-descr">Последняя коммуникация</div>
+                                    <div className="client-field-val">{UNSET}</div>
+                                </div>
+                                <div className="client-field">
+                                    <div className="client-field-descr">Дата создания в mawi</div>
+                                    <div className="client-field-val">{UNSET}</div>
                                 </div>
                             </>
                         )}
@@ -83,7 +124,9 @@ export function CompanyPage() {
                                 <div className='company-contacts'>
                                     {contacts.map(c => (
                                         <div className='contact'>
+                                            <div className='contact-descr'>Контакты, связанные с компанией</div>
                                             <div className='contact-name'>{`${c.LAST_NAME} ${c.NAME}`}</div>
+                                            {c.POST && <div className='contact-value'>{c.POST}</div>}
                                             {c.PHONE.map(p => <a key={c.ID} className='contact-phone'
                                                                  href={`tel:${p.VALUE}`}>{p.VALUE}</a>)}
                                         </div>
