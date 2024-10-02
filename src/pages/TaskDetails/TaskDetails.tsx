@@ -173,6 +173,10 @@ export function TaskDetails() {
                                         <div className="client-field-val">{task.title || UNSET}</div>
                                     </div>
                                     <div className="client-field">
+                                        <div className="client-field-descr">Статус</div>
+                                        <div className="client-field-val">{task.ufAuto851551329931 || UNSET}</div>
+                                    </div>
+                                    <div className="client-field">
                                         <div className="client-field-descr">Ответственный</div>
                                         <div className="client-field-val">{task.responsible?.name || UNSET}</div>
                                     </div>

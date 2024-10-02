@@ -16,31 +16,13 @@ export function TasksComponent({filter = 'all'}: TasksComponentProps) {
         const d = new Date()
 
         if(filter === 'closed'){
-            const i1 = s.tasks.findIndex(t => !!t.closedDate)
-            if(i1 !== -1){
-                let i2 = i1
-                while(s.tasks[i2] && !!s.tasks[i2].closedDate) i2++
-                return s.tasks.slice(i1, i2)
-            }
-            return []
+            return s.tasks.filter(t => !!t.closedDate)
         } else if(filter === 'no-closed'){
-
+            return s.tasks.filter(t => !t.closedDate)
         }else if(filter === 'deadline'){
-            const i1 = s.tasks.findIndex(t => !!t.deadline)
-            if(i1 !== -1){
-                let i2 = i1
-                while(s.tasks[i2] && !!s.tasks[i2].deadline && s.tasks[i2].deadline!.valueOf() > d.valueOf()) i2++
-                return s.tasks.slice(i1, i2)
-            }
-            return []
+            return  s.tasks.filter(t => !!t.deadline)
         }if(filter === 'expired'){
-            const i1 = s.tasks.findIndex(t => !!t.deadline && t.deadline.valueOf() < d.valueOf())
-            if(i1 !== -1){
-                let i2 = i1
-                while(s.tasks[i2] && !!s.tasks[i2].deadline && s.tasks[i2].deadline!.valueOf() > d.valueOf()) i2++
-                return s.tasks.slice(i1, i2)
-            }
-            return []
+            return s.tasks.filter(t => t.deadline && t.deadline.valueOf() < d.valueOf())
         }
         return s.tasks
     }, [s, filter])
@@ -58,11 +40,7 @@ export function TasksComponent({filter = 'all'}: TasksComponentProps) {
         : (
             <Block>
                 <div className='tasks-list'>
-                    {tasks.length
-                        ? tasks.map(t => (
-                        <TaskComponent key={t.id} task={t}/>
-                    ))
-                    : <div className='tasks-empty'>Спичок задач пуст</div>}
+                    { tasks.map(t => <TaskComponent key={t.id} task={t}/> )}
                 </div>
             </Block>
         )

@@ -18,7 +18,7 @@ export class TaskService {
             try {
                 const auth = await bitrix.getAuth()
                 const user_id = auth.user_id
-                ctx.updateAppContext(({...ctx, /*tasks: [], */ tasksLoading: true}))
+                ctx.updateAppContext(({...ctx, /*tasks: [], */ tasksLoading: true, tasks: []}))
 
                 const d = new Date()
 
@@ -66,18 +66,18 @@ export class TaskService {
                 } else if (periodType === 2) {
                     // задачи на сегодня
 
-                    let requestDeadlineNotSet = {
-                        filter: {
-                            "DEADLINE": '',
-                            '<REAL_STATUS': Task.STATE_COMPLETED,
-                            RESPONSIBLE_ID: user_id,
-                        },
-                        order: {
-                            DEADLINE: 'DESC',
-                            CREATED_DATE: 'DESC'
-                        },
-                        select: ['*', 'UF_*']
-                    }
+                    // let requestDeadlineNotSet = {
+                    //     filter: {
+                    //         "DEADLINE": '',
+                    //         '<REAL_STATUS': Task.STATE_COMPLETED,
+                    //         RESPONSIBLE_ID: user_id,
+                    //     },
+                    //     order: {
+                    //         DEADLINE: 'DESC',
+                    //         CREATED_DATE: 'DESC'
+                    //     },
+                    //     select: ['*', 'UF_*']
+                    // }
 
                     let requestDeadline = {
                         filter: {

@@ -26,6 +26,10 @@ const filters : FilterType[] = [
         title: 'Все'
     },
     {
+        filter: "no-closed",
+        title: 'Открытые'
+    },
+    {
         filter: "closed",
         title: 'Закрытые'
     },

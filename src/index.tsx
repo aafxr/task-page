@@ -14,19 +14,6 @@ window.addEventListener('resize', setFixedVH)
 //==================================================================================================
 
 
-// if (window.BX24) {
-//     window.BX24.init(() => console.log("BX24 init"))
-//     window.BX24.callMethod(
-//         'user.get',
-//         {
-//             ACTIVE: true,
-//             USER_TYPE: 'employee',
-//             ADMIN_MODE: true
-//         },
-//         console.log
-//     )
-// }
-
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
