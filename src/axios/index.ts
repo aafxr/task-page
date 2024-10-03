@@ -22,14 +22,12 @@ appFetch.interceptors.response.use(r => r, async (err) => {
     if (err.response.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true
         try {
-            if (await bxAuth.refresh()) {
-                // const idx = originalRequest.url?.indexOf(AUTH)
-                // if(idx && idx !== -1) originalRequest.url = originalRequest.url!.slice(0, idx + AUTH.length) + bxAuth.oauthData?.access_token
-
-
-                if(await refreshSession()) return appFetch(originalRequest)
-                return Promise.reject(new Error(errors.UNAUTHORIZED))
+            if (await refreshSession()) {
+                const idx = originalRequest.url?.indexOf(AUTH)
+                if(idx && idx !== -1) originalRequest.url = originalRequest.url!.slice(0, idx + AUTH.length) + bxAuth.oauthData?.access_token
+                return appFetch(originalRequest)
             }
+            return Promise.reject(new Error(errors.UNAUTHORIZED))
         } catch (e) {
             return Promise.reject(new Error(errors.UNAUTHORIZED))
         }
