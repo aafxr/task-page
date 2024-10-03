@@ -21,6 +21,7 @@ export class BXCompany{
     DATE_CREATE: Date | null = null
     DATE_MODIFY: Date | null = null
     EMPLOYEES: string | null = null
+    EMAIL: string | null = null
     HAS_EMAIL: YesNoType = 'N'
     HAS_IMOL: YesNoType = 'N'
     HAS_PHONE: YesNoType = 'N'

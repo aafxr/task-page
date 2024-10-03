@@ -1,6 +1,7 @@
 import axios, {AxiosInstance, AxiosRequestConfig} from "axios";
 import {bxAuth} from "../bitrix";
 import {errors} from "../errors";
+import {BASE_URL} from "../App";
 
 interface AxiosInstanceWithFlag extends AxiosInstance {
     refresh: boolean
@@ -22,9 +23,12 @@ appFetch.interceptors.response.use(r => r, async (err) => {
         originalRequest._retry = true
         try {
             if (await bxAuth.refresh()) {
-                const idx = originalRequest.url?.indexOf(AUTH)
-                if(idx && idx !== -1) originalRequest.url = originalRequest.url!.slice(0, idx + AUTH.length) + bxAuth.oauthData?.access_token
-                return appFetch(originalRequest)
+                // const idx = originalRequest.url?.indexOf(AUTH)
+                // if(idx && idx !== -1) originalRequest.url = originalRequest.url!.slice(0, idx + AUTH.length) + bxAuth.oauthData?.access_token
+
+
+                if(await refreshSession()) return appFetch(originalRequest)
+                return Promise.reject(new Error(errors.UNAUTHORIZED))
             }
         } catch (e) {
             return Promise.reject(new Error(errors.UNAUTHORIZED))
@@ -34,25 +38,20 @@ appFetch.interceptors.response.use(r => r, async (err) => {
 })
 
 
-// //авторелоад
-// if (!originalRequest._retry){
-//     originalRequest._retry = true
-//     try {
-//         if (await bxAuth.refresh()) return appFetch(originalRequest)
-//     } catch (e) {
-//         return Promise.reject(new Error(errors.UNAUTHORIZED))
-//     }
-//
-// }else{
-//     if(global['localStorage'] && global['location']){
-//         const d = new Date()
-//         const tm = +localStorage['refreshTime']
-//
-//         if(tm && d.valueOf() - tm < 5000){
-//             localStorage.removeItem('refreshTime')
-//         }else{
-//             localStorage.setItem('refreshTime', d.valueOf().toString())
-//             window.location.reload()
-//         }
-//     }
-// }
+
+
+
+
+
+async function refreshSession(): Promise<boolean>{
+    const authorized = await appFetch.get(BASE_URL + 'api/auth/isAuthorized/')
+    if(authorized.data.ok){
+        return await bxAuth.refresh()
+    } else {
+        const res = await appFetch.get(BASE_URL + 'api/auth/login/?' + Telegram.WebApp.initData)
+        if(res.data.ok){
+            return await bxAuth.refresh()
+        }
+        return false
+    }
+}

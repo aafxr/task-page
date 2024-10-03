@@ -4,6 +4,7 @@
 }
 
 .contact-descr{
+    color: var(--text-color-secondary);
     font-size: 0.7rem;
     font-weight: 300;
 }
@@ -14,6 +15,7 @@
 }
 
 .contact-value{
+    color: var(--text-color-secondary);
     font-size: 0.8rem;
     font-weight: 300;
 }
