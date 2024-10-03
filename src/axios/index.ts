@@ -36,15 +36,10 @@ appFetch.interceptors.response.use(r => r, async (err) => {
 })
 
 
-
-
-
-
-
 async function refreshSession(): Promise<boolean>{
-    const authorized = await appFetch.get(BASE_URL + 'api/auth/isAuthorized/')
-    if(authorized.data.ok){
-        return await bxAuth.refresh()
+    // const authorized = await appFetch.get(BASE_URL + 'api/auth/isAuthorized/')
+    if(await bxAuth.refresh()){
+        return true
     } else {
         const res = await appFetch.get(BASE_URL + 'api/auth/login/?' + Telegram.WebApp.initData)
         if(res.data.ok){

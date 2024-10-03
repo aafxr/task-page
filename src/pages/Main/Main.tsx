@@ -120,6 +120,7 @@ export function Main() {
                     <TasksComponent filter={f.filter}/>
                 </Container>
             </div>
+
         </div>
     );
 }
