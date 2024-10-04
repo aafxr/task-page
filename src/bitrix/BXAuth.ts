@@ -124,24 +124,24 @@ export class BXAuth {
 
 
     private _saveState(){
-        if('localStorage' in globalThis){
-            const data = {
-                oauthData: this.oauthData,
-                appCredentials: this.appCredentials
-            }
-            globalThis.localStorage.setItem('bx', JSON.stringify(data))
-        }
+        // if('localStorage' in globalThis){
+        //     const data = {
+        //         oauthData: this.oauthData,
+        //         appCredentials: this.appCredentials
+        //     }
+        //     globalThis.localStorage.setItem('bx', JSON.stringify(data))
+        // }
     }
 
     private _loadState(){
-        if('localStorage' in globalThis) {
-            try{
-                const data = JSON.parse(localStorage.getItem('bx') || '{}')
-                if('oauthData' in data) this.oauthData = data.oauthData
-                if('appCredentials' in data) this.appCredentials = data.appCredentials
-
-            }catch (_){}
-        }
+        // if('localStorage' in globalThis) {
+        //     try{
+        //         const data = JSON.parse(localStorage.getItem('bx') || '{}')
+        //         if('oauthData' in data) this.oauthData = data.oauthData
+        //         if('appCredentials' in data) this.appCredentials = data.appCredentials
+        //
+        //     }catch (_){}
+        // }
     }
 
 

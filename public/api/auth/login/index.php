@@ -1,12 +1,22 @@
 <?php
 
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
+global $USER;
+
+if (!is_object($USER)) $USER = new CUser;
 
 $TOKEN = '7523877036:AAHjl9LsmBpJhGJzjaIOgziJDUapxUSJiNI';
 
 
 $result = [];
 
+if( !isset($_GET['auth_date']) || !isset($_GET['query_id']) || !isset($_GET['user']) || !isset($_GET['hash']) ){
+     http_response_code(401);
+     $result['ok'] = false;
+     $result['message'] = 'unauthorized';
+     echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+     exit;
+ }
 
 
 
@@ -40,7 +50,7 @@ if(!$isInitDataValid){
 
 $user = json_decode($_GET['user'], true);
 
-if(!isset($user['id']){
+if(!isset($user['id'])){
     http_response_code(401);
     $result['ok'] = false;
     $result['message'] = 'unauthorized';
@@ -58,8 +68,11 @@ $rsUsers = CUser::GetList(($by="id"), ($order="desc"), $filter,$arParams);
 $cUser = $rsUsers->GetNext();
 
 if($cUser != false){
+//     $user->Authorize($cUser['ID']);
     $result = [
         'ok' => true,
+        'user' => $cUser,
+        'auth' => $USER->Authorize($cUser['ID'])
     ];
 } else{
     $result = [

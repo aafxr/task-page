@@ -3,7 +3,10 @@
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
 
 global $USER;
-CUser::Logout();
+
+if (!is_object($USER)) $USER = new CUser;
+
+$USER->Logout();
 
 $result = [
     'ok' => true

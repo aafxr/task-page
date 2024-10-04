@@ -1,0 +1,33 @@
+.filePreview{
+    display: flex;
+    justify-content: stretch;
+    align-items: center;
+    gap: var(--offset);
+    width: 100%;
+}
+
+.filePreview:not(:first-child){
+    padding-top: var(--padding);
+}
+
+
+.filePreview-fileIcon,
+.filePreview-removeIcon{
+    flex: none;
+    width: var(--ui-height);
+    height: var(--ui-height);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.filePreview-removeIcon{
+    color: var(--text-error-color);
+    cursor: pointer;
+}
+
+.filePreview-name{
+    flex: 1 1;
+    font-size: 0.8rem;
+}
+

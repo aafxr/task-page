@@ -1,7 +1,13 @@
 import React from 'react';
+import {ReloadButton} from "../ReloadButton";
 
 
 export function AuthMessage() {
+
+
+    function handleReload(){
+        window.location.reload()
+    }
 
 
     function handleIdClick(){
@@ -16,6 +22,9 @@ export function AuthMessage() {
         <span>
             Сообщите руководителю ваш телеграм id (<span onClick={handleIdClick}>{Telegram.WebApp.initDataUnsafe.user?.id}</span>),
             чтобы вас добавили в систему
+            <div className='mt'>
+                <ReloadButton onClick={handleReload} />
+            </div>
         </span>
     );
 }

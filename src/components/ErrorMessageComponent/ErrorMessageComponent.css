@@ -5,7 +5,7 @@
 
 .message-container{
     position: relative;
-    padding: 0.5rem;
+    padding: var(--padding) 20px var(--padding) var(--padding);
     background-color: var(--bg-main);
     border-radius: var(--ui-radius);
 }

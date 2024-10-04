@@ -7,7 +7,9 @@ import {TaskDetails, TaskEditePage} from "./pages";
 import {useAppContext} from "./context/AppContext";
 import {CompanyPage} from "./pages/CompanyPage";
 import {NewTask} from "./pages/NewTask";
-import {TaskService} from "./services";
+import {ErrorService, TaskService} from "./services";
+import {fetchIsAuthorized} from "./api/fetchIsAuthorized";
+import {errors} from "./errors";
 import {Main} from "./pages";
 
 import './css/App.css';
@@ -19,6 +21,15 @@ function App() {
     const navigate = useNavigate()
     const {pathname} = useLocation()
 
+
+    // useEffect(() => {
+    //     fetchIsAuthorized()
+    //         .then(r => !r && ErrorService.handleError(s)(new Error(errors.UNAUTHORIZED)))
+    //         .catch(ErrorService.handleError(s))
+    // }, []);
+
+    //@ts-ignore
+    window.fetchIsAuthorized = fetchIsAuthorized
 
     // init app
     useEffect(() => {

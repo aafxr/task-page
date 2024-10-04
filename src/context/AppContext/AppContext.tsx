@@ -39,6 +39,7 @@ export interface AppContextState {
     tasks: Task[]
     tasksLoading: boolean
     error: ReactNode | null
+    errorCode: number | null
     selectedTask: Task | null
     persons: BXPerson[],
     personsMap: Map<string, BXPerson>
@@ -54,6 +55,7 @@ const defaultState: AppContextState = {
     tasksLoading: false,
     tasks: window.location.origin.includes('localhost') ? tasks : [],
     error: null,
+    errorCode: null,
     selectedTask: null,
     updateAppContext: () => {},
     persons: [],

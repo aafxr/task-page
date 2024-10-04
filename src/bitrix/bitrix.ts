@@ -32,9 +32,9 @@ export const bitrix = {
         fail: (e: Error) => unknown = () => {}
     ) {
         new Promise(async (resolve, rej) => {
-            if (!bxAuth.isAuthenticated()) {
-                if (!await bxAuth.refresh()) fail(new Error(errors.UNAUTHORIZED))
-            }
+            // if (!bxAuth.isAuthenticated()) {
+            //     if (!await bxAuth.refresh()) fail(new Error(errors.UNAUTHORIZED))
+            // }
 
             const res = await appFetch(bitrix._callMethodURL(methodName, params)) as AxiosResponse
             if (res && res.status >=200 && res.status < 300) cb(res.data)

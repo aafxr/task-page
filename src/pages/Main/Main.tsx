@@ -46,6 +46,7 @@ export function Main() {
     const navigate = useNavigate()
     const s = useAppContext()
     const [f, setFilter] = useState(filters[0])
+    // const [delay, setDelay] = useState(false)
 
 
     const today = useMemo(() => {
@@ -56,6 +57,18 @@ export function Main() {
         dateEnd.setHours(23,59,59,999)
         return d.valueOf() >= dateStart.valueOf() && d.valueOf() < dateEnd.valueOf()
     }, [s.selectedDay])
+
+
+    // useEffect(() => {
+    //     if(s.errorCode === 401 && Telegram.WebApp.initData){
+    //         setTimeout(() => {
+    //             setDelay(true)
+    //             bitrix.getAuth()
+    //                 .then((auth) => auth && window.location.reload() )
+    //                 .catch(console.error)
+    //         }, 1000)
+    //     }
+    // }, [s.errorCode])
 
 
     useEffect(() => {
@@ -74,7 +87,9 @@ export function Main() {
 
 
     function handleResetError(){
-        s.updateAppContext(p => ({...p, error: null}))
+        if(s.errorCode !== 401){
+            s.updateAppContext(p => ({...p, error: null, errorCode: null}))
+        }
     }
 
 
@@ -86,16 +101,16 @@ export function Main() {
     return (
         <div className='wrapper'>
             <div className='wrapper-header'>
-                        <div className='mainPage-filter'>
-                            <Button onClick={handleToggleCalendar}>{dateFormatter.format(s.selectedDay)}</Button>
-                            {today && filters.map(e =>
-                                <Button
-                                    key={e.filter}
-                                    className={e=== f ? 'active-btn' : ''}
-                                    onClick={() => setFilter(e)}
-                                >{e.title}</Button>
-                            )}
-                        </div>
+                <div className='mainPage-filter'>
+                    <Button onClick={handleToggleCalendar}>{dateFormatter.format(s.selectedDay)}</Button>
+                    {today && filters.map(e =>
+                        <Button
+                            key={e.filter}
+                            className={e=== f ? 'active-btn' : ''}
+                            onClick={() => setFilter(e)}
+                        >{e.title}</Button>
+                    )}
+                </div>
                 <Container style={{paddingBottom: 'var(--padding)'}}>
                     {!!s.error && (
                         <ErrorMessageComponent onClose={handleResetError}>
@@ -113,14 +128,15 @@ export function Main() {
             </div>
             <div className='wrapper-content'>
                 <Container >
-                    <Block className='addTask' onClick={handleAddTask}>
-                        <PlusIcon className='icon' />
-                        <Text>добавить задачу</Text>
-                    </Block>
+                    {s.errorCode !== 401 && (
+                        <Block className='addTask' onClick={handleAddTask}>
+                            <PlusIcon className='icon'/>
+                            <Text>добавить задачу</Text>
+                        </Block>
+                    )}
                     <TasksComponent filter={f.filter}/>
                 </Container>
             </div>
-
         </div>
     );
 }

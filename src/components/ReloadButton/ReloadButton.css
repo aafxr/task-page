@@ -1,0 +1,20 @@
+.reload{
+    padding: var(--padding);
+    position: relative;
+    white-space: nowrap;
+    color: var(--text-accent-color);
+    border-radius: var(--ui-height);
+}
+
+.reload:after{
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: var(--text-accent-color);
+    opacity: .5;
+    z-index: 0;
+}
+
+.reload-icon{
+    margin-left: .5rem;
+}

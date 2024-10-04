@@ -7,18 +7,18 @@ import {AuthMessage} from "../components/AuthMessage";
  * преобразует сообщение  об ошибке в читаемое сообщение
  * @param errorMessage
  */
-function errorMessageToReadableMessage(errorMessage: string): ReactNode {
+function errorMessageToReadableMessage(errorMessage: string): {node: ReactNode, code: number} {
 
     switch (errorMessage) {
         case errors.BX_EXPIRED_TOKEN:
         case errors.UNAUTHORIZED:
-            return AuthMessage()
+            return {node: AuthMessage(), code: 401}
         case errors.BX_PAYMENT_REQUIRED:
-            return 'Приложение временно не достсупно'
+            return {node: 'Приложение временно не достсупно', code: 500}
         case errors.BX_INSUFFICIENT_SCOPE:
-            return 'Недостаточно прав'
+            return {node: 'Недостаточно прав', code: 403}
         default:
-            return errorMessage
+            return {node: errorMessage, code: 500}
     }
 }
 
@@ -27,7 +27,8 @@ export class ErrorService {
     static handleError(ctx: AppContextState) {
         return (e: Error) => {
             // handle error here ...
-            ctx.updateAppContext(s => ({...s, error: errorMessageToReadableMessage(e.message)}))
+            const err = errorMessageToReadableMessage(e.message)
+            ctx.updateAppContext(s => ({...s, error: err.node, errorCode: err.code}))
             console.error('[ErrorService] ', e)
         }
     }

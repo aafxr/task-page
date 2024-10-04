@@ -22,7 +22,7 @@ appFetch.interceptors.response.use(r => r, async (err) => {
     if (err.response.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true
         try {
-            if (await refreshSession()) {
+            if (await refreshSession(Telegram.WebApp.initData)) {
                 const idx = originalRequest.url?.indexOf(AUTH)
                 if(idx && idx !== -1) originalRequest.url = originalRequest.url!.slice(0, idx + AUTH.length) + bxAuth.oauthData?.access_token
                 return appFetch(originalRequest)
@@ -36,15 +36,18 @@ appFetch.interceptors.response.use(r => r, async (err) => {
 })
 
 
-async function refreshSession(): Promise<boolean>{
-    // const authorized = await appFetch.get(BASE_URL + 'api/auth/isAuthorized/')
-    if(await bxAuth.refresh()){
-        return true
+async function refreshSession(authData: string): Promise<boolean>{
+    const authorized = await axios.get(BASE_URL + 'api/auth/isAuthorized/')
+    if(authorized.data.ok){
+        return await bxAuth.refresh()
     } else {
-        const res = await appFetch.get(BASE_URL + 'api/auth/login/?' + Telegram.WebApp.initData)
+        const res = await axios.get(BASE_URL + 'api/auth/login/?' + authData)
         if(res.data.ok){
             return await bxAuth.refresh()
         }
         return false
     }
 }
+
+//@ts-ignore
+window.refreshSession = refreshSession

@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect, useMemo, useState} from 'react';
+import React, {ChangeEvent, useEffect, useMemo, useRef, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
 
 import {useAppContext} from "../../context/AppContext";
@@ -19,6 +19,7 @@ import {TaskType} from "../../classes/TaskType";
 import {Task} from "../../classes/Task";
 import {BXContact} from "../../classes/BXContact";
 import {Block} from "../../components/Block";
+import {FilePreview} from "../../components/FilePreview";
 
 const d = new Date()
 d.setHours(23, 59, 59, 999)
@@ -45,6 +46,8 @@ export function TaskEditePage() {
     const [nextTask, setNextTask] = useState<Task>()
     const [contacts, setContacts] = useState<BXContact[]>([])
     const [taskTypes, setTaskTypes] = useState<TaskType[]>([])
+    const [files, setFiles] = useState<File[]>([])
+    const fileInput = useRef<HTMLInputElement>(null)
 
 
     //установка флага "задача выполнена успешно" если она не закрыта
@@ -209,6 +212,26 @@ export function TaskEditePage() {
     }
 
 
+    function handleFileButtonClick(){
+        fileInput.current?.click()
+    }
+
+
+    function handleFileChange(e: ChangeEvent<HTMLInputElement>){
+        const el = e.target as HTMLInputElement
+        const file = el.files?.item(0)
+        if(file){
+            setFiles([...files, file])
+        }
+    }
+
+
+    function handleRemoveFile(file: File){
+        const nextState = files.filter(f => f !== file)
+        setFiles(nextState)
+    }
+
+
     return (
         <div className='report report-container wrapper overlay'>
             <div className='wrapper-header'>
@@ -245,6 +268,14 @@ export function TaskEditePage() {
                                 <div className='ui-form-row'>
                                     <Text>{updateTimeLabel(report.taskTime)}</Text>
                                     <Range full min={1} max={12} value={+report.taskTime} onChange={handleSpentTime}/>
+                                </div>
+                                <div className='ui-form-row'>
+                                    {files.length > 0 && <Text>файлы</Text>}
+                                    {files.length > 0 && files.map((f, i) => (
+                                        <FilePreview key={i} file={f} onRemove={handleRemoveFile} />
+                                    ))}
+                                    <Button full onClick={handleFileButtonClick} >Добавить файл</Button>
+                                    <input ref={fileInput} type='file' hidden multiple={false} onChange={handleFileChange} />
                                 </div>
                             </>
                         )}
