@@ -1,6 +1,6 @@
 import {AppContextState} from "../context/AppContext";
 import {errors} from "../errors";
-import React, {ReactNode} from "react";
+import {ReactNode} from "react";
 import {AuthMessage} from "../components/AuthMessage";
 
 /**

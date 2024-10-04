@@ -1,14 +1,18 @@
 import React, {HTMLAttributes} from 'react';
 import clsx from "clsx";
 
+import {ReloadIcon} from "../svg";
 
-interface ReloadButtonProps extends HTMLAttributes<HTMLDivElement>{}
+import './ReloadButton.css'
+
+
+interface ReloadButtonProps extends HTMLAttributes<HTMLButtonElement>{}
 
 
 export function ReloadButton(props: ReloadButtonProps) {
     return (
-        <button className={clsx('reload', props.className)}>
-            <ReloadButton className='icon icon-reload' />
+        <button {...props} className={clsx('reload', props.className)}>
+            <ReloadIcon className='icon icon-reload' />
             Обновить
         </button>
     );

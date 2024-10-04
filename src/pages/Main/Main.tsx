@@ -59,18 +59,6 @@ export function Main() {
     }, [s.selectedDay])
 
 
-    // useEffect(() => {
-    //     if(s.errorCode === 401 && Telegram.WebApp.initData){
-    //         setTimeout(() => {
-    //             setDelay(true)
-    //             bitrix.getAuth()
-    //                 .then((auth) => auth && window.location.reload() )
-    //                 .catch(console.error)
-    //         }, 1000)
-    //     }
-    // }, [s.errorCode])
-
-
     useEffect(() => {
         if (!today) setFilter(filters[0])
     }, [today]);

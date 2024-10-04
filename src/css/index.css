@@ -386,3 +386,9 @@ body, html {
 .mb{
     margin-bottom: var(--margin);
 }
+
+.center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

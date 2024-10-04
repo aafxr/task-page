@@ -1,4 +1,4 @@
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {Navigate, Route, Routes, useLocation, useNavigate} from "react-router-dom";
 
 import {setTGThemeColor} from "./utils/setTGThemeColor";
@@ -7,12 +7,11 @@ import {TaskDetails, TaskEditePage} from "./pages";
 import {useAppContext} from "./context/AppContext";
 import {CompanyPage} from "./pages/CompanyPage";
 import {NewTask} from "./pages/NewTask";
-import {ErrorService, TaskService} from "./services";
-import {fetchIsAuthorized} from "./api/fetchIsAuthorized";
-import {errors} from "./errors";
+import {TaskService} from "./services";
 import {Main} from "./pages";
 
 import './css/App.css';
+import {bitrix} from "./bitrix";
 
 export const BASE_URL = process.env.REACT_APP_BACKEND_URL || '/';
 
@@ -22,14 +21,8 @@ function App() {
     const {pathname} = useLocation()
 
 
-    // useEffect(() => {
-    //     fetchIsAuthorized()
-    //         .then(r => !r && ErrorService.handleError(s)(new Error(errors.UNAUTHORIZED)))
-    //         .catch(ErrorService.handleError(s))
-    // }, []);
-
     //@ts-ignore
-    window.fetchIsAuthorized = fetchIsAuthorized
+    // window.fetchIsAuthorized = fetchIsAuthorized
 
     // init app
     useEffect(() => {
@@ -55,6 +48,17 @@ function App() {
             ? Telegram.WebApp.BackButton.hide()
             : Telegram.WebApp.BackButton.show()
     }, [pathname]);
+
+
+    useEffect(() => {
+        if(s.errorCode === 401 && Telegram.WebApp.initData){
+            setTimeout(() => {
+                bitrix.getAuth()
+                    .then((auth) => auth && window.location.reload() )
+                    .catch(console.error)
+            }, 300)
+        }
+    }, [s.errorCode])
 
 
     return (

@@ -22,7 +22,7 @@ export function AuthMessage() {
         <span>
             Сообщите руководителю ваш телеграм id (<span onClick={handleIdClick}>{Telegram.WebApp.initDataUnsafe.user?.id}</span>),
             чтобы вас добавили в систему
-            <div className='mt'>
+            <div className='center mt'>
                 <ReloadButton onClick={handleReload} />
             </div>
         </span>

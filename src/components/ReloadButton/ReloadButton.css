@@ -1,9 +1,14 @@
 .reload{
-    padding: var(--padding);
+    padding: 0 0.5rem;
     position: relative;
+    display: flex;
+    align-items: center;
     white-space: nowrap;
     color: var(--text-accent-color);
     border-radius: var(--ui-height);
+    background-color: transparent;
+    border: none;
+    overflow: hidden;
 }
 
 .reload:after{
@@ -11,10 +16,11 @@
     position: absolute;
     inset: 0;
     background-color: var(--text-accent-color);
-    opacity: .5;
+    opacity: .3;
     z-index: 0;
 }
 
-.reload-icon{
-    margin-left: .5rem;
+.icon-reload{
+    margin-right: .5rem;
+    color: var(--text-accent-color);
 }
