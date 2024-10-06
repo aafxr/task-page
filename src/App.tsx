@@ -1,6 +1,7 @@
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {Navigate, Route, Routes, useLocation, useNavigate} from "react-router-dom";
 
+import {ErrorMessageComponent} from "./components/ErrorMessageComponent";
 import {setTGThemeColor} from "./utils/setTGThemeColor";
 import {PersonService} from "./services/PersonService";
 import {TaskDetails, TaskEditePage} from "./pages";
@@ -11,8 +12,6 @@ import {TaskService} from "./services";
 import {Main} from "./pages";
 
 import './css/App.css';
-import {bitrix} from "./bitrix";
-import {ErrorMessageComponent} from "./components/ErrorMessageComponent";
 
 export const BASE_URL = process.env.REACT_APP_BACKEND_URL || '/';
 
@@ -21,9 +20,6 @@ function App() {
     const navigate = useNavigate()
     const {pathname} = useLocation()
 
-
-    //@ts-ignore
-    // window.fetchIsAuthorized = fetchIsAuthorized
 
     // init app
     useEffect(() => {
@@ -51,20 +47,6 @@ function App() {
     }, [pathname]);
 
 
-    useEffect(() => {
-        navigator.clipboard.writeText(Telegram.WebApp.initData).catch(console.error)
-    }, [])
-
-
-    // useEffect(() => {
-    //     if(s.errorCode === 401 && Telegram.WebApp.initData){
-    //         setTimeout(() => {
-    //             bitrix.getAuth()
-    //                 .then((auth) => auth && window.location.reload() )
-    //                 .catch(console.error)
-    //         }, 300)
-    //     }
-    // }, [s.errorCode])
 
     if(s.errorCode === 401){
         return (

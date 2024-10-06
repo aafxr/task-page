@@ -19,9 +19,9 @@ export const bxAuth = new BXAuth(baseURL, CLIENT_ID, CLIENT_SECRET)
 // @ts-ignore
 window.bxAuth = bxAuth
 
-bxAuth.refresh()
-    .then(r => console.log('auth: ', r))
-    .catch(console.error)
+// bxAuth.refresh()
+//     .then(r => console.log('auth: ', r))
+//     .catch(console.error)
 
 
 export const bitrix = {

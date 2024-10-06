@@ -25,7 +25,7 @@ setInterval(() => {hasPermit = false}, 60_000)
 
 async function sessionStop(){
     await axios.get(BASE_URL + 'api/auth/logout/')
-    bitrix.logout()
+    // bitrix.logout()
 }
 
 
