@@ -12,6 +12,7 @@ import {Main} from "./pages";
 
 import './css/App.css';
 import {bitrix} from "./bitrix";
+import {ErrorMessageComponent} from "./components/ErrorMessageComponent";
 
 export const BASE_URL = process.env.REACT_APP_BACKEND_URL || '/';
 
@@ -51,14 +52,34 @@ function App() {
 
 
     useEffect(() => {
-        if(s.errorCode === 401 && Telegram.WebApp.initData){
-            setTimeout(() => {
-                bitrix.getAuth()
-                    .then((auth) => auth && window.location.reload() )
-                    .catch(console.error)
-            }, 300)
-        }
-    }, [s.errorCode])
+        navigator.clipboard.writeText(Telegram.WebApp.initData).catch(console.error)
+    }, [])
+
+
+    // useEffect(() => {
+    //     if(s.errorCode === 401 && Telegram.WebApp.initData){
+    //         setTimeout(() => {
+    //             bitrix.getAuth()
+    //                 .then((auth) => auth && window.location.reload() )
+    //                 .catch(console.error)
+    //         }, 300)
+    //     }
+    // }, [s.errorCode])
+
+    if(s.errorCode === 401){
+        return (
+            <div className='wrapper'>
+                <div className='content'>
+                    <div className='unauthorized-container'>
+                        <ErrorMessageComponent>
+                            {s.error}
+                        </ErrorMessageComponent>
+                    </div>
+                </div>
+
+            </div>
+        )
+    }
 
 
     return (

@@ -61,6 +61,11 @@ export const bitrix = {
         sp.append('auth', bxAuth.access_token)
 
         return baseURL + '/rest/' + methodName + '?' + _params + '&' + sp.toString()
+    },
+
+    logout(){
+        bxAuth.oauthData = null
+        bxAuth.appCredentials = null
     }
 }
 

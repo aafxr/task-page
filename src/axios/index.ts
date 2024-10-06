@@ -1,7 +1,8 @@
 import axios, {AxiosInstance, AxiosRequestConfig} from "axios";
-import {bxAuth} from "../bitrix";
+import {bitrix, bxAuth} from "../bitrix";
 import {errors} from "../errors";
 import {BASE_URL} from "../App";
+import {fetchIsAuthorized} from "../api/fetchIsAuthorized";
 
 interface AxiosInstanceWithFlag extends AxiosInstance {
     refresh: boolean
@@ -16,8 +17,29 @@ const AUTH = 'auth='
 
 export const appFetch = axios.create({}) as AxiosInstanceWithFlag;
 
+let hasPermit = false
+
+//сброс флага для проверки доступа при следующем запросе (каждые 60 секунд)
+setInterval(() => {hasPermit = false}, 60_000)
+
+
+async function sessionStop(){
+    await axios.get(BASE_URL + 'api/auth/logout/')
+    bitrix.logout()
+}
+
+
 //automatically refresh auth
-appFetch.interceptors.response.use(r => r, async (err) => {
+appFetch.interceptors.response.use(async (r) => {
+    if(hasPermit) return r
+    const res = await axios.get(BASE_URL + 'api/auth/hasPermit/?' + Telegram.WebApp.initData)
+    if (res.status === 200 && res.data.ok) {
+        hasPermit = true
+        return r
+    }
+    await sessionStop()
+    return r
+}, async (err) => {
     const originalRequest = err.config as RequestConfigWithFlag
     if (err.response.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true

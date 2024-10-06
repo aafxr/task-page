@@ -13,7 +13,7 @@ interface ErrorMessageComponentProps extends PropsWithChildren{
 export function ErrorMessageComponent({className, onClose, children}: ErrorMessageComponentProps) {
     return (
         <div className={clsx("message message-container", className)}>
-            <div className="message-close" onClick={onClose} />
+            {!!onClose && <div className="message-close" onClick={onClose}/>}
             {children}
         </div>
     );

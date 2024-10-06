@@ -392,3 +392,9 @@ body, html {
     justify-content: center;
     align-items: center;
 }
+
+.unauthorized-container{
+    height: 100vh;
+    display: flex;
+    align-items: center;
+}
