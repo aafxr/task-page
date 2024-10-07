@@ -239,6 +239,8 @@ export class Task {
 
     closePrevDay: boolean = false
 
+    files: File[] = []
+
     constructor(t: Partial<Task> = {}) {
         Object.keys(t)
             .forEach((k) => {

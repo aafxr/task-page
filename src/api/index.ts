@@ -4,3 +4,7 @@ export * from './fetchUsers'
 export * from './fetchRestAPI'
 export * from './fetchTaskTypes'
 
+export * from './fetchLogout'
+export * from './fetchLogin'
+export * from './fetchIsAuthorized'
+export * from './fetchHasPermit'

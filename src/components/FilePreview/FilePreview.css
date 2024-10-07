@@ -24,6 +24,9 @@
 .filePreview-removeIcon{
     color: var(--text-error-color);
     cursor: pointer;
+}
+
+.filePreview-icon{
     transform: rotate(45deg);
 }
 

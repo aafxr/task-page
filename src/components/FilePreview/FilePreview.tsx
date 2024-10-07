@@ -25,7 +25,7 @@ export function FilePreview({file, onRemove}: FilePreviewProps) {
             </div>
             <div className='filePreview-name'>{file.name}</div>
             <div className='filePreview-removeIcon'>
-                <PlusIcon className='icon' onClick={handleRemoveFile}/>
+                <PlusIcon className='filePreview-icon icon' onClick={handleRemoveFile}/>
             </div>
         </div>
     );

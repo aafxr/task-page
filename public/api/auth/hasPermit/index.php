@@ -5,6 +5,30 @@ global $USER;
 
 $TOKEN = '7523877036:AAHjl9LsmBpJhGJzjaIOgziJDUapxUSJiNI';
 
+
+$ok = $USER->IsAuthorized();
+if($ok){
+    $id = $USER->GetID();
+
+
+    $arParams["SELECT"] = Array("*", "UF_*");
+    $filter = Array(
+        "ID"=> $id
+    );
+
+    $rsUsers = CUser::GetList(($by="id"), ($order="desc"), $filter,$arParams);
+    $cUser = $rsUsers->GetNext();
+
+    if($cUser && isset($cUser['UF_TELEGRAM_ID'])){
+        $result['ok'] = true;
+        echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        exit;
+    }
+}
+
+
+
+
 if( !isset($_GET['auth_date']) || !isset($_GET['query_id']) || !isset($_GET['user']) || !isset($_GET['hash']) ){
      $result['ok'] = false;
      $result['message'] = 'unauthorized';

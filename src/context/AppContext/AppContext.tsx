@@ -77,8 +77,6 @@ export function AppContextProvider({children}: PropsWithChildren) {
     // @ts-ignore
     window.ctx = s
 
-    console.log(s)
-
 
     return (
         <AppContext.Provider value={s}>

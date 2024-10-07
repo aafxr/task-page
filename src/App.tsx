@@ -15,6 +15,7 @@ import {TaskService} from "./services";
 import {Main} from "./pages";
 
 import './css/App.css';
+import {fetchLogout} from "./api";
 
 export const BASE_URL = process.env.REACT_APP_BACKEND_URL || '/';
 
@@ -29,15 +30,21 @@ function App() {
             fetchHasPermit()
                 .then(r => {
                     if(r) s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: true})
-                    else s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: false})
+                    else {
+                        s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: false})
+                        fetchLogout().catch(console.error)
+                    }
                 })
                 .catch(console.error)
-        }, 60_000)
+        }, 30_000)
 
         fetchHasPermit()
             .then(r => {
                 if(r) s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: true})
-                else s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: false})
+                else {
+                    s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: false})
+                    fetchLogout().catch(console.error)
+                }
             })
             .catch(console.error)
     }, []);

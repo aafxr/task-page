@@ -110,6 +110,10 @@ export function TaskEditePage() {
             return
         }
 
+        if(files.length){
+            report.files = files
+        }
+
         TaskService.closeAndUpdate(s, report, nextTask)
             .then(r => console.log('closeAndUpdate finish with result: ', r))
             .then(() => navigate(BASE_URL))

@@ -42,14 +42,15 @@ appFetch.interceptors.response.use(async (r) => {
 
 
 async function refreshSession(authData: string): Promise<boolean>{
-    const authorized = await axios.get(BASE_URL + 'api/auth/isAuthorized/')
-    if(authorized.data.ok){
-        return await bxAuth.refresh()
-    } else {
-        if(await fetchLogin(authData)){
-            return await bxAuth.refresh()
-        }
-        return false
-    }
+    return await bxAuth.refresh()
+    // const authorized = await axios.get(BASE_URL + 'api/auth/isAuthorized/')
+    // if(authorized.data.ok){
+    //     return await bxAuth.refresh()
+    // } else {
+    //     if(await fetchLogin(authData)){
+    //         return await bxAuth.refresh()
+    //     }
+    //     return false
+    // }
 }
 
