@@ -3,6 +3,8 @@
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
 global $USER;
 
+$TOKEN = '7523877036:AAHjl9LsmBpJhGJzjaIOgziJDUapxUSJiNI';
+
 if( !isset($_GET['auth_date']) || !isset($_GET['query_id']) || !isset($_GET['user']) || !isset($_GET['hash']) ){
      $result['ok'] = false;
      $result['message'] = 'unauthorized';
@@ -38,6 +40,8 @@ if(!$isInitDataValid){
     echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     exit;
 }
+
+$user = json_decode($_GET['user'], true);
 
 if(!isset($user['id'])){
     $result['ok'] = false;

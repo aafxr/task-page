@@ -12,6 +12,7 @@ function errorMessageToReadableMessage(errorMessage: string): {node: ReactNode, 
     switch (errorMessage) {
         case errors.BX_EXPIRED_TOKEN:
         case errors.UNAUTHORIZED:
+        case errors.PERMISSION_DENIED:
             return {node: AuthMessage(), code: 401}
         case errors.BX_PAYMENT_REQUIRED:
             return {node: 'Приложение временно не достсупно', code: 500}

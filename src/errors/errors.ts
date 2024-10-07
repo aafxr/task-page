@@ -1,5 +1,6 @@
 export const errors = {
     UNAUTHORIZED: 'Unauthorized',
+    PERMISSION_DENIED: 'permission denied',
 
 
     // -------- bitrix error --------

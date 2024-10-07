@@ -4,8 +4,11 @@ import {Navigate, Route, Routes, useLocation, useNavigate} from "react-router-do
 import {ErrorMessageComponent} from "./components/ErrorMessageComponent";
 import {setTGThemeColor} from "./utils/setTGThemeColor";
 import {PersonService} from "./services/PersonService";
+import {AuthMessage} from "./components/AuthMessage";
+import {fetchHasPermit} from "./api/fetchHasPermit";
 import {TaskDetails, TaskEditePage} from "./pages";
 import {useAppContext} from "./context/AppContext";
+import {Container} from "./components/Container";
 import {CompanyPage} from "./pages/CompanyPage";
 import {NewTask} from "./pages/NewTask";
 import {TaskService} from "./services";
@@ -21,16 +24,36 @@ function App() {
     const {pathname} = useLocation()
 
 
+    useEffect(() => {
+        setInterval(() => {
+            fetchHasPermit()
+                .then(r => {
+                    if(r) s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: true})
+                    else s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: false})
+                })
+                .catch(console.error)
+        }, 60_000)
+
+        fetchHasPermit()
+            .then(r => {
+                if(r) s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: true})
+                else s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: false})
+            })
+            .catch(console.error)
+    }, []);
+
+
     // init app
     useEffect(() => {
-        TaskService.getTasks(s)
-        PersonService.getList(s)
-    }, [s.selectedDay]);
+        if(s.loggedIn){
+            TaskService.getTasks(s)
+            PersonService.getList(s)
+        }
+    }, [s.selectedDay, s.loggedIn]);
 
 
 
     useEffect(() => {
-        if(!('Telegram' in window)) window.location.reload()
         Telegram.WebApp.ready()
         Telegram.WebApp.disableVerticalSwipes()
         Telegram.WebApp.expand()
@@ -48,17 +71,16 @@ function App() {
 
 
 
-    if(s.errorCode === 401){
+    if(!s.loggedIn){
         return (
             <div className='wrapper'>
                 <div className='content'>
-                    <div className='unauthorized-container'>
+                    <Container className='unauthorized-container'>
                         <ErrorMessageComponent>
-                            {s.error}
+                            <AuthMessage />
                         </ErrorMessageComponent>
-                    </div>
+                    </Container>
                 </div>
-
             </div>
         )
     }

@@ -34,6 +34,7 @@ const tasks = [
 
 
 export interface AppContextState {
+    loggedIn: boolean
     openCalendar: boolean
     selectedDay: Date
     tasks: Task[]
@@ -50,6 +51,7 @@ export interface AppContextState {
 
 
 const defaultState: AppContextState = {
+    loggedIn: false,
     openCalendar: false,
     selectedDay: new Date(),
     tasksLoading: false,
@@ -74,6 +76,8 @@ export function AppContextProvider({children}: PropsWithChildren) {
 
     // @ts-ignore
     window.ctx = s
+
+    console.log(s)
 
 
     return (
