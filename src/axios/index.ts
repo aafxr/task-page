@@ -1,9 +1,7 @@
 import axios, {AxiosInstance, AxiosRequestConfig} from "axios";
 import { bxAuth} from "../bitrix";
 import {errors} from "../errors";
-import {BASE_URL} from "../App";
-import {fetchLogin} from "../api/fetchLogin";
-import {fetchHasPermit} from "../api/fetchHasPermit";
+
 
 interface AxiosInstanceWithFlag extends AxiosInstance {
     refresh: boolean
@@ -18,11 +16,21 @@ const AUTH = 'auth='
 
 export const appFetch = axios.create({}) as AxiosInstanceWithFlag;
 
+// const o:any = {}
+// axios.interceptors.request.use(r => {
+//     o[Date.now()] = r.url
+//     navigator.clipboard.writeText(JSON.stringify(o))
+//     return r
+// })
+
+// appFetch.interceptors.request.use(r => {
+//     o[Date.now()] = r.url
+//     navigator.clipboard.writeText(JSON.stringify(o))
+//     return r
+// })
 
 //automatically refresh auth
-appFetch.interceptors.response.use(async (r) => {
-    return r
-}, async (err) => {
+appFetch.interceptors.response.use(async (r) => r, async (err) => {
     const originalRequest = err.config as RequestConfigWithFlag
     if (err.response.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true

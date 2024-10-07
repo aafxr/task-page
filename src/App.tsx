@@ -28,7 +28,7 @@ function App() {
         setInterval(() => {
             fetchHasPermit()
                 .then(r => {
-                    if(r) s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: true})
+                    if (r) s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: true})
                     else {
                         s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: false})
                         // fetchLogout().catch(console.error)
@@ -39,7 +39,7 @@ function App() {
 
         fetchHasPermit()
             .then(r => {
-                if(r) s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: true})
+                if (r) s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: true})
                 else {
                     s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: false})
                     // fetchLogout().catch(console.error)
@@ -51,21 +51,20 @@ function App() {
 
     // init app
     useEffect(() => {
-        if(s.loggedIn){
+        if (s.loggedIn) {
             TaskService.getTasks(s)
             PersonService.getList(s)
         }
     }, [s.selectedDay, s.loggedIn]);
 
 
-
     useEffect(() => {
         let id: number
-        if(!('Telegram' in window)){
-             id = window.setInterval(() => tgInit(), 50)
+        if (!('Telegram' in window)) {
+            id = window.setInterval(() => tgInit(), 50)
         }
         const tgInit = () => {
-            if('Telegram' in window && id) clearInterval(id)
+            if ('Telegram' in window && id) clearInterval(id)
             Telegram.WebApp.ready()
             Telegram.WebApp.disableVerticalSwipes()
             Telegram.WebApp.expand()
@@ -86,14 +85,13 @@ function App() {
     }, [pathname]);
 
 
-
-    if(s.loggedIn === false){
+    if (s.loggedIn === false) {
         return (
             <div className='wrapper'>
                 <div className='content'>
                     <Container className='unauthorized-container'>
                         <ErrorMessageComponent>
-                            <AuthMessage />
+                            <AuthMessage/>
                         </ErrorMessageComponent>
                     </Container>
                 </div>

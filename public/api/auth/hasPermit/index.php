@@ -27,21 +27,18 @@ if($ok){
 }
 
 
+$query = $_SERVER['QUERY_STRING'];
+parse_str($query, $params);
 
-
-if( !isset($_GET['auth_date']) || !isset($_GET['query_id']) || !isset($_GET['user']) || !isset($_GET['hash']) ){
-     $result['ok'] = false;
-     $result['message'] = 'unauthorized';
-     echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-     exit;
- }
-
-
+$hash = '';
 
 $strs = [];
-$strs['auth_date'] = 'auth_date=' . $_GET['auth_date'];
-$strs['query_id'] = 'query_id=' . $_GET['query_id'];
-$strs['user'] = 'user=' . $_GET['user'];
+foreach($params as $k => $v){
+    if($k == 'hash') {
+        continue;
+    }
+    $strs[$k] = $k . '=' . $v;
+}
 
 sort($strs);
 
@@ -61,6 +58,7 @@ $isInitDataValid = $calcHash == $hash;
 if(!$isInitDataValid){
     $result['ok'] = false;
     $result['message'] = 'unauthorized';
+    $result['isInitDataValid'] = $isInitDataValid;
     echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     exit;
 }

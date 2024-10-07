@@ -10,20 +10,19 @@ $TOKEN = '7523877036:AAHjl9LsmBpJhGJzjaIOgziJDUapxUSJiNI';
 
 $result = [];
 
-if( !isset($_GET['auth_date']) || !isset($_GET['query_id']) || !isset($_GET['user']) || !isset($_GET['hash']) ){
-     http_response_code(401);
-     $result['ok'] = false;
-     $result['message'] = 'unauthorized';
-     echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-     exit;
- }
+$query = $_SERVER['QUERY_STRING'];
+parse_str($query, $params);
 
-
+$hash = '';
 
 $strs = [];
-$strs['auth_date'] = 'auth_date=' . $_GET['auth_date'];
-$strs['query_id'] = 'query_id=' . $_GET['query_id'];
-$strs['user'] = 'user=' . $_GET['user'];
+foreach($params as $k => $v){
+    if($k == 'hash') {
+        continue;
+    }
+    $strs[$k] = $k . '=' . $v;
+}
+
 
 sort($strs);
 
