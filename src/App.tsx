@@ -60,12 +60,22 @@ function App() {
 
 
     useEffect(() => {
-        Telegram.WebApp.ready()
-        Telegram.WebApp.disableVerticalSwipes()
-        Telegram.WebApp.expand()
-        Telegram.WebApp.BackButton.onClick(() => navigate(-1))
-        Telegram.WebApp.onEvent('themeChanged', setTGThemeColor)
-        setTGThemeColor()
+        let id: number
+        if(!('Telegram' in window)){
+             id = window.setInterval(() => tgInit(), 50)
+        }
+        const tgInit = () => {
+            if('Telegram' in window && id) clearInterval(id)
+            Telegram.WebApp.ready()
+            Telegram.WebApp.disableVerticalSwipes()
+            Telegram.WebApp.expand()
+            Telegram.WebApp.BackButton.onClick(() => navigate(-1))
+            Telegram.WebApp.onEvent('themeChanged', setTGThemeColor)
+            setTGThemeColor()
+        }
+
+        tgInit()
+
     }, []);
 
 
@@ -77,7 +87,7 @@ function App() {
 
 
 
-    if(!s.loggedIn){
+    if(s.loggedIn === false){
         return (
             <div className='wrapper'>
                 <div className='content'>

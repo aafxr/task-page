@@ -119,10 +119,11 @@ export class TaskService {
                         //         return {...s, tasksLoading: false, tasks: [ ...t, ...s.tasks]}
                         //     })),
                         TaskService._loadTasks(requestDeadline)
-                            .then(t => ctx.updateAppContext(s => ({...s, tasks: [...t, ...s.tasks], tasksLoading: false}))),
+                            .then(t => ctx.updateAppContext(s => ({...s, tasks: [...t, ...s.tasks]}))),
                         TaskService._loadTasks(requestClosed)
-                            .then(t =>  ctx.updateAppContext(s => ({...s, tasks: [ ...s.tasks, ...t], tasksLoading: false})))
+                            .then(t =>  ctx.updateAppContext(s => ({...s, tasks: [ ...s.tasks, ...t]})))
                     ])
+                        .finally(() => ctx.updateAppContext(s => ({...s, tasksLoading: false})))
 
                     return
                 } else {

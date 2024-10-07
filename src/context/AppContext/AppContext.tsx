@@ -34,7 +34,7 @@ const tasks = [
 
 
 export interface AppContextState {
-    loggedIn: boolean
+    loggedIn?: boolean
     openCalendar: boolean
     selectedDay: Date
     tasks: Task[]
@@ -51,7 +51,7 @@ export interface AppContextState {
 
 
 const defaultState: AppContextState = {
-    loggedIn: false,
+    loggedIn: undefined,
     openCalendar: false,
     selectedDay: new Date(),
     tasksLoading: false,
