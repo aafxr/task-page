@@ -3,7 +3,7 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="12683e7a-5a44-4690-87a0-4d626a0bb060" name="192.168.52.30">
-        <fileTransfer rootFolder="/home/bitrix/www/pub/test/" accessType="SFTP" host="192.168.52.30" port="22" sshConfigId="1beb2d4a-9340-445c-97eb-79304578ce35" sshConfig="root@192.168.52.30:22 password">
+        <fileTransfer rootFolder="/home/bitrix/www/pub/test" accessType="SFTP" host="192.168.52.30" port="22" sshConfigId="1beb2d4a-9340-445c-97eb-79304578ce35" sshConfig="root@192.168.52.30:22 password">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>

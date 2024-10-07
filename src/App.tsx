@@ -5,17 +5,16 @@ import {ErrorMessageComponent} from "./components/ErrorMessageComponent";
 import {setTGThemeColor} from "./utils/setTGThemeColor";
 import {PersonService} from "./services/PersonService";
 import {AuthMessage} from "./components/AuthMessage";
-import {fetchHasPermit} from "./api/fetchHasPermit";
 import {TaskDetails, TaskEditePage} from "./pages";
 import {useAppContext} from "./context/AppContext";
 import {Container} from "./components/Container";
 import {CompanyPage} from "./pages/CompanyPage";
 import {NewTask} from "./pages/NewTask";
 import {TaskService} from "./services";
+import {fetchHasPermit} from "./api";
 import {Main} from "./pages";
 
 import './css/App.css';
-import {fetchLogout} from "./api";
 
 export const BASE_URL = process.env.REACT_APP_BACKEND_URL || '/';
 
@@ -32,7 +31,7 @@ function App() {
                     if(r) s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: true})
                     else {
                         s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: false})
-                        fetchLogout().catch(console.error)
+                        // fetchLogout().catch(console.error)
                     }
                 })
                 .catch(console.error)
@@ -43,7 +42,7 @@ function App() {
                 if(r) s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: true})
                 else {
                     s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: false})
-                    fetchLogout().catch(console.error)
+                    // fetchLogout().catch(console.error)
                 }
             })
             .catch(console.error)
