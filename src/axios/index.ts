@@ -22,15 +22,32 @@ export const appFetch = axios.create({}) as AxiosInstanceWithFlag;
 //     navigator.clipboard.writeText(JSON.stringify(o))
 //     return r
 // })
-
+//
 // appFetch.interceptors.request.use(r => {
 //     o[Date.now()] = r.url
 //     navigator.clipboard.writeText(JSON.stringify(o))
 //     return r
 // })
 
+// let refresh = false
+//
+// const sleep = (ms: number) => new Promise(r => setTimeout(r, ms))
+//
+//
+// axios.interceptors.request.use(async (r) => {
+//     while(refresh) await sleep(50)
+//     return r
+// })
+//
+//
+// appFetch.interceptors.request.use(async (r) => {
+//     while(refresh) await sleep(50)
+//     return r
+// })
+
 //automatically refresh auth
 appFetch.interceptors.response.use(async (r) => r, async (err) => {
+    // refresh = true
     const originalRequest = err.config as RequestConfigWithFlag
     if (err.response.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true
@@ -43,6 +60,8 @@ appFetch.interceptors.response.use(async (r) => r, async (err) => {
             return Promise.reject(new Error(errors.UNAUTHORIZED))
         } catch (e) {
             return Promise.reject(new Error(errors.UNAUTHORIZED))
+        } finally {
+            // refresh = false
         }
     }
     return Promise.reject(err)

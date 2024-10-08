@@ -116,12 +116,12 @@ export function Main() {
             </div>
             <div className='wrapper-content'>
                 <Container >
-                    {s.errorCode !== 401 && (
+                    {
                         <Block className='addTask' onClick={handleAddTask}>
                             <PlusIcon className='icon'/>
                             <Text>добавить задачу</Text>
                         </Block>
-                    )}
+                    }
                     <TasksComponent filter={f.filter}/>
                 </Container>
             </div>
