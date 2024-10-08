@@ -11,7 +11,7 @@ import {Container} from "./components/Container";
 import {CompanyPage} from "./pages/CompanyPage";
 import {NewTask} from "./pages/NewTask";
 import {TaskService} from "./services";
-import {fetchHasPermit} from "./api";
+import {fetchHasPermit, fetchLogin} from "./api";
 import {Main} from "./pages";
 
 import './css/App.css';
@@ -26,24 +26,28 @@ function App() {
 
     useEffect(() => {
         setInterval(() => {
-            fetchHasPermit()
-                .then(r => {
-                    if (r) s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: true})
-                    else {
-                        s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: false})
-                        // fetchLogout().catch(console.error)
-                    }
+            fetchLogin()
+                .then(() => {
+                    fetchHasPermit()
+                        .then(r => {
+                            if (r) s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: true})
+                            else s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: false})
+                        })
+                        .catch(console.error)
+
                 })
                 .catch(console.error)
         }, 30_000)
 
-        fetchHasPermit()
-            .then(r => {
-                if (r) s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: true})
-                else {
-                    s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: false})
-                    // fetchLogout().catch(console.error)
-                }
+        fetchLogin()
+            .then(() => {
+                fetchHasPermit()
+                    .then(r => {
+                        if (r) s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: true})
+                        else s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: false})
+                    })
+                    .catch(console.error)
+
             })
             .catch(console.error)
     }, []);

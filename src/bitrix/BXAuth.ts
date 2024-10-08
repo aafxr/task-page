@@ -37,47 +37,46 @@ export class BXAuth {
     appCredentials: AppCredentials | null = null
     oauthData: OAuthData | null = null
 
+    authUpdate = false
+
 
     constructor(baseURL: string, client_id: string, client_secret: string) {
         this.baseURL = baseURL
         this.client_id = client_id
         this.client_secret = client_secret
 
-
-
         this.auth = this.auth.bind(this)
         this.refresh = this.refresh.bind(this)
-
-        this._loadState()
     }
 
     /**
      * отправляет запрос на получение токенов доступа к апи
      */
     async auth(): Promise<boolean> {
-        this.appCredentials = null
-        this.oauthData = null
+        try{
+            this.authUpdate = true
+            const authResponse: any = await fetch(`${this.baseURL}/oauth/authorize/?client_id=${this.client_id}&state=JJHgsdgfkdaslg7lbadsfg`).catch(console.error)
 
-        const authResponse: any = await fetch(`${this.baseURL}/oauth/authorize/?client_id=${this.client_id}&state=JJHgsdgfkdaslg7lbadsfg`).catch(console.error)
+            if(!authResponse) return false
 
-        if(!authResponse) return false
+            if (authResponse.url) {
+                this.appCredentials = BXAuth.parseCredentials(authResponse.url)
+            }
 
-        if (authResponse.url) {
-            this.appCredentials = BXAuth.parseCredentials(authResponse.url)
+            if (!this.appCredentials || !('client_id' in this.appCredentials)) return false
+
+            const params = BXAuth.submitParamsForCredentials(this, 'authorization_code')
+
+            if (!params) return false
+
+            this.oauthData = await fetch(this.baseURL + '/oauth/token/?' + params)
+                .then((res) => res.json())
+                .catch(console.error)
+
+            return this.isAuthenticated()
+        }finally {
+            this.authUpdate = false
         }
-
-        if (!this.appCredentials || 'client_id' in this.appCredentials) return false
-
-        const params = BXAuth.submitParamsForCredentials(this, 'authorization_code')
-
-        if (!params) return false
-
-        this.oauthData = await fetch(this.baseURL + '/oauth/token/?' + params)
-            .then((res) => res.json())
-            .catch(console.error)
-
-        this._saveState()
-        return this.isAuthenticated()
     }
 
 
@@ -85,24 +84,24 @@ export class BXAuth {
      * обнавляет токен доступа к апи
      */
     async refresh(): Promise<boolean> {
-        const refresh_token = this.refresh_token
-        if (!refresh_token) return await this.auth()
+        try {
+            this.authUpdate = true
 
+            const refresh_token = this.refresh_token
+            if (!refresh_token) return false
 
-        const params = BXAuth.submitParamsForCredentials(this, 'refresh_token')
+            const params = BXAuth.submitParamsForCredentials(this, 'refresh_token')
 
-        if (!params) {
-            this.appCredentials = null
-            this.oauthData = null
-            return false
+            if (!params) return false
+
+            this.oauthData = await fetch(this.baseURL + '/oauth/token/?' + params)
+                .then((res) => res.json())
+                .catch(console.error)
+
+            return true
+        } finally {
+            this.authUpdate = false
         }
-
-        this.oauthData = await fetch(this.baseURL + '/oauth/token/?' + params)
-            .then((res) => res.json())
-            .catch(console.error)
-
-        this._saveState()
-        return this.isAuthenticated()
     }
 
 
@@ -120,28 +119,6 @@ export class BXAuth {
 
     get user_id() {
         return this.oauthData?.user_id || ''
-    }
-
-
-    private _saveState(){
-        // if('localStorage' in globalThis){
-        //     const data = {
-        //         oauthData: this.oauthData,
-        //         appCredentials: this.appCredentials
-        //     }
-        //     globalThis.localStorage.setItem('bx', JSON.stringify(data))
-        // }
-    }
-
-    private _loadState(){
-        // if('localStorage' in globalThis) {
-        //     try{
-        //         const data = JSON.parse(localStorage.getItem('bx') || '{}')
-        //         if('oauthData' in data) this.oauthData = data.oauthData
-        //         if('appCredentials' in data) this.appCredentials = data.appCredentials
-        //
-        //     }catch (_){}
-        // }
     }
 
 

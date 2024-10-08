@@ -31,7 +31,7 @@ export const appFetch = axios.create({}) as AxiosInstanceWithFlag;
 
 // let refresh = false
 //
-// const sleep = (ms: number) => new Promise(r => setTimeout(r, ms))
+const sleep = (ms: number) => new Promise(r => setTimeout(r, ms))
 //
 //
 // axios.interceptors.request.use(async (r) => {
@@ -47,12 +47,11 @@ export const appFetch = axios.create({}) as AxiosInstanceWithFlag;
 
 //automatically refresh auth
 appFetch.interceptors.response.use(async (r) => r, async (err) => {
-    // refresh = true
     const originalRequest = err.config as RequestConfigWithFlag
     if (err.response.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true
         try {
-            if (await refreshSession(Telegram.WebApp.initData)) {
+            if (await refreshSession()) {
                 const idx = originalRequest.url?.indexOf(AUTH)
                 if(idx && idx !== -1) originalRequest.url = originalRequest.url!.slice(0, idx + AUTH.length) + bxAuth.oauthData?.access_token
                 return appFetch(originalRequest)
@@ -60,24 +59,15 @@ appFetch.interceptors.response.use(async (r) => r, async (err) => {
             return Promise.reject(new Error(errors.UNAUTHORIZED))
         } catch (e) {
             return Promise.reject(new Error(errors.UNAUTHORIZED))
-        } finally {
-            // refresh = false
         }
     }
     return Promise.reject(err)
 })
 
 
-async function refreshSession(authData: string): Promise<boolean>{
-    return await bxAuth.refresh()
-    // const authorized = await axios.get(BASE_URL + 'api/auth/isAuthorized/')
-    // if(authorized.data.ok){
-    //     return await bxAuth.refresh()
-    // } else {
-    //     if(await fetchLogin(authData)){
-    //         return await bxAuth.refresh()
-    //     }
-    //     return false
-    // }
+async function refreshSession(): Promise<boolean>{
+    while(bxAuth.authUpdate) await sleep(50)
+    if(await bxAuth.refresh()) return true
+    return await bxAuth.auth();
 }
 
