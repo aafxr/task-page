@@ -46,48 +46,6 @@ body, html {
 }
 /*---------------------------------*/
 
-/*----------- button --------------*/
-.btn{
-    height: var(--btn-height);
-    flex: 1 1;
-    padding: var(--padding);
-    display: inline-flex;
-    justify-content: center;
-    align-items: stretch;
-    color: var(--btn-color);
-    font-size: 1rem;
-    font-weight: 400;
-    background-color: var(--bg-main);
-    border: 1px solid var(--border-color) ;
-    border-radius: var(--btn-radius);
-    outline-color: var(--text-accent-color);
-    cursor: pointer;
-}
-.btn.full{
-    width: 100%;
-}
-
-.btn:disabled{
-    filter: brightness(0.96);
-    pointer-events: none;
-    cursor: default;
-}
-
-/*---------------------------------*/
-
-/*----------- textarea ------------*/
-.textarea{
-    padding: var(--textarea-padding);
-    color: var(--ui-color);
-    font-size: 0.8rem;
-    background-color: var(--bg-main);
-    border: 1px solid var(--border-color);
-    border-radius: var(--ui-radius);
-    outline-color: var(--text-accent-color);
-    resize: none;
-}
-/*---------------------------------*/
-
 
 
 

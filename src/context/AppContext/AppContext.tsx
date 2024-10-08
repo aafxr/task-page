@@ -53,6 +53,8 @@ export interface AppContextState {
         files: Record<string, boolean>
     }
 
+    reportSending: boolean
+
 
     updateAppContext: React.Dispatch<React.SetStateAction<AppContextState>>
 }
@@ -70,6 +72,7 @@ const defaultState: AppContextState = {
     updateAppContext: () => {},
     persons: [],
     personsMap: new Map(),
+    reportSending: false
 }
 
 

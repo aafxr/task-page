@@ -350,7 +350,7 @@ export function TaskEditePage() {
             </div>
             <div className='wrapper-footer'>
                 <div className='footer-btns'>
-                    <Button className='active-btn' onClick={handleSave}>Сохранить</Button>
+                    <Button className='active-btn' onClick={handleSave} loading={s.reportSending} disabled={s.reportSending}>Сохранить</Button>
                     <Button onClick={handleCloseClick}>Закрыть</Button>
                 </div>
             </div>

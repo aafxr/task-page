@@ -1,11 +1,10 @@
 .bx-select {
     position: relative;
     display: inline-block;
-    /*width: 200px; !* Ширина select *!*/
     height: var(--ui-height);
-    border: 1px solid var(--ui-border-color); /* Граница */
-    border-radius: var(--ui-radius); /* Скругленные углы */
-    background-color: var(--bg-main); /* Фон */
+    border: 1px solid var(--ui-border-color);
+    border-radius: var(--ui-radius);
+    background-color: var(--bg-main);
 }
 
 .bx-select option{
@@ -15,62 +14,3 @@
 .bx-select.full{
     width: 100%;
 }
-
-/*.bx-select-input {*/
-/*    display: flex;*/
-/*    align-items: center;*/
-/*    justify-content: space-between;*/
-/*    cursor: pointer;*/
-/*    !*padding: 8px 12px; !* Отступы внутри *!*!*/
-/*}*/
-
-/*.bx-select-arrow {*/
-/*    position: relative;*/
-/*    display: inline-block;*/
-/*    width: 40px;*/
-/*    height: 40px;*/
-/*    margin-left: auto; !* Отступ от текста *!*/
-/*}*/
-
-/*.bx-select-arrow::after{*/
-/*    content: '';*/
-/*    position: absolute;*/
-/*    left: 50%;*/
-/*    top: 50%;*/
-/*    width: 0;*/
-/*    height: 0;*/
-/*    border-left: 5px solid transparent;*/
-/*    border-right: 5px solid transparent;*/
-/*    border-top: 5px solid #ccc; !* Цвет стрелки *!*/
-/*    transform: translate(-50%, -50%);*/
-
-
-/*}*/
-
-/*.bx-select-dropdown {*/
-/*    position: absolute;*/
-/*    top: 100%;*/
-/*    left: 0;*/
-/*    width: 100%;*/
-/*    background-color: #fff;*/
-/*    border: 1px solid #ccc;*/
-/*    border-radius: 4px;*/
-/*    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);*/
-/*    z-index: 210;*/
-/*    list-style: none;*/
-/*    padding: 0;*/
-/*    margin: 0;*/
-/*}*/
-
-/*.bx-select-dropdown-item {*/
-/*    padding: 8px 12px;*/
-/*    cursor: pointer;*/
-/*}*/
-
-/*.bx-select-dropdown-item:hover {*/
-/*    background-color: #f0f0f0; !* Цвет при наведении *!*/
-/*}*/
-
-/*.bx-select-dropdown-item.active {*/
-/*    background-color: #e0e0e0; !* Цвет активного элемента *!*/
-/*}*/

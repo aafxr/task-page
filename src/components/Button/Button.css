@@ -1,0 +1,45 @@
+.btn{
+    height: var(--btn-height);
+    flex: 1 1;
+    padding: var(--padding);
+    display: inline-flex;
+    justify-content: center;
+    align-items: stretch;
+    color: var(--btn-color);
+    font-size: 1rem;
+    font-weight: 400;
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color) ;
+    border-radius: var(--btn-radius);
+    outline-color: var(--text-accent-color);
+    cursor: pointer;
+}
+.btn.full{
+    width: 100%;
+}
+
+.btn:disabled{
+    filter: brightness(0.96);
+    pointer-events: none;
+    cursor: default;
+}
+
+.loader {
+    width: calc((var(--ui-height) - var(--padding) * 2) * 0.9);
+    height: calc((var(--ui-height) - var(--padding) * 2) * 0.9);
+    border: 3px dotted var(--text-color);
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    animation: rotation 2s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

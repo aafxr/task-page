@@ -274,6 +274,7 @@ export class TaskService {
      */
     static async closeAndUpdate(ctx: AppContextState, task: Task, nextTask?: Task) {
         try {
+            ctx.updateAppContext(p => ({...p, reportSending: true}))
             task.status = Task.STATE_COMPLETED
             if (!task.isClosed()) {
                 task.closedDate = new Date()
@@ -292,9 +293,11 @@ export class TaskService {
                         let folder : BXFolder
                         if(foldersResponse.folder) folder = foldersResponse.folder
                         else {
-                            const r = await fetchRestAPI<BXFolder>("disk.folder.addsubfolder", { id: crmFolder.ID, data: {NAME: folderName} } )
+                            const r = await fetchRestAPI<BXFolder>("disk.folder.addsubfolder", { id: crmFolder.ID, data: {NAME: folderName, CREATED_BY: 1} } )
                             folder = new BXFolder(r.result)
                         }
+                        // const r = await fetchRestAPI<BXFolder>("disk.folder.addsubfolder", { id: folder.ID, data: {NAME: 'Задачи', CREATED_BY: 1} } )
+                        // let taskFolder = new BXFolder(r.result)
 
                         await Promise.all([
                             task.files.map(f => {
@@ -305,7 +308,7 @@ export class TaskService {
                                 inputElement.files = dt.files;
                                 return fetchRestAPI("disk.folder.uploadfile", {
                                     id: folder.ID,
-                                    data: {NAME: "avatar.jpg"},
+                                    data: {NAME: f.name},
                                     fileContent: inputElement,
                                     generateUniqueName: true,
                                 })
@@ -320,6 +323,8 @@ export class TaskService {
             return res
         } catch (e) {
             ErrorService.handleError(ctx)(e as Error)
+        } finally {
+            ctx.updateAppContext(p => ({...p, reportSending: false}))
         }
     }
 
