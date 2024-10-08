@@ -284,14 +284,17 @@ export function TaskEditePage() {
                                     <Text>{updateTimeLabel(report.taskTime)}</Text>
                                     <Range full min={1} max={12} value={+report.taskTime} onChange={handleSpentTime}/>
                                 </div>
-                                <div className='ui-form-row'>
-                                    {files.length > 0 && <Text>файлы</Text>}
-                                    {files.length > 0 && files.map((f, i) => (
-                                        <FilePreview key={i} file={f} onRemove={handleRemoveFile} />
-                                    ))}
-                                    <Button full onClick={handleFileButtonClick} >Добавить файл</Button>
-                                    <input ref={fileInput} type='file' hidden multiple={false} onChange={handleFileChange} />
-                                </div>
+                                {report.ufCrmTask.length > 0 && (
+                                    <div className='ui-form-row'>
+                                        {files.length > 0 && <Text>файлы</Text>}
+                                        {files.length > 0 && files.map((f, i) => (
+                                            <FilePreview key={i} file={f} onRemove={handleRemoveFile}/>
+                                        ))}
+                                        <Button full onClick={handleFileButtonClick}>Добавить файл</Button>
+                                        <input ref={fileInput} type='file' hidden multiple={false}
+                                               onChange={handleFileChange}/>
+                                    </div>
+                                )}
                             </>
                         )}
                     </Block>
