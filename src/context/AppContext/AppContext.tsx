@@ -33,6 +33,8 @@ const tasks = [
 ]
 
 
+
+
 export interface AppContextState {
     loggedIn?: boolean
     openCalendar: boolean
@@ -44,6 +46,12 @@ export interface AppContextState {
     selectedTask: Task | null
     persons: BXPerson[],
     personsMap: Map<string, BXPerson>
+
+    report?: {
+        reportTask: Task
+        nextTask?: Task
+        files: Record<string, boolean>
+    }
 
 
     updateAppContext: React.Dispatch<React.SetStateAction<AppContextState>>

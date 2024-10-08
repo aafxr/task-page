@@ -38,6 +38,7 @@ if (\Bitrix\Main\Loader::includeModule('disk'))
         );
         if($folderCrm)
         {
+            $result['crm'] = $folderCrm;
             $folder = $folderCrm->getChild(
                 [
                     '=NAME' => $folderName,

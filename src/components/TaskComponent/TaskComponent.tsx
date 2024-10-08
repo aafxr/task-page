@@ -42,8 +42,14 @@ export function TaskComponent({task}: TaskComponentProps) {
     const cn: Record<string, boolean> = {
         closed: isClosed,
     }
-    if(task.urgent) cn['task-urgent'] = true
-    else if(task.important) cn['task-highPriority'] = true
+
+    const urgent = task.urgent
+    const important = task.important
+
+
+    if(urgent && !important) cn['task-blue'] = true
+    else if(important && !urgent) cn['task-green'] = true
+    else if(important && urgent) cn['task-red'] = true
 
 
     const handleTaskClick = () => navigate(BASE_URL + `task/${task.id}`)

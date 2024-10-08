@@ -16,12 +16,16 @@
     border-top: 1px solid var(--task-border-color);
 }
 
-.task-highPriority{
-    background: linear-gradient(90deg, var(--confirm-color), var(--task-bg-color) 5%, var(--task-bg-color));
+.task-green{
+    background: linear-gradient(90deg, var(--task-green-color), var(--task-bg-color) 10px, var(--task-bg-color));
 }
 
-.task-urgent{
-    background: linear-gradient(90deg, var(--task-report-color), var(--task-bg-color) 5%, var(--task-bg-color));
+.task-red{
+    background: linear-gradient(90deg, var(--task-red-color), var(--task-bg-color) 10px, var(--task-bg-color));
+}
+
+.task-blue{
+    background: linear-gradient(90deg, var(--task-blue-color), var(--task-bg-color) 10px, var(--task-bg-color));
 }
 
 .task-date-container {

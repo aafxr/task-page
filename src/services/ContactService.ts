@@ -113,18 +113,18 @@ export class ContactService {
      * @param ctx
      * @param companyId
      */
-    static getCompany(ctx: AppContextState, companyId: string){
+    static getCompany(ctx: AppContextState, companyId: string): Promise<BXCompany>{
         return new Promise(async (resolve, reject) => {
             try {
                 const id = companyId.includes('_')
                     ? companyId.split('_')[1]
                     : companyId
 
-                if(companiesMap.has(id)) return resolve(contactsMap.get(id))
+                if(companiesMap.has(id)) return resolve(companiesMap.get(id)!)
 
-                const res = await fetchRestAPI<BXContact>('crm.company.get', {id})
-                const c = new BXContact(res.result)
-                contactsMap.set(c.ID, c)
+                const res = await fetchRestAPI<BXCompany>('crm.company.get', {id})
+                const c = new BXCompany(res.result)
+                companiesMap.set(c.ID, c)
                 return c
             } catch (e){
                 ErrorService.handleError(ctx)(e as Error)

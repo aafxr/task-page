@@ -46,6 +46,9 @@
     --task-border-radius: var(--border-radius);
     --task-success-color: #107000;
     --task-report-color: var(--text-error-color);
+    --task-green-color: #B0DD86;
+    --task-red-color: #FF9E9E;
+    --task-blue-color: #ABCEF3;
 
 
     --loader-width: var(--ui-height);

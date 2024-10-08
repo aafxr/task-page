@@ -114,6 +114,17 @@ export function TaskEditePage() {
             report.files = files
         }
 
+        const _files = files.reduce((a, f) => {
+            a[f.name] = false
+            return a
+        },{} as Record<string, boolean>)
+
+        s.report = {
+            reportTask: report,
+            nextTask: nextTask,
+            files: _files
+        }
+
         TaskService.closeAndUpdate(s, report, nextTask)
             .then(r => console.log('closeAndUpdate finish with result: ', r))
             .then(() => navigate(BASE_URL))

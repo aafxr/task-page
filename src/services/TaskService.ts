@@ -6,6 +6,9 @@ import {IBXSuccessResponse} from "../bitrix/@types";
 import {TaskType} from "../classes/TaskType";
 import {fetchTaskTypes} from "../api";
 import {bitrix} from "../bitrix";
+import {ContactService} from "./ContactService";
+import {fetchFindFolder} from "../api/fetchFindFolder";
+import {BXFolder} from "../classes/BXFolder";
 
 
 export class TaskService {
@@ -279,6 +282,39 @@ export class TaskService {
                 }
             }
 
+            if(task.ufCrmTask.length){
+                const company = await ContactService.getCompany(ctx, task.ufCrmTask[0])
+                if(company) {
+                    const folderName = `${company.TITLE} [C${company.ID}]`
+                    const foldersResponse = await fetchFindFolder(folderName)
+                    if(foldersResponse && foldersResponse.crm){
+                        const  crmFolder : BXFolder = foldersResponse.crm
+                        let folder : BXFolder
+                        if(foldersResponse.folder) folder = foldersResponse.folder
+                        else {
+                            const r = await fetchRestAPI<BXFolder>("disk.folder.addsubfolder", { id: crmFolder.ID, data: {NAME: folderName} } )
+                            folder = new BXFolder(r.result)
+                        }
+
+                        await Promise.all([
+                            task.files.map(f => {
+                                const dt = new DataTransfer()
+                                dt.items.add(f)
+                                const inputElement = document.createElement('input');
+                                inputElement.type = 'file';
+                                inputElement.files = dt.files;
+                                return fetchRestAPI("disk.folder.uploadfile", {
+                                    id: folder.ID,
+                                    data: {NAME: "avatar.jpg"},
+                                    fileContent: inputElement,
+                                    generateUniqueName: true,
+                                })
+                            })
+                        ])
+                    }
+                }
+            }
+
             const res = await TaskService.update(ctx, task, nextTask)
             if (res) TaskService.getTasks(ctx)
             return res
@@ -290,7 +326,6 @@ export class TaskService {
 
     static async getTaskTypes(ctx: AppContextState, task: Task): Promise<TaskType[]> {
         try {
-
             const types = await fetchTaskTypes(task.responsibleId, task.id)
             return types.map(t => new TaskType(t))
         } catch (e) {
