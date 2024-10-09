@@ -197,6 +197,18 @@ define('AUTH_REQUIRED', true);
 require_once(dirname(__DIR__, 2) . '/local.header.php');
 
 
+$hlid = 2; // Указываем ID нашего highloadblock блока к которому будет делать запросы.
+$hlblock = Bitrix\Highloadblock\HighloadBlockTable::getById($hlid)->fetch();
+$taskTypesClass = Bitrix\Highloadblock\HighloadBlockTable::compileEntity($hlblock)->getDataClass();
+
+
+$taskTypesRes = $taskTypesClass::getList([]);
+$taskTypesList = [];
+while ($taskTypeData = $taskTypesRes->Fetch()) {
+    $taskTypesList[$taskTypeData['ID']] = $taskTypeData;
+}
+
+
 if(!isset($request['userId']) || !isset($request['data'])){
     http_response_code(400);
     $result = [
