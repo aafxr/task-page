@@ -5,7 +5,7 @@ import {fetchRestAPI, fetchTasks} from "../api";
 import {IBXSuccessResponse} from "../bitrix/@types";
 import {TaskType} from "../classes/TaskType";
 import {fetchTaskTypes} from "../api";
-import {bitrix} from "../bitrix";
+import {bitrix, bxAuth} from "../bitrix";
 import {ContactService} from "./ContactService";
 import {fetchFindFolder} from "../api/fetchFindFolder";
 import {BXFolder} from "../classes/BXFolder";
@@ -19,7 +19,13 @@ export class TaskService {
     static getTasks(ctx: AppContextState) {
         (async () => {
             try {
-                const auth = await bitrix.getAuth()
+                let auth = await bitrix.getAuth()
+                if(!auth) {
+                    await bxAuth.auth()
+                    auth = await bitrix.getAuth()
+                }
+                console.log('auth' , auth)
+                if(!auth) return
                 const user_id = auth.user_id
                 ctx.updateAppContext(({...ctx, /*tasks: [], */ tasksLoading: true, tasks: []}))
 

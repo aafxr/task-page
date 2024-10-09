@@ -39,15 +39,19 @@ export const bitrix = {
             .catch(fail)
     },
 
-    async getAuth(): Promise<Exclude<BXAuth['oauthData'], null>> {
+    async getAuth(): Promise<BXAuth['oauthData'] | null> {
         if (bxAuth.isAuthenticated()){
             return bxAuth.oauthData!
         }
 
-        if (await bxAuth.refresh()){
+        if (bxAuth.refresh_token && await bxAuth.refresh()){
             return bxAuth.oauthData!
         }
-        else throw new Error(errors.UNAUTHORIZED)
+
+        if (bxAuth.access_token && await bxAuth.auth()){
+            return bxAuth.oauthData!
+        }
+        return bxAuth.oauthData
     },
 
     _callMethodURL(methodName: string, params: Record<string, any>) {

@@ -28,7 +28,7 @@ export function NewTask() {
     useEffect(() => {
         bitrix.getAuth()
             .then(u => {
-                task.responsibleId = '' + u.user_id
+                task.responsibleId = '' + u?.user_id
                 setTask(new Task(task))
             })
     }, []);

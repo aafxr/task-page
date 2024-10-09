@@ -63,7 +63,7 @@ export class BXAuth {
                 this.appCredentials = BXAuth.parseCredentials(authResponse.url)
             }
 
-            if (!this.appCredentials || !('client_id' in this.appCredentials)) return false
+            if (!this.appCredentials || !('member_id' in this.appCredentials)) return false
 
             const params = BXAuth.submitParamsForCredentials(this, 'authorization_code')
 

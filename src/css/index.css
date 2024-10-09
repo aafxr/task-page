@@ -200,8 +200,8 @@ body, html {
 }
 
 .active-btn{
-    color: var(--text-color);
-    background-color: var(--text-accent-color);
+    color: var(--text-color)!important;
+    background-color: var(--text-accent-color)!important;
 }
 /*---------------------------------*/
 
