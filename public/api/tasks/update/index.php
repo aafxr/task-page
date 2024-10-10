@@ -83,49 +83,49 @@ if (count($arUpdateFields) > 0) {
     $oTaskItem->complete();
 }
 
-if ($taskNextTypeId > 1) {
-
-    /**
-     * Legacy code
-     * */
-    $nextTaskPriority = $request['nextTask']['UF_AUTO_851551329931'];
-
-
-    $arNewTask = [
-        "TITLE" => "CRM: " . $arCompany['TITLE'],
-        "DESCRIPTION" => $request['nextTask']['description'],
-        'UF_AUTO_274474131393' => $taskNextTypeId, // Тип следующей задачи
-        "DEADLINE" => new \Bitrix\Main\Type\DateTime($request['nextTask']['deadLine'] . " 23:59", "Y-m-d H:i"),
-        "ALLOW_CHANGE_DEADLINE" => 'N',
-        "TASK_CONTROL" => false,
-        "DEPENDS_ON" => $taskId,
-        "UF_CRM_TASK" => $arTask['UF_CRM_TASK'],
-        "RESPONSIBLE_ID" => (int)$request['nextTask']['user'], // Идентификатор исполнителя (ответственного).
-        "UF_AUTO_851551329931" => $nextTaskPriority
-    ];
-
-    $log = date("d.m.Y H:i:s") . PHP_EOL;
-    $log .= "Request:<pre>" . print_r($arNewTask, true) . "</pre>";
-    file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/local/log/close/taskClose_" . $taskId . ".log", $log, FILE_APPEND);
-
-
-    if ((int)$request['nextTask']['UF_CRM_TASK_CONTACT'] > 0) {
-        $arNewTask['UF_CRM_TASK_CONTACT'] = (int)$request['nextTask']['UF_CRM_TASK_CONTACT'];
-    }
-
-    $rsAdd = CTaskItem::add($arNewTask, $userId);
-
-    if ($ID = $rsAdd->getId()) {
-        $nextTaskId = $ID;
-        $obTask->Update($taskId, [
-            'UF_NEXT_TASK' => $ID
-        ]);
-    } else {
-        $nextTaskId = false;
-    }
-
-
-}
+//if ($taskNextTypeId > 1 && $request['nextTask']) {
+//
+//    /**
+//     * Legacy code
+//     * */
+//    $nextTaskPriority = $request['nextTask']['UF_AUTO_851551329931'];
+//
+//
+//    $arNewTask = [
+//        "TITLE" => "CRM: " . $arCompany['TITLE'],
+//        "DESCRIPTION" => $request['nextTask']['description'],
+//        'UF_AUTO_274474131393' => $taskNextTypeId, // Тип следующей задачи
+//        "DEADLINE" => new \Bitrix\Main\Type\DateTime($request['nextTask']['deadLine'] . " 23:59", "Y-m-d H:i"),
+//        "ALLOW_CHANGE_DEADLINE" => $request['nextTask']['ALLOW_CHANGE_DEADLINE'] || 'N',
+//        "TASK_CONTROL" => false,
+//        "DEPENDS_ON" => $taskId,
+//        "UF_CRM_TASK" => $arTask['UF_CRM_TASK'],
+//        "RESPONSIBLE_ID" => (int)$request['nextTask']['user'], // Идентификатор исполнителя (ответственного).
+//        "UF_AUTO_851551329931" => $nextTaskPriority
+//    ];
+//
+//    $log = date("d.m.Y H:i:s") . PHP_EOL;
+//    $log .= "Request:<pre>" . print_r($arNewTask, true) . "</pre>";
+//    file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/local/log/close/taskClose_" . $taskId . ".log", $log, FILE_APPEND);
+//
+//
+//    if ((int)$request['nextTask']['UF_CRM_TASK_CONTACT'] > 0) {
+//        $arNewTask['UF_CRM_TASK_CONTACT'] = (int)$request['nextTask']['UF_CRM_TASK_CONTACT'];
+//    }
+//
+//    $rsAdd = CTaskItem::add($arNewTask, $userId);
+//
+//    if ($ID = $rsAdd->getId()) {
+//        $nextTaskId = $ID;
+//        $obTask->Update($taskId, [
+//            'UF_NEXT_TASK' => $ID
+//        ]);
+//    } else {
+//        $nextTaskId = false;
+//    }
+//
+//
+//}
 
 if ($request['taskClosePrevDate']) {
     $taskEntity = new Bitrix\Tasks\Internals\TaskTable();
@@ -142,10 +142,10 @@ if ($request['taskClosePrevDate']) {
     $result['calc']['closed_date'] = $bxDateTime;
 }
 
-TaskActionSync($taskId);
+//TaskActionSync($taskId);
 
 if (count($errors) > 0) {
-    $result['ok'] = false;
+    $updateResult = false;
     $DB->Rollback();
 } else {
     $DB->Commit();
@@ -207,7 +207,8 @@ $result = [
     'updated' => $arUpdateFields,
     'updateResult' => $updateResult,
     'errors' => $errors,
-    'error' => $lastErrorText
+    'error' => $lastErrorText,
+    'filesEmpty' => empty($_FILES)
 ];
 
 echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
