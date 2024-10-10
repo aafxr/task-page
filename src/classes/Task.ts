@@ -329,3 +329,6 @@ export class Task {
         return this.deadline.valueOf() - d.valueOf() < 0 && this.status < Task.STATE_COMPLETED
     }
 }
+
+//@ts-ignore
+window.Task = Task
