@@ -6,7 +6,7 @@ import {Calendar} from "../../components/Calendar";
 import {Modal} from "../../components/Moadl";
 import {ErrorMessageComponent} from "../../components/ErrorMessageComponent";
 import {Button} from "../../components/Button";
-import {useEffect, useMemo, useState} from "react";
+import React, {ChangeEvent, useEffect, useMemo, useRef, useState} from "react";
 import {Block} from "../../components/Block";
 import {PlusIcon} from "../../components/svg";
 import {Text} from "../../components/Text";
@@ -86,6 +86,24 @@ export function Main() {
     }
 
 
+    const inputRef = useRef<HTMLInputElement>(null)
+    function handleInputChange(e: ChangeEvent<HTMLInputElement>){
+        if(!inputRef.current) return
+        const el = inputRef.current as HTMLInputElement
+        const file = el.files?.item(0)
+        if(!file) return
+        //@ts-ignore
+        window.files = window.files ? [...window.files, file] : [file]
+
+    }
+
+
+    function buttonClick(){
+        if(!inputRef.current) return
+        inputRef.current.click()
+    }
+
+
     return (
         <div className='wrapper'>
             <div className='wrapper-header'>
@@ -124,6 +142,10 @@ export function Main() {
                     }
                     <TasksComponent filter={f.filter}/>
                 </Container>
+            </div>
+            <div className='wrapper-footer'>
+                <Button onClick={buttonClick} full>click</Button>
+                <input ref={inputRef} type="file" hidden onChange={handleInputChange} accept={'image/png, image/jpeg, image/jpg'}/>
             </div>
         </div>
     );

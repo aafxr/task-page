@@ -311,7 +311,7 @@ export class Task {
 
         Object.entries(task).forEach(([k, v]) => {
             if (k in toBxField) {
-                if (k.toLowerCase().includes('date')) {
+                if (k.toLowerCase().includes('date') && v) {
                     // @ts-ignore
                     result[toBxField[k]] = v.toISOString()
                     return
