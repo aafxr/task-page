@@ -42,17 +42,17 @@ function App() {
     useEffect(() => {
         setInterval(() => {
             fetchHasPermit()
-                .then(r => {
-                    if (r) s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: true})
-                    else s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: false})
+                .then(({ok, user}) => {
+                    if (ok) s.updateAppContext(p => p.loggedIn === ok ? p : {...p, user, loggedIn: true})
+                    else s.updateAppContext(p => p.loggedIn === ok ? p : {...p, user: undefined, loggedIn: false})
                 })
                 .catch(console.error)
         }, 30_000)
 
         fetchHasPermit()
-            .then(r => {
-                if (r) s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: true})
-                else s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: false})
+            .then(({ok, user}) => {
+                if (ok) s.updateAppContext(p => p.loggedIn === ok ? p : {...p, user, loggedIn: true})
+                else s.updateAppContext(p => p.loggedIn === ok ? p : {...p, user: undefined, loggedIn: false})
             })
             .catch(console.error)
     }, []);

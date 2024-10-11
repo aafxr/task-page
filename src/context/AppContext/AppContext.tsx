@@ -36,6 +36,7 @@ const tasks = [
 
 
 export interface AppContextState {
+    user?: BXPerson
     loggedIn?: boolean
     openCalendar: boolean
     selectedDay: Date
