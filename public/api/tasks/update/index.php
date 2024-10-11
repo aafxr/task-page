@@ -1,6 +1,6 @@
 <?php
 
-require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
 
 define("UF_FIELD_RESULT", "UF_AUTO_280393729397");
 define("UF_FIELD_SUCCESS", "UF_AUTO_251545709641");
@@ -13,9 +13,8 @@ $userId = $USER->GetID();
 if (!is_object($USER)) $USER = new CUser;
 
 
-
 $ok = $USER->IsAuthorized();
-if(!$ok){
+if (!$ok) {
     http_response_code(401);
     $result['ok'] = false;
     $result['message'] = 'unauthorized';
@@ -23,59 +22,65 @@ if(!$ok){
     exit;
 }
 
+$userId = $USER->GetID();
+
 
 $result = [];
 
-if($_POST['request']){
-    $request = json_decode($_POST['request'],true);
+
+if (isset($_POST['request'])) {
+    $request = json_decode($_POST['request'], true);
 }
 
-if(!isset($request) || !$request['taskId'] || !$request['taskNextTypeId'] || !$request['fields']){
+if (!isset($request) || !$request['task']) {
     http_response_code(400);
     $result = [
         'ok' => false,
-        'message' => "fields taskId, taskNextTypeId, fields are require \n taskClosePrevDate - optional"
+        'message' => "fields taskId, taskNextTypeId are require \n taskClosePrevDate - optional"
     ];
     echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     exit;
 }
 
 
+$task = $request['task'];
+$nextTask = $request['nextTask'];
+//$taskNextTypeId = (int)$request['taskNextTypeId'];
 
-$taskId = (int)$request['taskId'];
-$taskNextTypeId = (int)$request['taskNextTypeId'];
+$taskId = (int)$task['ID'];
 
 $arTask = CTasks::GetList([], ['ID' => $taskId], ['*', 'UF_*'])->fetch();
-$isCompleted = ($arTask['STATUS'] == CTasks::STATE_COMPLETED);
 
-$companyId = preg_replace("/[^0-9]/", '', $arTask['UF_CRM_TASK'][0]);
-$arCompany = CCrmCompany::GetList([], ["ID" => $companyId])->fetch();
-
-$arUpdateFields = [];
-$updateResult = false;
-$errors = [];
-$lastErrorText = false;
-
-foreach ($request['fields'] as $key => $value) {
-    $arUpdateFields[$key] = $value;
+$updateTaskFields = [];
+foreach ($task as $k => $v) {
+    if (array_key_exists($k, $arTask) && $arTask[$k] != $task[$k]) $updateTaskFields[$k] = $v;
 }
 
-$log = date("d.m.Y H:i:s") . PHP_EOL;
-$log .= "Request:<pre>" . print_r($request, true) . "</pre>";
-file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/local/log/close/taskClose_" . $taskId . ".log", $log, FILE_APPEND);
+
+if ($nextTask) {
+    $arNextTask = [];
+    foreach ($nextTask as $k => $v) {
+        $arNextTask[$k] = $v;
+    }
+    $arNextTask['TITLE'] = $arTask['TITLE'];
+    $arNextTask['CREATE_DATE'] = date(DATE_ATOM);
+}
+
+
+$result['ok'] = true;
+$result['errors'] = [];
 
 $DB->StartTransaction();
 
-if (count($arUpdateFields) > 0) {
-
-    $updateResult = true;
-
+$updateResult = true;
+// -------------------- update task ----------------------------------
+if(count($updateTaskFields) > 0){
     $obTask = new CTasks;
-    $updateResult = $obTask->Update($taskId, $arUpdateFields);
+    $updateResult = $obTask->Update($taskId, $task);
 
     if (!$updateResult) {
         if ($e = $APPLICATION->GetException()) {
-            $errors[] = $e->GetString();
+            $result['errors'][] = $e->GetString();
         }
     }
 
@@ -83,49 +88,41 @@ if (count($arUpdateFields) > 0) {
     $oTaskItem->complete();
 }
 
-//if ($taskNextTypeId > 1 && $request['nextTask']) {
-//
-//    /**
-//     * Legacy code
-//     * */
-//    $nextTaskPriority = $request['nextTask']['UF_AUTO_851551329931'];
-//
-//
-//    $arNewTask = [
-//        "TITLE" => "CRM: " . $arCompany['TITLE'],
-//        "DESCRIPTION" => $request['nextTask']['description'],
-//        'UF_AUTO_274474131393' => $taskNextTypeId, // Тип следующей задачи
-//        "DEADLINE" => new \Bitrix\Main\Type\DateTime($request['nextTask']['deadLine'] . " 23:59", "Y-m-d H:i"),
-//        "ALLOW_CHANGE_DEADLINE" => $request['nextTask']['ALLOW_CHANGE_DEADLINE'] || 'N',
-//        "TASK_CONTROL" => false,
-//        "DEPENDS_ON" => $taskId,
-//        "UF_CRM_TASK" => $arTask['UF_CRM_TASK'],
-//        "RESPONSIBLE_ID" => (int)$request['nextTask']['user'], // Идентификатор исполнителя (ответственного).
-//        "UF_AUTO_851551329931" => $nextTaskPriority
-//    ];
-//
-//    $log = date("d.m.Y H:i:s") . PHP_EOL;
-//    $log .= "Request:<pre>" . print_r($arNewTask, true) . "</pre>";
-//    file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/local/log/close/taskClose_" . $taskId . ".log", $log, FILE_APPEND);
-//
-//
-//    if ((int)$request['nextTask']['UF_CRM_TASK_CONTACT'] > 0) {
-//        $arNewTask['UF_CRM_TASK_CONTACT'] = (int)$request['nextTask']['UF_CRM_TASK_CONTACT'];
-//    }
-//
-//    $rsAdd = CTaskItem::add($arNewTask, $userId);
-//
-//    if ($ID = $rsAdd->getId()) {
-//        $nextTaskId = $ID;
-//        $obTask->Update($taskId, [
-//            'UF_NEXT_TASK' => $ID
-//        ]);
-//    } else {
-//        $nextTaskId = false;
-//    }
-//
-//
-//}
+$log = date("d.m.Y H:i:s") . PHP_EOL;
+$log .= "Request:<pre>" . print_r($request, true) . "</pre>";
+file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/local/log/close/taskClose_" . $taskId . ".log", $log, FILE_APPEND);
+
+// -------------------- update task end ------------------------------
+
+
+// -------------------- update next task ----------------------------------
+if ($arNextTask) {
+    $log = date("d.m.Y H:i:s") . PHP_EOL;
+    $log .= "Request:<pre>" . print_r($nextTask, true) . "</pre>";
+    file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/local/log/close/taskClose_" . $taskId . ".log", $log, FILE_APPEND);
+
+    $rsAdd = CTaskItem::add($arNextTask, $userId);
+
+    if ($ID = $rsAdd->getId()) {
+        $nextTaskId = $ID;
+        $obTask->Update($taskId, ['UF_NEXT_TASK' => $ID]);
+        $arTask['UF_NEXT_TASK'] = $ID;
+    } else {
+        $result['errors'][] = "next task not created\n";
+        $result['ok'] = false;
+        $nextTaskId = false;
+    }
+}
+// -------------------- update next task end ------------------------------
+
+// close transaction
+if (count($result['errors']) > 0) {
+    $result['ok'] = false;
+    $DB->Rollback();
+} else {
+    $DB->Commit();
+}
+
 
 if ($request['taskClosePrevDate']) {
     $taskEntity = new Bitrix\Tasks\Internals\TaskTable();
@@ -142,73 +139,63 @@ if ($request['taskClosePrevDate']) {
     $result['calc']['closed_date'] = $bxDateTime;
 }
 
-//TaskActionSync($taskId);
 
-if (count($errors) > 0) {
-    $updateResult = false;
-    $DB->Rollback();
-} else {
-    $DB->Commit();
+if (isset($arTask['UF_CRM_TASK']) && is_array($arTask['UF_CRM_TASK']) && count($arTask['UF_CRM_TASK']) > 0){
+    $companyId = preg_replace("/[^0-9]/", '', $arTask['UF_CRM_TASK'][0]);
+    $arCompany = CCrmCompany::GetList([], ["ID" => $companyId])->fetch();
 }
 
-if (\Bitrix\Main\Loader::includeModule('disk') && !empty($_FILES)) {
+if(!$arCompany && !empty($_FILES)){
+    $result['errors'][] = "files not saved, because company not found\n";
+}
+
+
+if (\Bitrix\Main\Loader::includeModule('disk') && !empty($_FILES) && $companyId) {
     $driver = \Bitrix\Disk\Driver::getInstance();
     $storage = $driver->getStorageByCommonId('shared_files_s1');
-    if ($storage)
-    {
+    if ($storage) {
         $folderCrm = $storage->getChild(
             array(
                 '=NAME' => 'CRM',
                 'TYPE' => \Bitrix\Disk\Internals\FolderTable::TYPE_FOLDER
             )
         );
-        if($folderCrm) {
-            $folderEntityNameId = '*[C'. $companyId .']';
+        if ($folderCrm) {
+            $folderEntityNameId = '*[C' . $companyId . ']';
             $folderEntity = $folderCrm->getChild(
                 [
-                    'NAME' => "%".$folderEntityNameId,
+                    'NAME' => "%" . $folderEntityNameId,
                     'TYPE' => \Bitrix\Disk\Internals\FolderTable::TYPE_FOLDER
                 ]
             );
 
-            if(!$folderEntity){
+            if (!$folderEntity) {
                 $folderEntity = $folderCrm->addSubFolder([
-                    'NAME' => $arCompany['TITLE'] . ' ' . '[C'. $companyId .']',
+                    'NAME' => $arCompany['TITLE'] . ' ' . '[C' . $companyId . ']',
                     'CREATED_BY' => 1
                 ]);
             }
 
-            if($folderEntity){
+            if ($folderEntity) {
+                $result['created_files'] = [];
                 foreach ($_FILES as $fileKey => $file) {
                     $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+                    $fileName = $file['name'] . '.' . $ext;
                     $file = $folderEntity->uploadFile($file, array(
-                        'NAME' =>   $file['name'] . '.' . $ext,
+                        'NAME' => $fileName,
                         'CREATED_BY' => 1
                     ));
-//                  if($file){
-//                      $fileId = $file->getFileId();
-//                      $bxContactItem->set('PHOTO', $fileId);
-//                  }
-
+                    if($file) $result['created_files'][] = $fileName;
                 }
-
             }
         }
     }
 }
 
-$result = [
-    'ok' => $updateResult,
-    'request' => $request,
-    'taskId' => $taskId,
-    'nextTaskId' => $nextTaskId,
-    'companyId' => $companyId,
-    'task' => $arTask,
-    'updated' => $arUpdateFields,
-    'updateResult' => $updateResult,
-    'errors' => $errors,
-    'error' => $lastErrorText,
-    'filesEmpty' => empty($_FILES)
+$result['result'] = [
+    'task' =>  $arTask,
+    'nextTask' =>  $arNextTask
 ];
+
 
 echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
