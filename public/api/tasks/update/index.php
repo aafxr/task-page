@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * request:{
+ *      task: {},
+ *      nextTask?: {},
+ *      taskClosePrevDate?: iso time
+ * }
+ */
+
 require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
 
 define("UF_FIELD_RESULT", "UF_AUTO_280393729397");
