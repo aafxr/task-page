@@ -29,12 +29,12 @@ export class TaskService {
                 const user_id = auth.user_id
                 ctx.updateAppContext(({...ctx, /*tasks: [], */ tasksLoading: true, tasks: []}))
 
-                const d = new Date()
-
-                const dateStart = new Date(ctx.selectedDay)
-                dateStart.setHours(0, 0, 0, 0)
-                const dateEnd = new Date(dateStart)
-                dateEnd.setHours(23, 59, 59, 999)
+                // const d = new Date()
+                //
+                // const dateStart = new Date(ctx.selectedDay)
+                // dateStart.setHours(0, 0, 0, 0)
+                // const dateEnd = new Date(dateStart)
+                // dateEnd.setHours(23, 59, 59, 999)
 
 
                 /**
@@ -44,35 +44,35 @@ export class TaskService {
                  *  3. дата отбора > текущей = показываем все задачи на заданный период
                  */
 
-                let periodType = 2
-
-                d.setHours(0, 0, 0, 0)
-                if (dateEnd.valueOf() < d.valueOf()) periodType = 1
-
-                d.setHours(23, 59, 59, 999)
-                if (dateStart.valueOf() > d.valueOf()) periodType = 3
-
-                let request: any = {}
-
-                let tasks: Task[] = []
-
-                if (periodType === 1) {
-                    // прошедшие задачи
-                    request = {
-                        filter: {
-                            '>=CLOSED_DATE': dateStart.toISOString(),
-                            '<CLOSED_DATE': dateEnd.toISOString(),
-                            RESPONSIBLE_ID: user_id
-                        },
-                        order: {
-                            CREATED_DATE: 'DESC',
-                        },
-                        select: ['*', 'UF_*']
-                    }
-
-                    tasks = await TaskService._loadTasks(request)
-
-                } else if (periodType === 2) {
+                // let periodType = 2
+                //
+                // d.setHours(0, 0, 0, 0)
+                // if (dateEnd.valueOf() < d.valueOf()) periodType = 1
+                //
+                // d.setHours(23, 59, 59, 999)
+                // if (dateStart.valueOf() > d.valueOf()) periodType = 3
+                //
+                // let request: any = {}
+                //
+                // let tasks: Task[] = []
+                //
+                // if (periodType === 1) {
+                //     прошедшие задачи
+                    // request = {
+                    //     filter: {
+                    //         '>=CLOSED_DATE': dateStart.toISOString(),
+                    //         '<CLOSED_DATE': dateEnd.toISOString(),
+                    //         RESPONSIBLE_ID: user_id
+                    //     },
+                    //     order: {
+                    //         CREATED_DATE: 'DESC',
+                    //     },
+                    //     select: ['*', 'UF_*']
+                    // }
+                    //
+                    // tasks = await TaskService._loadTasks(request)
+                //
+                // } else if (periodType === 2) {
                     // задачи на сегодня
 
                     // let requestDeadlineNotSet = {
@@ -88,70 +88,72 @@ export class TaskService {
                     //     select: ['*', 'UF_*']
                     // }
 
-                    let requestDeadline = {
-                        filter: {
-                            "<DEADLINE": dateEnd.toISOString(),
-                            '<REAL_STATUS': Task.STATE_COMPLETED,
-                            RESPONSIBLE_ID: user_id,
-                        },
-                        order: {
-                            DEADLINE: 'DESC',
-                            CREATED_DATE: 'DESC'
-                        },
-                        select: ['*', 'UF_*']
-                    }
+                    // let requestDeadline = {
+                    //     filter: {
+                    //         "<DEADLINE": dateEnd.toISOString(),
+                    //         '<REAL_STATUS': Task.STATE_COMPLETED,
+                    //         RESPONSIBLE_ID: user_id,
+                    //     },
+                    //     order: {
+                    //         DEADLINE: 'DESC',
+                    //         CREATED_DATE: 'DESC'
+                    //     },
+                    //     select: ['*', 'UF_*']
+                    // }
+                    //
+                    //
+                    //
+                    // let requestClosed = {
+                    //     filter: {
+                    //         '<CLOSED_DATE': dateEnd.toISOString(),
+                    //         '>=CLOSED_DATE': dateStart.toISOString(),
+                    //         RESPONSIBLE_ID: user_id
+                    //     },
+                    //     order: {
+                    //         CLOSED_DATE: 'DESC',
+                    //     },
+                    //     select: ['*', 'UF_*']
+                    // }
 
 
 
-                    let requestClosed = {
-                        filter: {
-                            '<CLOSED_DATE': dateEnd.toISOString(),
-                            '>=CLOSED_DATE': dateStart.toISOString(),
-                            RESPONSIBLE_ID: user_id
-                        },
-                        order: {
-                            CLOSED_DATE: 'DESC',
-                        },
-                        select: ['*', 'UF_*']
-                    }
-
-
-                    await Promise.all([
-                        // TaskService._loadTasks(requestDeadlineNotSet)
-                        //     .then(t => ctx.updateAppContext(s => {
-                        //         if(!s.tasks.length) return {...s, tasks: t, tasksLoading: false}
-                        //         if(s.tasks[0].deadline){
-                        //             let i = 0
-                        //             while(s.tasks[i].deadline) i++
-                        //             return {...s, tasksLoading: false, tasks: [...s.tasks.slice(0,i), ...t, ...s.tasks.slice(i+1)]}
-                        //         }
-                        //         return {...s, tasksLoading: false, tasks: [ ...t, ...s.tasks]}
-                        //     })),
-                        TaskService._loadTasks(requestDeadline)
-                            .then(t => ctx.updateAppContext(s => ({...s, tasks: [...t, ...s.tasks]}))),
-                        TaskService._loadTasks(requestClosed)
-                            .then(t =>  ctx.updateAppContext(s => ({...s, tasks: [ ...s.tasks, ...t]})))
-                    ])
-                        .finally(() => ctx.updateAppContext(s => ({...s, tasksLoading: false})))
-
-                    return
-                } else {
-                    //задачи на завтра
-                    request = {
-                        filter: {
-                            '<DEADLINE': dateEnd.toISOString(),
-                            '>=DEADLINE': dateStart.toISOString(),
-                            '<REAL_STATUS': Task.STATE_COMPLETED,
-                            RESPONSIBLE_ID: user_id
-                        },
-                        order: {
-                            DEADLINE: 'DESC',
-                            CREATED_DATE: 'DESC',
-                        },
-                        select: ['*', 'UF_*']
-                    }
-                    tasks = await TaskService._loadTasks(request)
-                }
+                //     await Promise.all([
+                //         // TaskService._loadTasks(requestDeadlineNotSet)
+                //         //     .then(t => ctx.updateAppContext(s => {
+                //         //         if(!s.tasks.length) return {...s, tasks: t, tasksLoading: false}
+                //         //         if(s.tasks[0].deadline){
+                //         //             let i = 0
+                //         //             while(s.tasks[i].deadline) i++
+                //         //             return {...s, tasksLoading: false, tasks: [...s.tasks.slice(0,i), ...t, ...s.tasks.slice(i+1)]}
+                //         //         }
+                //         //         return {...s, tasksLoading: false, tasks: [ ...t, ...s.tasks]}
+                //         //     })),
+                //
+                //         TaskService._loadTasks(requestDeadline)
+                //             .then(t => ctx.updateAppContext(s => ({...s, tasks: [...t, ...s.tasks]}))),
+                //         TaskService._loadTasks(requestClosed)
+                //             .then(t =>  ctx.updateAppContext(s => ({...s, tasks: [ ...s.tasks, ...t]})))
+                //     ])
+                //         .finally(() => ctx.updateAppContext(s => ({...s, tasksLoading: false})))
+                //
+                //     return
+                // } else {
+                //     //задачи на завтра
+                //     request = {
+                //         filter: {
+                //             '<DEADLINE': dateEnd.toISOString(),
+                //             '>=DEADLINE': dateStart.toISOString(),
+                //             '<REAL_STATUS': Task.STATE_COMPLETED,
+                //             RESPONSIBLE_ID: user_id
+                //         },
+                //         order: {
+                //             DEADLINE: 'DESC',
+                //             CREATED_DATE: 'DESC',
+                //         },
+                //         select: ['*', 'UF_*']
+                //     }
+                //     tasks = await TaskService._loadTasks(request)
+                // }
 
 
                 // сортировка задач без дедлайн ------------------------------
@@ -164,6 +166,8 @@ export class TaskService {
                 // }
                 // сортировка задач без дедлайн ------------------------------
 
+                const tasks = await fetchTasks('212', ctx.selectedDay)
+
                 ctx.updateAppContext(s => ({...s, tasks}))
 
             } catch (e) {
@@ -174,20 +178,20 @@ export class TaskService {
         })()
     }
 
-    static async _loadTasks(request: any = {}) {
-        // загрузка всех задач
-        let next = 0
-        let res: IBXSuccessResponse<{ tasks: Task[] }>
-        let tasks: Task[] = []
-
-        do {
-            request.start = next
-            res = await fetchTasks(request)
-            next = res.next
-            tasks = tasks.concat(res.result.tasks.map(t => new Task(t)))
-        } while (next < res.total)
-        return tasks
-    }
+    // static async _loadTasks(request: any = {}) {
+    //     // загрузка всех задач
+    //     let next = 0
+    //     let res: IBXSuccessResponse<{ tasks: Task[] }>
+    //     let tasks: Task[] = []
+    //
+    //     do {
+    //         request.start = next
+    //         res = await fetchTasks(request)
+    //         next = res.next
+    //         tasks = tasks.concat(res.result.tasks.map(t => new Task(t)))
+    //     } while (next < res.total)
+    //     return tasks
+    // }
 
 
     /**
