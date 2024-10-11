@@ -16,9 +16,9 @@ define("UF_FIELD_SUCCESS", "UF_AUTO_251545709641");
 global $APPLICATION;
 global $DB;
 global $USER;
+if (!is_object($USER)) $USER = new CUser;
 $userId = $USER->GetID();
 
-if (!is_object($USER)) $USER = new CUser;
 
 
 $ok = $USER->IsAuthorized();
