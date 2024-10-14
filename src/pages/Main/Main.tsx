@@ -86,24 +86,6 @@ export function Main() {
     }
 
 
-    const inputRef = useRef<HTMLInputElement>(null)
-    function handleInputChange(e: ChangeEvent<HTMLInputElement>){
-        if(!inputRef.current) return
-        const el = inputRef.current as HTMLInputElement
-        const file = el.files?.item(0)
-        if(!file) return
-        //@ts-ignore
-        window.files = window.files ? [...window.files, file] : [file]
-
-    }
-
-
-    function buttonClick(){
-        if(!inputRef.current) return
-        inputRef.current.click()
-    }
-
-
     return (
         <div className='wrapper'>
             <div className='wrapper-header'>
@@ -144,8 +126,6 @@ export function Main() {
                 </Container>
             </div>
             <div className='wrapper-footer'>
-                <Button onClick={buttonClick} full>click</Button>
-                <input ref={inputRef} type="file" hidden onChange={handleInputChange} accept={'image/png, image/jpeg, image/jpg'}/>
             </div>
         </div>
     );

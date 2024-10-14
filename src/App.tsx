@@ -15,6 +15,8 @@ import {fetchHasPermit} from "./api";
 import {Main} from "./pages";
 
 import './css/App.css';
+import {QueryNav} from "./components/QueryNav";
+import {TestPage} from "./pages/TestPage/TestPage";
 
 export const BASE_URL = process.env.REACT_APP_BACKEND_URL || '/';
 
@@ -95,14 +97,18 @@ function App() {
 
 
     return (
-        <Routes>
-            <Route path={BASE_URL} element={<Main/>}/>
-            <Route path={BASE_URL + 'task/new'} element={<NewTask/>}/>
-            <Route path={BASE_URL + 'task/:taskID'} element={<TaskDetails/>}/>
-            <Route path={BASE_URL + 'task/:taskID/:companyID'} element={<CompanyPage/>}/>
-            <Route path={BASE_URL + 'task/:taskID/edite'} element={<TaskEditePage/>}/>
-            <Route path={'*'} element={<Navigate to={BASE_URL}/>}/>
-        </Routes>
+        <>
+            <QueryNav name={'page'} />
+            <Routes>
+                <Route path={BASE_URL} element={<Main/>}/>
+                <Route path={BASE_URL + 'task/new'} element={<NewTask/>}/>
+                <Route path={BASE_URL + 'task/:taskID'} element={<TaskDetails/>}/>
+                <Route path={BASE_URL + 'task/:taskID/:companyID'} element={<CompanyPage/>}/>
+                <Route path={BASE_URL + 'task/:taskID/edite'} element={<TaskEditePage/>}/>
+                <Route path={BASE_URL + 'test'} element={<TestPage/>}/>
+                <Route path={'*'} element={<Navigate to={BASE_URL}/>}/>
+            </Routes>
+        </>
     )
 }
 
