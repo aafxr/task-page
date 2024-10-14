@@ -22,7 +22,7 @@ import {Block} from "../../components/Block";
 import {FilePreview} from "../../components/FilePreview";
 
 const d = new Date()
-d.setHours(23, 59, 59, 999)
+d.setHours(23, 30, 0, 0)
 
 
 function updateTimeLabel(v: Task['taskTime']) {
@@ -44,6 +44,7 @@ export function TaskEditePage() {
     const task = useTask(taskID)!
     const [report, setReport] = useState(new Task(task))
     const [nextTask, setNextTask] = useState<Task>()
+    const [nextTaskDate, setNextTaskDate] = useState(new Date(d))
     const [contacts, setContacts] = useState<BXContact[]>([])
     const [taskTypes, setTaskTypes] = useState<TaskType[]>([])
     const [files, setFiles] = useState<File[]>([])
@@ -113,6 +114,8 @@ export function TaskEditePage() {
         if(files.length){
             report.files = files
         }
+
+        if(nextTask) nextTask.deadline = nextTaskDate
 
         const _files = files.reduce((a, f) => {
             a[f.name] = false
@@ -185,10 +188,8 @@ export function TaskEditePage() {
     function handleSelectDate(e: ChangeEvent<HTMLInputElement>) {
         const d = e.target.valueAsDate
         if (!d) return
-        d.setHours(23, 59, 59, 999)
-        const nextState = new Task(nextTask)
-        nextState.deadline = d
-        setNextTask(nextState)
+        d.setHours(23, 30, 0, 0)
+        setNextTaskDate(d)
     }
 
 
