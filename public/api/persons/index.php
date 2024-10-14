@@ -6,8 +6,10 @@ define('AUTH_REQUIRED', true);
 
 require_once (dirname(__DIR__,1) . '/local/header.php');
 
-$arParams["SELECT"] = Array("*", "UF_*");
-$filter = Array();
+$arParams["SELECT"] = Array("UF_*");
+$filter = Array(
+    'ACTIVE' => 'Y'
+);
 
 $rsUsers = CUser::GetList(($by="id"), ($order="desc"), $filter,$arParams);
 

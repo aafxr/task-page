@@ -67,7 +67,6 @@ $rsUsers = CUser::GetList(($by="id"), ($order="desc"), $filter,$arParams);
 $cUser = $rsUsers->GetNext();
 
 if($cUser != false){
-//     $user->Authorize($cUser['ID']);
     $result = [
         'ok' => true,
         'user' => $cUser,
