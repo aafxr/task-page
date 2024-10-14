@@ -3,7 +3,7 @@
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
 
 global $USER;
-
+if (!is_object($USER)) $USER = new CUser;
 
 $ok = $USER->IsAuthorized();
 if(!$ok){

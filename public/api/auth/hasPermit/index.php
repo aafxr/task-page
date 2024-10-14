@@ -1,7 +1,9 @@
 <?php
 
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
+
 global $USER;
+if (!is_object($USER)) $USER = new CUser;
 
 $TOKEN = '7523877036:AAHjl9LsmBpJhGJzjaIOgziJDUapxUSJiNI';
 
@@ -81,7 +83,6 @@ $rsUsers = CUser::GetList(($by="id"), ($order="desc"), $filter,$arParams);
 $cUser = $rsUsers->GetNext();
 
 if($cUser != false){
-//     $user->Authorize($cUser['ID']);
     $result = [
         'ok' => true,
         'user' => $cUser,
