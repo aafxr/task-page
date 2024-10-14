@@ -105,6 +105,10 @@ export function NewTask() {
             alert('Укажите ответственного')
             return
         }
+        if (!task.deadline){
+            alert('Укажите крайний срок')
+            return
+        }
 
         TaskService.add(s, task)
             .then(() => navigate('/'))

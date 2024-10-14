@@ -9,14 +9,19 @@ import {TaskDetails, TaskEditePage} from "./pages";
 import {useAppContext} from "./context/AppContext";
 import {Container} from "./components/Container";
 import {CompanyPage} from "./pages/CompanyPage";
+import {NetStat} from "./components/NetStat";
 import {NewTask} from "./pages/NewTask";
 import {TaskService} from "./services";
 import {fetchHasPermit} from "./api";
 import {Main} from "./pages";
 
 import './css/App.css';
+import axios from "axios";
 
 export const BASE_URL = process.env.REACT_APP_BACKEND_URL || '/';
+
+//@ts-ignore
+window.axios = axios
 
 function App() {
     const s = useAppContext()
@@ -95,14 +100,17 @@ function App() {
 
 
     return (
-        <Routes>
-            <Route path={BASE_URL} element={<Main/>}/>
-            <Route path={BASE_URL + 'task/new'} element={<NewTask/>}/>
-            <Route path={BASE_URL + 'task/:taskID'} element={<TaskDetails/>}/>
-            <Route path={BASE_URL + 'task/:taskID/:companyID'} element={<CompanyPage/>}/>
-            <Route path={BASE_URL + 'task/:taskID/edite'} element={<TaskEditePage/>}/>
-            <Route path={'*'} element={<Navigate to={BASE_URL}/>}/>
-        </Routes>
+        <>
+            <NetStat />
+            <Routes>
+                <Route path={BASE_URL} element={<Main/>}/>
+                <Route path={BASE_URL + 'task/new'} element={<NewTask/>}/>
+                <Route path={BASE_URL + 'task/:taskID'} element={<TaskDetails/>}/>
+                <Route path={BASE_URL + 'task/:taskID/:companyID'} element={<CompanyPage/>}/>
+                <Route path={BASE_URL + 'task/:taskID/edite'} element={<TaskEditePage/>}/>
+                <Route path={'*'} element={<Navigate to={BASE_URL}/>}/>
+            </Routes>
+        </>
     )
 }
 

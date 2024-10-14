@@ -2,6 +2,7 @@ import {AppContextState} from "../context/AppContext";
 import {errors} from "../errors";
 import {ReactNode} from "react";
 import {AuthMessage} from "../components/AuthMessage";
+import axios from "axios";
 
 /**
  * преобразует сообщение  об ошибке в читаемое сообщение
@@ -18,6 +19,8 @@ function errorMessageToReadableMessage(errorMessage: string): {node: ReactNode, 
             return {node: 'Приложение временно не достсупно', code: 500}
         case errors.BX_INSUFFICIENT_SCOPE:
             return {node: 'Недостаточно прав', code: 403}
+        case errors.NETWORK_ERROR:
+            return {node: 'Проблемы с интернетом, попробуйте повторить запрос', code: 0}
         default:
             return {node: errorMessage, code: 500}
     }
