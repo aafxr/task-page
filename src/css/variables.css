@@ -20,7 +20,7 @@
 
     --ui-radius: 4px;
     --ui-color: var(--text-color);
-    --ui-border-color: var(--border-color);
+    --ui-border-color: var(--text-accent-color);
     --ui-height: 40px;
     --ui-bg-color: var(--bg-main);
     --ui-bg-error: #FFDCDB;
