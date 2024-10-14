@@ -1,0 +1,20 @@
+.netstat{
+    height: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 0.6rem;
+    transition: height .3s;
+}
+
+.netstat.offline{
+    height: 20px;
+    background-color: var(--text-error-color);
+}
+
+.netstat.online{
+    height: 20px;
+    background-color: var(--task-success-color);
+}
+

@@ -14,7 +14,9 @@ interface RequestConfigWithFlag extends AxiosRequestConfig{
 
 const AUTH = 'auth='
 
-export const appFetch = axios.create({}) as AxiosInstanceWithFlag;
+export const appFetch = axios.create({
+    timeout: 10000
+}) as AxiosInstanceWithFlag;
 
 // const o:any = {}
 // axios.interceptors.request.use(r => {
@@ -48,7 +50,7 @@ const sleep = (ms: number) => new Promise(r => setTimeout(r, ms))
 //automatically refresh auth
 appFetch.interceptors.response.use(async (r) => r, async (err) => {
     const originalRequest = err.config as RequestConfigWithFlag
-    if (err.response.status === 401 && !originalRequest._retry) {
+    if (err.response?.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true
         try {
             if (await refreshSession()) {

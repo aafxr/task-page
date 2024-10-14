@@ -1,4 +1,4 @@
-import {useEffect, useMemo} from "react";
+import {useEffect} from "react";
 import {Navigate, Route, Routes, useLocation, useNavigate} from "react-router-dom";
 
 import {ErrorMessageComponent} from "./components/ErrorMessageComponent";
@@ -15,44 +15,29 @@ import {fetchHasPermit} from "./api";
 import {Main} from "./pages";
 
 import './css/App.css';
-import {TestPage} from "./pages/TestPage/TestPage";
 
 export const BASE_URL = process.env.REACT_APP_BACKEND_URL || '/';
-
-
-function useQuery() {
-    const {search} = useLocation();
-
-    return useMemo(() => new URLSearchParams(search), [search]);
-}
-
-function QueryNavigate({name = null}: { name?: string | undefined | null }) {
-    if (!name) return null
-    console.log('navigate to: ', BASE_URL + name)
-    return <Navigate to={BASE_URL + name}/>
-}
 
 function App() {
     const s = useAppContext()
     const navigate = useNavigate()
     const {pathname} = useLocation()
-    const query = useQuery()
 
 
     useEffect(() => {
         setInterval(() => {
             fetchHasPermit()
-                .then(({ok, user}) => {
-                    if (ok) s.updateAppContext(p => p.loggedIn === ok ? p : {...p, user, loggedIn: true})
-                    else s.updateAppContext(p => p.loggedIn === ok ? p : {...p, user: undefined, loggedIn: false})
+                .then(r => {
+                    if (r) s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: true})
+                    else s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: false})
                 })
                 .catch(console.error)
         }, 30_000)
 
         fetchHasPermit()
-            .then(({ok, user}) => {
-                if (ok) s.updateAppContext(p => p.loggedIn === ok ? p : {...p, user, loggedIn: true})
-                else s.updateAppContext(p => p.loggedIn === ok ? p : {...p, user: undefined, loggedIn: false})
+            .then(r => {
+                if (r) s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: true})
+                else s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: false})
             })
             .catch(console.error)
     }, []);
@@ -68,7 +53,6 @@ function App() {
 
 
     useEffect(() => {
-
         let id: number
         if (!('Telegram' in window)) {
             id = window.setInterval(() => tgInit(), 50)
@@ -111,18 +95,14 @@ function App() {
 
 
     return (
-        <>
-            <QueryNavigate name={query.get('name')}/>
-            <Routes>
-                <Route path={BASE_URL} element={<Main/>}/>
-                <Route path={BASE_URL + 'task/new'} element={<NewTask/>}/>
-                <Route path={BASE_URL + 'task/:taskID'} element={<TaskDetails/>}/>
-                <Route path={BASE_URL + 'task/:taskID/:companyID'} element={<CompanyPage/>}/>
-                <Route path={BASE_URL + 'task/:taskID/edite'} element={<TaskEditePage/>}/>
-                <Route path={BASE_URL + 'test'} element={<TestPage/>}/>
-                <Route path={'*'} element={<Navigate to={BASE_URL}/>}/>
-            </Routes>
-        </>
+        <Routes>
+            <Route path={BASE_URL} element={<Main/>}/>
+            <Route path={BASE_URL + 'task/new'} element={<NewTask/>}/>
+            <Route path={BASE_URL + 'task/:taskID'} element={<TaskDetails/>}/>
+            <Route path={BASE_URL + 'task/:taskID/:companyID'} element={<CompanyPage/>}/>
+            <Route path={BASE_URL + 'task/:taskID/edite'} element={<TaskEditePage/>}/>
+            <Route path={'*'} element={<Navigate to={BASE_URL}/>}/>
+        </Routes>
     )
 }
 
