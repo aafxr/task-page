@@ -25,8 +25,9 @@ export function AlertMessage() {
     }, []);
 
 
-    function handleCloseAlert(a: string){
-        const newState = messages.filter(m => m !== a)
+    function handleCloseAlert(idx: number){
+        const newState = [...messages]
+        newState.splice(idx, 1)
         setMessages(newState)
     }
 
@@ -35,7 +36,7 @@ export function AlertMessage() {
         <div className='alerts'>
             {messages.map((a, i) => (
                 <div key={i} className='alert-item'>
-                    <div className='alert-item-close'  onClick={() => handleCloseAlert(a)}>
+                    <div className='alert-item-close'  onClick={() => handleCloseAlert(i)}>
                         <PlusIcon className='icon' />
                     </div>
                     {a}
