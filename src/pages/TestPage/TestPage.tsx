@@ -1,10 +1,11 @@
 import {useEffect, useMemo, useState} from "react";
 
+import {CustomSelect} from "../../components/CustomSelect";
 import {ErrorService, TaskService} from "../../services";
 import {useAppContext} from "../../context/AppContext";
+import {Container} from "../../components/Container";
 import {TaskType} from "../../classes/TaskType";
 import {Title} from "../../components/Title";
-import Select from 'react-select'
 
 import './TestPage.css'
 
@@ -21,7 +22,7 @@ export function TestPage() {
 
 
     useEffect(() => {
-        if(!taskTypes.length || !s.user) return
+        if(taskTypes.length || !s.user) return
         TaskService.getTaskTypes(s)
             .then(r => {
                 console.log('getTaskTypes done')
@@ -55,11 +56,13 @@ export function TestPage() {
                 <Title>Тестовая страница</Title>
             </div>
             <div className='wrapper-content'>
-                <Select
-                    defaultValue={selectData[0]}
-                    options={selectData}
-                    onChange={r => handleSelect(r?.value)}
-                />
+                <Container>
+                    <CustomSelect
+                        defaultValue={selectData[0]}
+                        options={selectData}
+                        onChange={r => handleSelect(r?.value)}
+                    />
+                </Container>
             </div>
         </div>
     );

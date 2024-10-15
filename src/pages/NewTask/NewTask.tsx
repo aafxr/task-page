@@ -1,12 +1,12 @@
 import {useNavigate} from "react-router-dom";
 import React, {ChangeEvent, useEffect, useMemo, useState} from 'react';
 
+import {CustomSelect} from "../../components/CustomSelect";
 import {useAppContext} from "../../context/AppContext";
 import {DateSelect} from "../../components/DateSelect";
 import {Container} from "../../components/Container";
 import {Checkbox} from "../../components/Checkbox";
 import {TextArea} from "../../components/TextArea";
-import {Select} from "../../components/Select";
 import {Button} from "../../components/Button";
 import {Title} from "../../components/Title";
 import {Block} from "../../components/Block";
@@ -80,9 +80,9 @@ export function NewTask() {
     }
 
 
-    function handleResponsiblePerson(personID: string) {
+    function handleResponsiblePerson(personID?: string) {
         const nextState = new Task(task)
-        nextState.responsibleId = personID
+        nextState.responsibleId = personID || '-1'
         setTask(nextState)
     }
 
@@ -101,7 +101,7 @@ export function NewTask() {
             alert('Укажите цель задачи')
             return
         }
-        if (task.responsibleId === '-1'){
+        if (!task.responsibleId || task.responsibleId === '-1'){
             alert('Укажите ответственного')
             return
         }
@@ -163,8 +163,11 @@ export function NewTask() {
                         </div>
                         <div className='ui-form-row'>
                             <Text>Ответственный</Text>
-                            <Select full options={selectPersonData} value={task.responsibleId}
-                                    onChange={handleResponsiblePerson}/>
+                            <CustomSelect
+                                defaultValue={selectPersonData[0]}
+                                options={selectPersonData}
+                                onChange={r => handleResponsiblePerson(r?.value)}
+                            />
                         </div>
                     </Block>
                 </Container>

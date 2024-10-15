@@ -247,7 +247,7 @@ export class TaskService {
     static async update(ctx: AppContextState, task: Task, nextTask?: Task) {
         try {
             const originTask = ctx.tasks.find(t => t.id === task.id)
-            if (!originTask) return false
+            if (!originTask) throw new Error(`Задача с ид ${task.id} не найдена`)
 
             if (nextTask) {
                 task.ufNextTask = await TaskService.add(ctx, nextTask)

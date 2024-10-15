@@ -10,7 +10,6 @@ import {TaskService} from "../../services";
 import {Text} from "../../components/Text";
 import {Checkbox} from "../../components/Checkbox";
 import {Range} from "../../components/Range";
-import {Select} from "../../components/Select";
 import {DateSelect} from "../../components/DateSelect";
 import {Title} from "../../components/Title";
 import {BASE_URL} from "../../App";
@@ -20,6 +19,7 @@ import {Task} from "../../classes/Task";
 import {BXContact} from "../../classes/BXContact";
 import {Block} from "../../components/Block";
 import {FilePreview} from "../../components/FilePreview";
+import {CustomSelect} from "../../components/CustomSelect";
 
 const d = new Date()
 d.setHours(23, 30, 0, 0)
@@ -107,7 +107,7 @@ export function TaskEditePage() {
             return
         }
         if(nextTask && nextTask.responsibleId === '-1'){
-            alert('Укажите ответственного для следующей заддачи')
+            alert('Укажите ответственного для следующей задачи')
             return
         }
 
@@ -154,11 +154,11 @@ export function TaskEditePage() {
     }
 
 
-    function handleClosePrevDay(e: ChangeEvent<HTMLInputElement>) {
-        const nextReport = new Task(report)
-        nextReport.closePrevDay = e.target.checked
-        setReport(nextReport)
-    }
+    // function handleClosePrevDay(e: ChangeEvent<HTMLInputElement>) {
+    //     const nextReport = new Task(report)
+    //     nextReport.closePrevDay = e.target.checked
+    //     setReport(nextReport)
+    // }
 
 
     function handleSpentTime(e: ChangeEvent<HTMLInputElement>) {
@@ -168,10 +168,14 @@ export function TaskEditePage() {
     }
 
 
-    function nextDeal(v: string) {
-        if (+v === report.nextTaskType) return
+    function nextDeal(v?: string) {
         const nextReport = new Task(report)
-        nextReport.nextTaskType = +v
+        if(!v){
+            report.nextTaskType = -1
+        } else if (+v === report.nextTaskType) return
+        else {
+            nextReport.nextTaskType = +v
+        }
         setReport(nextReport)
 
         const nt = new Task(nextTask)
@@ -181,7 +185,7 @@ export function TaskEditePage() {
             setNextTask(nt)
         }
 
-        if (+v === -1) setNextTask(undefined)
+        if (!v || +v === -1) setNextTask(undefined)
     }
 
 
@@ -207,16 +211,16 @@ export function TaskEditePage() {
     }
 
 
-    function handleResponsiblePerson(personID: string) {
+    function handleResponsiblePerson(personID?: string) {
         const nextState = new Task(nextTask)
-        nextState.responsibleId = personID
+        nextState.responsibleId = personID || '-1'
         setNextTask(nextState)
     }
 
 
-    function handleContact(contactID: string) {
+    function handleContact(contactID?: string) {
         const nextState = new Task(nextTask)
-        nextState.ufCrmTaskContact = contactID
+        nextState.ufCrmTaskContact = contactID || null
         setNextTask(nextState)
     }
 
@@ -304,7 +308,11 @@ export function TaskEditePage() {
                     <Block className='next-task-container'>
                         <div className='ui-form-row'>
                             <Text>Запланировать далее:</Text>
-                            <Select full options={selectTaskTypes} onChange={nextDeal}/>
+                            <CustomSelect
+                                defaultValue={selectTaskTypes[0]}
+                                options={selectTaskTypes}
+                                onChange={r => nextDeal(r?.value)}
+                            />
                         </div>
                         {!!nextTask && (
                             <>
@@ -325,13 +333,19 @@ export function TaskEditePage() {
                                 </div>
                                 <div className='ui-form-row'>
                                     <Text>Сотрудник</Text>
-                                    <Select full options={selectPersonData} value={nextTask.responsibleId}
-                                            onChange={handleResponsiblePerson}/>
+                                    <CustomSelect
+                                        defaultValue={selectPersonData[0]}
+                                        options={selectPersonData}
+                                        onChange={r => handleResponsiblePerson(r?.value)}
+                                    />
                                 </div>
                                 <div className='ui-form-row'>
                                     <Text>Контактное лицо</Text>
-                                    <Select full options={selectContactsData} value={nextTask.ufCrmTaskContact}
-                                            onChange={handleContact}/>
+                                    <CustomSelect
+                                        defaultValue={selectContactsData[0]}
+                                        options={selectContactsData}
+                                        onChange={r => handleContact(r?.value)}
+                                    />
                                 </div>
                                 <div className='ui-form-row'>
                                     <Text>Желаемый результат:</Text>

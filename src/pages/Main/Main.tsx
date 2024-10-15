@@ -1,18 +1,18 @@
+import {useNavigate} from "react-router-dom";
+import React, {useEffect, useMemo, useState} from "react";
+
+import {ErrorMessageComponent} from "../../components/ErrorMessageComponent";
 import {TaskFilter, TasksComponent} from "../../components/TasksComponent";
 import {dateFormatter} from "../../utils/dateFormatter";
 import {useAppContext} from "../../context/AppContext";
 import {Container} from "../../components/Container";
 import {Calendar} from "../../components/Calendar";
-import {Modal} from "../../components/Moadl";
-import {ErrorMessageComponent} from "../../components/ErrorMessageComponent";
 import {Button} from "../../components/Button";
-import React, {ChangeEvent, useEffect, useMemo, useRef, useState} from "react";
-import {Block} from "../../components/Block";
 import {PlusIcon} from "../../components/svg";
+import {Block} from "../../components/Block";
+import {Modal} from "../../components/Moadl";
 import {Text} from "../../components/Text";
-import {useNavigate} from "react-router-dom";
 import {BASE_URL} from "../../App";
-
 
 
 type FilterType = {
@@ -20,7 +20,7 @@ type FilterType = {
     filter: TaskFilter
 }
 
-const filters : FilterType[] = [
+const filters: FilterType[] = [
     {
         filter: "all",
         title: 'Все'
@@ -40,8 +40,6 @@ const filters : FilterType[] = [
 ]
 
 
-
-
 export function Main() {
     const navigate = useNavigate()
     const s = useAppContext()
@@ -52,9 +50,9 @@ export function Main() {
     const today = useMemo(() => {
         const d = s.selectedDay
         const dateStart = new Date()
-        dateStart.setHours(0,0,0,0)
+        dateStart.setHours(0, 0, 0, 0)
         const dateEnd = new Date()
-        dateEnd.setHours(23,59,59,999)
+        dateEnd.setHours(23, 59, 59, 999)
         return d.valueOf() >= dateStart.valueOf() && d.valueOf() < dateEnd.valueOf()
     }, [s.selectedDay])
 
@@ -74,31 +72,49 @@ export function Main() {
     }
 
 
-    function handleResetError(){
-        if(s.errorCode !== 401){
+    function handleResetError() {
+        if (s.errorCode !== 401) {
             s.updateAppContext(p => ({...p, error: null, errorCode: null}))
         }
     }
 
 
-    function handleAddTask(){
+    function handleAddTask() {
         navigate(`${BASE_URL}task/new`)
+    }
+
+
+    function handleSelectedDayArrowClick(e: React.UIEvent<HTMLDivElement>, type: 'left' | 'right'){
+        e.stopPropagation()
+        const d = new Date(s.selectedDay)
+        if(type === 'left'){
+            d.setDate(d.getDate() - 1)
+        } else {
+            d.setDate(d.getDate() + 1)
+        }
+        s.updateAppContext(p => ({...p, selectedDay: d}))
     }
 
 
     return (
         <div className='wrapper'>
             <div className='wrapper-header'>
-                <div className='mainPage-filter'>
-                    <Button onClick={handleToggleCalendar}>{dateFormatter.format(s.selectedDay)}</Button>
-                    {today && filters.map(e =>
-                        <Button
-                            key={e.filter}
-                            className={e=== f ? 'active-btn' : ''}
-                            onClick={() => setFilter(e)}
-                        >{e.title}</Button>
-                    )}
-                </div>
+                <Button className='selectedDay' full onClick={handleToggleCalendar}>
+                    <div className='selectedDay-arrow selectedDay-arrow--left'  onClick={e => handleSelectedDayArrowClick(e, 'left')}/>
+                    <div className='selectedDay-arrow selectedDay-arrow--right' onClick={e => handleSelectedDayArrowClick(e, 'right')} />
+                    {dateFormatter.format(s.selectedDay)}
+                </Button>
+                {today && (
+                    <div className='mainPage-filter'>
+                        {filters.map(e =>
+                            <Button
+                                key={e.filter}
+                                className={e === f ? 'active-btn' : ''}
+                                onClick={() => setFilter(e)}
+                            >{e.title}</Button>
+                        )}
+                    </div>
+                )}
                 <Container style={{paddingBottom: 'var(--padding)'}}>
                     {!!s.error && (
                         <ErrorMessageComponent onClose={handleResetError}>
@@ -115,7 +131,7 @@ export function Main() {
                 </Container>
             </div>
             <div className='wrapper-content'>
-                <Container >
+                <Container>
                     {
                         <Block className='addTask' onClick={handleAddTask}>
                             <PlusIcon className='icon'/>

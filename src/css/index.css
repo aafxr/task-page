@@ -253,15 +253,36 @@ body, html {
 }
 
 
+.selectedDay{
+    position: relative;
+}
 
-/*.dayBtn {*/
-/*    padding: 8px 12px;*/
-/*    color: var(--text-color);*/
-/*    font-weight: 600;*/
-/*    background-color: var(--bg-main);*/
-/*    border-radius: 4px;*/
-/*    border: none;*/
-/*}*/
+.selectedDay-arrow{
+    position: absolute;
+    top: 1px;
+    width: calc(var(--ui-height) - 4px);
+    height: calc(var(--ui-height) - 4px);
+}
+
+.selectedDay-arrow:after{
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    border-top: 4px solid var(--text-accent-color);
+    border-left: 4px solid var(--text-accent-color);
+    border-right: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    transform: rotate(-45deg) translate(-50%, -50%);
+}
+
+.selectedDay-arrow--right{
+    right: 1px;
+    transform: rotate(180deg);
+}
+.selectedDay-arrow--left{
+    left: 1px;
+}
 
 .tasks-list {
     border-radius: var(--task-border-radius);
@@ -297,7 +318,6 @@ body, html {
     flex-direction: column;
     align-items: flex-start;
     margin-bottom: var(--margin);
-    overflow: hidden;
 }
 
 .report-content,
