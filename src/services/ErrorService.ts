@@ -3,6 +3,8 @@ import {errors} from "../errors";
 import {ReactNode} from "react";
 import {AuthMessage} from "../components/AuthMessage";
 import axios from "axios";
+import {BASE_URL} from "../App";
+import {dispatchAlert} from "../components/AlertMessage";
 
 /**
  * преобразует сообщение  об ошибке в читаемое сообщение
@@ -31,6 +33,14 @@ export class ErrorService {
     static handleError(ctx: AppContextState) {
         return (e: Error) => {
             // handle error here ...
+            const log = {
+                name: e.name,
+                message: e.message,
+                stack: e.stack
+            }
+            axios.post(BASE_URL + 'api/log/', log).catch(console.error)
+            dispatchAlert(e.message)
+
             const err = errorMessageToReadableMessage(e.message)
             ctx.updateAppContext(s => ({...s, error: err.node, errorCode: err.code}))
             console.error('[ErrorService] ', e)

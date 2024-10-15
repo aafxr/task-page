@@ -6,7 +6,7 @@ import {Calendar} from "../../components/Calendar";
 import {Modal} from "../../components/Moadl";
 import {ErrorMessageComponent} from "../../components/ErrorMessageComponent";
 import {Button} from "../../components/Button";
-import {useEffect, useMemo, useState} from "react";
+import React, {ChangeEvent, useEffect, useMemo, useRef, useState} from "react";
 import {Block} from "../../components/Block";
 import {PlusIcon} from "../../components/svg";
 import {Text} from "../../components/Text";
@@ -124,6 +124,8 @@ export function Main() {
                     }
                     <TasksComponent filter={f.filter}/>
                 </Container>
+            </div>
+            <div className='wrapper-footer'>
             </div>
         </div>
     );

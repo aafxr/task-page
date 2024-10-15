@@ -9,19 +9,18 @@ import {TaskDetails, TaskEditePage} from "./pages";
 import {useAppContext} from "./context/AppContext";
 import {Container} from "./components/Container";
 import {CompanyPage} from "./pages/CompanyPage";
-import {NetStat} from "./components/NetStat";
 import {NewTask} from "./pages/NewTask";
 import {TaskService} from "./services";
 import {fetchHasPermit} from "./api";
 import {Main} from "./pages";
 
 import './css/App.css';
-import axios from "axios";
+import {QueryNav} from "./components/QueryNav";
+import {TestPage} from "./pages/TestPage/TestPage";
+import {AlertMessage} from "./components/AlertMessage";
+import {NetStat} from "./components/NetStat";
 
 export const BASE_URL = process.env.REACT_APP_BACKEND_URL || '/';
-
-//@ts-ignore
-window.axios = axios
 
 function App() {
     const s = useAppContext()
@@ -32,17 +31,17 @@ function App() {
     useEffect(() => {
         setInterval(() => {
             fetchHasPermit()
-                .then(r => {
-                    if (r) s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: true})
-                    else s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: false})
+                .then(({ok, user}) => {
+                    if (ok) s.updateAppContext(p => p.loggedIn === ok ? p : {...p, loggedIn: true, user})
+                    else s.updateAppContext(p => p.loggedIn === ok ? p : {...p, loggedIn: false, user: undefined})
                 })
                 .catch(console.error)
         }, 30_000)
 
         fetchHasPermit()
-            .then(r => {
-                if (r) s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: true})
-                else s.updateAppContext(p => p.loggedIn === r ? p : {...p, loggedIn: false})
+            .then(({ok, user}) => {
+                if (ok) s.updateAppContext(p => p.loggedIn === ok ? p : {...p, loggedIn: true, user})
+                else s.updateAppContext(p => p.loggedIn === ok ? p : {...p, loggedIn: false, user: undefined})
             })
             .catch(console.error)
     }, []);
@@ -102,12 +101,15 @@ function App() {
     return (
         <>
             <NetStat />
+            <AlertMessage />
+            <QueryNav name={'page'} />
             <Routes>
                 <Route path={BASE_URL} element={<Main/>}/>
                 <Route path={BASE_URL + 'task/new'} element={<NewTask/>}/>
                 <Route path={BASE_URL + 'task/:taskID'} element={<TaskDetails/>}/>
                 <Route path={BASE_URL + 'task/:taskID/:companyID'} element={<CompanyPage/>}/>
                 <Route path={BASE_URL + 'task/:taskID/edite'} element={<TaskEditePage/>}/>
+                <Route path={BASE_URL + 'test'} element={<TestPage/>}/>
                 <Route path={'*'} element={<Navigate to={BASE_URL}/>}/>
             </Routes>
         </>

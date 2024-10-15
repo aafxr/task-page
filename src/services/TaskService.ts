@@ -24,7 +24,6 @@ export class TaskService {
                     await bxAuth.auth()
                     auth = await bitrix.getAuth()
                 }
-                console.log('auth' , auth)
                 if(!auth) return
                 const user_id = auth.user_id
                 ctx.updateAppContext(({...ctx, /*tasks: [], */ tasksLoading: true, tasks: []}))

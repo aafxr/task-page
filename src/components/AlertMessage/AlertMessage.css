@@ -1,0 +1,44 @@
+.alerts{
+    position: fixed;
+    inset: 0;
+    padding: 40px var(--padding) var(--padding) var(--padding);
+    display: flex;
+    flex-direction: column;
+    gap: var(--offset);
+    background-color: transparent;
+    z-index: 2000;
+    pointer-events: none;
+}
+
+.alert-item{
+    min-height: 100px;
+    position: relative;
+    padding: var(--padding) calc(var(--padding) * 2) var(--padding) var(--padding);
+    color: var(--text-color);
+    background-color: var(--bg-main);
+    border: 1px solid var(--text-accent-color);
+    box-shadow: 0 0 6px var(--text-accent-color);
+    border-radius: var(--border-radius);
+    pointer-events: all;
+}
+
+.alert-item-close{
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: var(--padding);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.alert-item-close .icon{
+    color: var(--text-error-color);
+    transform: rotate(45deg);
+}
+
+
+
+

@@ -174,16 +174,31 @@ export function TaskDetails() {
                                         <div className="client-field-val">{task.title || UNSET}</div>
                                     </div>
                                     <div className="client-field">
-                                        <div className="client-field-descr">Статус</div>
-                                        <div className="client-field-val">{task.ufAuto851551329931 || UNSET}</div>
+                                        <div className="client-field-descr">Цель</div>
+                                        <div className="client-field-val">{task.description || UNSET}</div>
                                     </div>
                                     <div className="client-field">
                                         <div className="client-field-descr">Ответственный</div>
                                         <div className="client-field-val">{task.responsible?.name || UNSET}</div>
                                     </div>
                                     <div className="client-field">
+                                        <div className="client-field-descr">Поставил задачу</div>
+                                        <div className="client-field-val">{task.creator?.name || UNSET}</div>
+                                    </div>
+                                    <div className="client-field">
                                         <div className="client-field-descr">Отчет руководителю</div>
                                         <div className="client-field-val">{task.report || UNSET}</div>
+                                    </div>
+                                    {task.deadline && (
+                                        <div className="client-field">
+                                            <div className="client-field-descr">Крайний срок</div>
+                                            <div className="client-field-val">
+                                                <strong>{dateFormatter.format(task.changedDate!)}</strong></div>
+                                        </div>
+                                    )}
+                                    <div className="client-field">
+                                        <div className="client-field-descr">Статус</div>
+                                        <div className="client-field-val">{task.ufAuto851551329931 || UNSET}</div>
                                     </div>
                                     <div className="client-field">
                                         <div className="client-field-descr">Дата создания</div>
@@ -195,13 +210,6 @@ export function TaskDetails() {
                                         <div
                                             className="client-field-val">{task.changedDate ? dateFormatter.format(task.changedDate) : UNSET}</div>
                                     </div>
-                                    {task.deadline && (
-                                        <div className="client-field">
-                                            <div className="client-field-descr">Крайний срок</div>
-                                            <div className="client-field-val">
-                                                <strong>{dateFormatter.format(task.changedDate!)}</strong></div>
-                                        </div>
-                                    )}
                                 </Block>
 
 
