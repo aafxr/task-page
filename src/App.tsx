@@ -1,26 +1,34 @@
-import {useEffect} from "react";
+import {lazy, Suspense, useEffect} from "react";
 import {Navigate, Route, Routes, useLocation, useNavigate} from "react-router-dom";
 
 import {ErrorMessageComponent} from "./components/ErrorMessageComponent";
 import {setTGThemeColor} from "./utils/setTGThemeColor";
 import {PersonService} from "./services/PersonService";
+import {AlertMessage} from "./components/AlertMessage";
 import {AuthMessage} from "./components/AuthMessage";
-import {TaskDetails, TaskEditePage} from "./pages";
 import {useAppContext} from "./context/AppContext";
 import {Container} from "./components/Container";
-import {CompanyPage} from "./pages/CompanyPage";
-import {NewTask} from "./pages/NewTask";
+import {QueryNav} from "./components/QueryNav";
+import {NetStat} from "./components/NetStat";
 import {TaskService} from "./services";
 import {fetchHasPermit} from "./api";
 import {Main} from "./pages";
 
 import './css/App.css';
-import {QueryNav} from "./components/QueryNav";
-import {TestPage} from "./pages/TestPage/TestPage";
-import {AlertMessage} from "./components/AlertMessage";
-import {NetStat} from "./components/NetStat";
+import {PageLoader} from "./components/PageLoader";
 
 export const BASE_URL = process.env.REACT_APP_BACKEND_URL || '/';
+
+
+const NewTaskLazy = lazy(() => import('./pages/NewTask/NewTask'))
+const TaskDetailsLazy = lazy(() => import('./pages/TaskDetails/TaskDetails'))
+const CompanyPageLazy = lazy(() => import('./pages/CompanyPage/CompanyPage'))
+const TaskEditePageLazy = lazy(() => import('./pages/TaskEditePage/TaskEditePage'))
+const TestPageLazy = lazy(() => import('./pages/TestPage/TestPage'))
+
+
+
+
 
 function App() {
     const s = useAppContext()
@@ -105,11 +113,11 @@ function App() {
             <QueryNav name={'page'} />
             <Routes>
                 <Route path={BASE_URL} element={<Main/>}/>
-                <Route path={BASE_URL + 'task/new'} element={<NewTask/>}/>
-                <Route path={BASE_URL + 'task/:taskID'} element={<TaskDetails/>}/>
-                <Route path={BASE_URL + 'task/:taskID/:companyID'} element={<CompanyPage/>}/>
-                <Route path={BASE_URL + 'task/:taskID/edite'} element={<TaskEditePage/>}/>
-                <Route path={BASE_URL + 'test'} element={<TestPage/>}/>
+                <Route path={BASE_URL + 'task/new'} element={<Suspense fallback={<PageLoader/>}><NewTaskLazy/></Suspense>}/>
+                <Route path={BASE_URL + 'task/:taskID'} element={<Suspense fallback={<PageLoader/>}><TaskDetailsLazy/></Suspense>}/>
+                <Route path={BASE_URL + 'task/:taskID/:companyID'} element={<Suspense fallback={<PageLoader/>}><CompanyPageLazy/></Suspense>}/>
+                <Route path={BASE_URL + 'task/:taskID/edite'} element={<Suspense fallback={<PageLoader/>}><TaskEditePageLazy/></Suspense>}/>
+                <Route path={BASE_URL + 'test'} element={<Suspense fallback={<PageLoader/>}><TestPageLazy/></Suspense>}/>
                 <Route path={'*'} element={<Navigate to={BASE_URL}/>}/>
             </Routes>
         </>

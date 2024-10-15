@@ -2,6 +2,7 @@ import React, {ButtonHTMLAttributes} from 'react';
 import clsx from "clsx";
 
 import './Button.css'
+import {Loader} from "../Loader";
 
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>{
@@ -20,7 +21,7 @@ export function Button(props: ButtonProps) {
 
     return (
         <button {...props} className={cn}>
-            {props.loading ? <span className="loader"></span> : props.children}
+            {props.loading ? <Loader /> : props.children}
         </button>
     );
 }

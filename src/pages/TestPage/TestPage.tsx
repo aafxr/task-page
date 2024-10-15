@@ -1,9 +1,8 @@
 import {Title} from "../../components/Title";
 
+import './TestPage.css'
+
 export function TestPage() {
-
-
-
 
 
 
@@ -18,3 +17,4 @@ export function TestPage() {
     );
 }
 
+export default TestPage

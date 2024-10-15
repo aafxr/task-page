@@ -179,3 +179,5 @@ export function NewTask() {
     );
 }
 
+export default NewTask
+

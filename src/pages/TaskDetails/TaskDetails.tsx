@@ -233,3 +233,4 @@ export function TaskDetails() {
     );
 }
 
+export default TaskDetails

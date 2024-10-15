@@ -359,3 +359,4 @@ export function TaskEditePage() {
     );
 }
 
+export default TaskEditePage
