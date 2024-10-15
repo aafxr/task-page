@@ -18,6 +18,7 @@ import './css/App.css';
 import {QueryNav} from "./components/QueryNav";
 import {TestPage} from "./pages/TestPage/TestPage";
 import {AlertMessage} from "./components/AlertMessage";
+import {NetStat} from "./components/NetStat";
 
 export const BASE_URL = process.env.REACT_APP_BACKEND_URL || '/';
 
@@ -99,6 +100,7 @@ function App() {
 
     return (
         <>
+            <NetStat />
             <AlertMessage />
             <QueryNav name={'page'} />
             <Routes>
