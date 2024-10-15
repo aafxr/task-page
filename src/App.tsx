@@ -40,6 +40,7 @@ function App() {
         setInterval(() => {
             fetchHasPermit()
                 .then(({ok, user}) => {
+                    console.log({ok, user})
                     if (ok) s.updateAppContext(p => p.loggedIn === ok ? p : {...p, loggedIn: true, user})
                     else s.updateAppContext(p => p.loggedIn === ok ? p : {...p, loggedIn: false, user: undefined})
                 })
@@ -48,6 +49,7 @@ function App() {
 
         fetchHasPermit()
             .then(({ok, user}) => {
+                console.log({ok, user})
                 if (ok) s.updateAppContext(p => p.loggedIn === ok ? p : {...p, loggedIn: true, user})
                 else s.updateAppContext(p => p.loggedIn === ok ? p : {...p, loggedIn: false, user: undefined})
             })

@@ -23,6 +23,7 @@ if($ok){
 
     if($cUser && isset($cUser['UF_TELEGRAM_ID'])){
         $result['ok'] = true;
+        $result['user'] = $cUser;
         echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         exit;
     }

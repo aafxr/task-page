@@ -21,7 +21,7 @@ $userId = $request['user_id'];
 $taskId = $request['task_id'];
 
 
-if (!$userId || !$taskId) {
+if (!isset($userId) || !isset($taskId)) {
     http_response_code(400);
     $result['ok'] = false;
     $result['message'] = 'bad request';

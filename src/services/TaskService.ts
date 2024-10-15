@@ -334,9 +334,13 @@ export class TaskService {
     }
 
 
-    static async getTaskTypes(ctx: AppContextState, task: Task): Promise<TaskType[]> {
+    static async getTaskTypes(ctx: AppContextState, task?: Task): Promise<TaskType[]> {
         try {
-            const types = await fetchTaskTypes(task.responsibleId, task.id)
+            const responsibleId = task?.responsibleId || ctx.user?.ID
+            const taskId = task?.id || '0'
+            if (!responsibleId) return []
+
+            const types = await fetchTaskTypes(responsibleId, taskId)
             return types.map(t => new TaskType(t))
         } catch (e) {
             ErrorService.handleError(ctx)(e as Error)
