@@ -260,20 +260,11 @@ body, html {
 .selectedDay-arrow{
     position: absolute;
     top: 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: calc(var(--ui-height) - 4px);
     height: calc(var(--ui-height) - 4px);
-}
-
-.selectedDay-arrow:after{
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    border-top: 4px solid var(--text-accent-color);
-    border-left: 4px solid var(--text-accent-color);
-    border-right: 4px solid transparent;
-    border-bottom: 4px solid transparent;
-    transform: rotate(-45deg) translate(-50%, -50%);
 }
 
 .selectedDay-arrow--right{
@@ -283,6 +274,17 @@ body, html {
 .selectedDay-arrow--left{
     left: 1px;
 }
+
+.selectedDay-arrow:after{
+    content: "";
+    border-top: 4px solid var(--text-accent-color);
+    border-left: 4px solid var(--text-accent-color);
+    border-right: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    transform: rotate(-45deg);
+}
+
+
 
 .tasks-list {
     border-radius: var(--task-border-radius);
