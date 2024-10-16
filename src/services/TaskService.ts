@@ -9,6 +9,8 @@ import {bitrix, bxAuth} from "../bitrix";
 import {ContactService} from "./ContactService";
 import {fetchFindFolder} from "../api/fetchFindFolder";
 import {BXFolder} from "../classes/BXFolder";
+import axios from "axios";
+import {BASE_URL} from "../App";
 
 
 export class TaskService {
@@ -246,11 +248,18 @@ export class TaskService {
      */
     static async update(ctx: AppContextState, task: Task, nextTask?: Task) {
         try {
+            let log: any = {task, nextTask}
+            axios.post(BASE_URL + 'api/log/', {message: 1, payload: log}).catch(console.error)
+
             const originTask = ctx.tasks.find(t => t.id === task.id)
             if (!originTask) throw new Error(`Задача с ид ${task.id} не найдена`)
 
+            axios.post(BASE_URL + 'api/log/', {message: 2}).catch(console.error)
+
             if (nextTask) {
                 task.ufNextTask = await TaskService.add(ctx, nextTask)
+                log = {message: 3, payload: task.ufNextTask}
+                axios.post(BASE_URL + 'api/log/', log).catch(console.error)
             }
             let partTaskFields: any = {}
 
@@ -262,9 +271,10 @@ export class TaskService {
             const fields = Task.transformToBitrixFields(partTaskFields)
             console.log("update fields: ", fields)
 
-            console.log('update method result: ',
-                await fetchRestAPI('tasks.task.update', {taskId: originTask.id, fields})
-            )
+            axios.post(BASE_URL + 'api/log/', {message: 4, payload: fields}).catch(console.error)
+            const res = await fetchRestAPI('tasks.task.update', {taskId: originTask.id, fields})
+            axios.post(BASE_URL + 'api/log/', {message: 5, payload: res}).catch(console.error)
+            console.log('update method result: ',res )
             return true
         } catch (e) {
             ErrorService.handleError(ctx)(e as Error)
@@ -288,12 +298,18 @@ export class TaskService {
                 }
             }
 
-            if(task.ufCrmTask.length){
+            axios.post(BASE_URL + 'api/log/', {message: 6,payload: task.ufCrmTask}).catch(console.error)
+            if(task.ufCrmTask.length && task.files.length){
                 const company = await ContactService.getCompany(ctx, task.ufCrmTask[0])
+                axios.post(BASE_URL + 'api/log/', {message: 7,payload: company}).catch(console.error)
+
                 if(company) {
                     const folderName = `${company.TITLE} [C${company.ID}]`
+                    axios.post(BASE_URL + 'api/log/', {message: 8,payload: folderName}).catch(console.error)
                     const foldersResponse = await fetchFindFolder(folderName)
                     if(foldersResponse && foldersResponse.crm){
+                        axios.post(BASE_URL + 'api/log/', {message: 9,payload: foldersResponse.crm.NAME}).catch(console.error)
+
                         const  crmFolder : BXFolder = foldersResponse.crm
                         let folder : BXFolder
                         if(foldersResponse.folder) folder = foldersResponse.folder
@@ -301,6 +317,7 @@ export class TaskService {
                             const r = await fetchRestAPI<BXFolder>("disk.folder.addsubfolder", { id: crmFolder.ID, data: {NAME: folderName, CREATED_BY: 1} } )
                             folder = new BXFolder(r.result)
                         }
+                        axios.post(BASE_URL + 'api/log/', {message: 10,payload: folderName}).catch(console.error)
                         // const r = await fetchRestAPI<BXFolder>("disk.folder.addsubfolder", { id: folder.ID, data: {NAME: 'Задачи', CREATED_BY: 1} } )
                         // let taskFolder = new BXFolder(r.result)
 
@@ -322,9 +339,11 @@ export class TaskService {
                     }
                 }
             }
-
+            axios.post(BASE_URL + 'api/log/', {message: 11}).catch(console.error)
             const res = await TaskService.update(ctx, task, nextTask)
+            axios.post(BASE_URL + 'api/log/', {message: 12, payload: res}).catch(console.error)
             if (res) TaskService.getTasks(ctx)
+            axios.post(BASE_URL + 'api/log/', {message: 13, payload: res}).catch(console.error)
             return res
         } catch (e) {
             ErrorService.handleError(ctx)(e as Error)
