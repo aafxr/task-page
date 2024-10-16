@@ -27,6 +27,10 @@ export class TaskService {
 
                 //--------------------------- new api ------------------------------------------------------
                 const tasks = await fetchTasks('' + user_id, ctx.selectedDay)
+                console.log(tasks)
+                //@ts-ignore
+                window.tasks = tasks
+                ctx.updateAppContext(s => ({...s, tasks}))
                 //--------------------------- new api end --------------------------------------------------
 
                 // const d = new Date()
@@ -164,7 +168,7 @@ export class TaskService {
                 // }
                 // сортировка задач без дедлайн ------------------------------
 
-                ctx.updateAppContext(s => ({...s, tasks}))
+                // ctx.updateAppContext(s => ({...s, tasks}))
 
             } catch (e) {
                 ErrorService.handleError(ctx)(e as Error)
