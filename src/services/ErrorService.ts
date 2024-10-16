@@ -12,6 +12,10 @@ import {dispatchAlert} from "../components/AlertMessage";
  */
 function errorMessageToReadableMessage(errorMessage: string): {node: ReactNode, code: number} {
 
+    if(errorMessage.startsWith('timeout')){
+        return {node: 'Медленное интернет соединение. Попробуйте повторить запрос', code: 0}
+    }
+
     switch (errorMessage) {
         case errors.BX_EXPIRED_TOKEN:
         case errors.UNAUTHORIZED:

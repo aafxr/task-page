@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 
-import './AlertMessage.css'
 import {PlusIcon} from "../svg";
+
+import './AlertMessage.css'
 
 const EVENT_NAME = 'errorMessage'
 

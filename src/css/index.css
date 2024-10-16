@@ -244,11 +244,11 @@ body, html {
 }
 
 .mainPage-filter{
-    padding:  var(--padding);
+    /*padding:  var(--padding);*/
     max-width: 100%;
     display: inline-flex;
     flex-wrap: nowrap;
-    gap: var(--offset);
+    /*gap: var(--offset);*/
     overflow-x: auto;
 }
 

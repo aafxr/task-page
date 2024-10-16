@@ -18,6 +18,9 @@ export const appFetch = axios.create({
     timeout: 10000
 }) as AxiosInstanceWithFlag;
 
+//@ts-ignore
+window.axios = appFetch
+
 // const o:any = {}
 // axios.interceptors.request.use(r => {
 //     o[Date.now()] = r.url

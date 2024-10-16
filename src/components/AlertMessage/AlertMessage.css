@@ -11,10 +11,12 @@
 }
 
 .alert-item{
-    min-height: 100px;
+    min-height: 60px;
     position: relative;
     padding: var(--padding) calc(var(--padding) * 2) var(--padding) var(--padding);
     color: var(--text-color);
+    font-size: 0.9rem;
+    font-weight: 500;
     background-color: var(--bg-main);
     border: 1px solid var(--text-accent-color);
     box-shadow: 0 0 6px var(--text-accent-color);

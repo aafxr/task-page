@@ -3,6 +3,7 @@ import {BXAuth} from "./BXAuth";
 import {ajax} from "./ajax";
 import {appFetch} from "../axios";
 import {AxiosResponse} from "axios";
+import {rejects} from "node:assert";
 
 const HOST_NAME = process.env.REACT_APP_HOST_NAME || ''
 // const PATH_NAME = process.env.REACT_APP_PATH_NAME || ''
@@ -32,9 +33,13 @@ export const bitrix = {
         fail: (e: Error) => unknown = () => {}
     ) {
         new Promise(async (resolve, rej) => {
-            if(!bxAuth.oauthData) await bxAuth.auth()
-            const res = await appFetch(bitrix._callMethodURL(methodName, params)) as AxiosResponse
-            if (res && res.status >=200 && res.status < 300) cb(res.data)
+            try {
+                if(!bxAuth.oauthData) await bxAuth.auth()
+                const res = await appFetch(bitrix._callMethodURL(methodName, params)) as AxiosResponse
+                if (res && res.status >=200 && res.status < 300) cb(res.data)
+            } catch (e){
+                rej(e)
+            }
         })
             .catch(fail)
     },
