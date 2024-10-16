@@ -147,14 +147,35 @@ if ($periodType > 1) {
 
 if ($periodType == 2) {
     $arListFilter = [
-        [
-            "LOGIC" => "AND",
-            "<DEADLINE" => \Bitrix\Main\Type\DateTime::createFromPhp($currentDateTime),
-
-        ],
-        "!REAL_STATUS" => CTasks::STATE_COMPLETED,
+        "<DEADLINE" => \Bitrix\Main\Type\DateTime::createFromPhp($currentDateTimeNextDay),
+        "<REAL_STATUS" => CTasks::STATE_COMPLETED,
         "RESPONSIBLE_ID" => $userId,
-        "!UF_CRM_TASK" => false
+    ];
+
+     $resTaskList = CTasks::GetList(
+        [
+            "DEADLINE" => "DESC",
+            "ID" => "DESC"
+        ],
+        $arListFilter,
+        [
+            "*", "UF_*"
+        ]
+    );
+
+    $list = [];
+
+    while($task = $resTaskList->GetNext()){
+        $list[] = $task;
+    }
+
+
+    $arListFilter = [
+        ">=CLOSED_DATE" => \Bitrix\Main\Type\DateTime::createFromPhp($currentDateTime),
+        "<CLOSED_DATE" => \Bitrix\Main\Type\DateTime::createFromPhp($currentDateTimeNextDay),
+        "REAL_STATUS" => CTasks::STATE_COMPLETED,
+        "RESPONSIBLE_ID" => $userId,
+//         "!UF_CRM_TASK" => false
     ];
 
     $resTaskList = CTasks::GetList(
@@ -169,7 +190,6 @@ if ($periodType == 2) {
     );
 }
 
-$list = [];
 
 while($task = $resTaskList->GetNext()){
     $list[] = $task;
