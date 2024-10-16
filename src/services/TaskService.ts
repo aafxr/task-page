@@ -1,14 +1,11 @@
 import {AppContextState} from "../context/AppContext";
 import {ErrorService} from "./ErrorService";
 import {Task} from "../classes/Task";
-import {fetchRestAPI, fetchTasks} from "../api";
-import {IBXSuccessResponse} from "../bitrix/@types";
+import {fetchTasks, fetchTaskTypes} from "../api";
 import {TaskType} from "../classes/TaskType";
-import {fetchTaskTypes} from "../api";
 import {bitrix, bxAuth} from "../bitrix";
-import {ContactService} from "./ContactService";
-import {fetchFindFolder} from "../api/fetchFindFolder";
-import {BXFolder} from "../classes/BXFolder";
+import {fetchAddTask} from "../api/fetchAddTask";
+import {fetchUpdateTask} from "../api/fetchUpdateTask";
 
 
 export class TaskService {
@@ -28,129 +25,133 @@ export class TaskService {
                 const user_id = auth.user_id
                 ctx.updateAppContext(({...ctx, /*tasks: [], */ tasksLoading: true, tasks: []}))
 
-                const d = new Date()
+                //--------------------------- new api ------------------------------------------------------
+                const tasks = await fetchTasks('' + user_id, ctx.selectedDay)
+                //--------------------------- new api end --------------------------------------------------
 
-                const dateStart = new Date(ctx.selectedDay)
-                dateStart.setHours(0, 0, 0, 0)
-                const dateEnd = new Date(dateStart)
-                dateEnd.setHours(23, 59, 59, 999)
-
-
-                /**
-                 *  условия
-                 *  1. дата отбора < текущей = показываем только закрытые задачи, за заданный период
-                 *  2. дата отбора = текущей = показываем задачи на сегодня, и все не закрытые задачи за прошлые даты
-                 *  3. дата отбора > текущей = показываем все задачи на заданный период
-                 */
-
-                let periodType = 2
-
-                d.setHours(0, 0, 0, 0)
-                if (dateEnd.valueOf() < d.valueOf()) periodType = 1
-
-                d.setHours(23, 59, 59, 999)
-                if (dateStart.valueOf() > d.valueOf()) periodType = 3
-
-                let request: any = {}
-
-                let tasks: Task[] = []
-
-                if (periodType === 1) {
-                    // прошедшие задачи
-                    request = {
-                        filter: {
-                            '>=CLOSED_DATE': dateStart.toISOString(),
-                            '<CLOSED_DATE': dateEnd.toISOString(),
-                            RESPONSIBLE_ID: user_id
-                        },
-                        order: {
-                            CREATED_DATE: 'DESC',
-                        },
-                        select: ['*', 'UF_*']
-                    }
-
-                    tasks = await TaskService._loadTasks(request)
-
-                } else if (periodType === 2) {
-                    // задачи на сегодня
-
-                    // let requestDeadlineNotSet = {
-                    //     filter: {
-                    //         "DEADLINE": '',
-                    //         '<REAL_STATUS': Task.STATE_COMPLETED,
-                    //         RESPONSIBLE_ID: user_id,
-                    //     },
-                    //     order: {
-                    //         DEADLINE: 'DESC',
-                    //         CREATED_DATE: 'DESC'
-                    //     },
-                    //     select: ['*', 'UF_*']
-                    // }
-
-                    let requestDeadline = {
-                        filter: {
-                            "<DEADLINE": dateEnd.toISOString(),
-                            '<REAL_STATUS': Task.STATE_COMPLETED,
-                            RESPONSIBLE_ID: user_id,
-                        },
-                        order: {
-                            DEADLINE: 'DESC',
-                            CREATED_DATE: 'DESC'
-                        },
-                        select: ['*', 'UF_*']
-                    }
-
-
-
-                    let requestClosed = {
-                        filter: {
-                            '<CLOSED_DATE': dateEnd.toISOString(),
-                            '>=CLOSED_DATE': dateStart.toISOString(),
-                            RESPONSIBLE_ID: user_id
-                        },
-                        order: {
-                            CLOSED_DATE: 'DESC',
-                        },
-                        select: ['*', 'UF_*']
-                    }
-
-
-                    await Promise.all([
-                        // TaskService._loadTasks(requestDeadlineNotSet)
-                        //     .then(t => ctx.updateAppContext(s => {
-                        //         if(!s.tasks.length) return {...s, tasks: t, tasksLoading: false}
-                        //         if(s.tasks[0].deadline){
-                        //             let i = 0
-                        //             while(s.tasks[i].deadline) i++
-                        //             return {...s, tasksLoading: false, tasks: [...s.tasks.slice(0,i), ...t, ...s.tasks.slice(i+1)]}
-                        //         }
-                        //         return {...s, tasksLoading: false, tasks: [ ...t, ...s.tasks]}
-                        //     })),
-                        TaskService._loadTasks(requestDeadline)
-                            .then(t => ctx.updateAppContext(s => ({...s, tasks: [...t, ...s.tasks]}))),
-                        TaskService._loadTasks(requestClosed)
-                            .then(t =>  ctx.updateAppContext(s => ({...s, tasks: [ ...s.tasks, ...t]})))
-                    ])
-                        .finally(() => ctx.updateAppContext(s => ({...s, tasksLoading: false})))
-
-                    return
-                } else {
-                    //задачи на завтра
-                    request = {
-                        filter: {
-                            '<DEADLINE': dateEnd.toISOString(),
-                            '>=DEADLINE': dateStart.toISOString(),
-                            '<REAL_STATUS': Task.STATE_COMPLETED,
-                            RESPONSIBLE_ID: user_id
-                        },
-                        order: {
-                            DEADLINE: 'DESC',
-                            CREATED_DATE: 'DESC',
-                        },
-                        select: ['*', 'UF_*']
-                    }
-                    tasks = await TaskService._loadTasks(request)
-                }
+                // const d = new Date()
+                //
+                // const dateStart = new Date(ctx.selectedDay)
+                // dateStart.setHours(0, 0, 0, 0)
+                // const dateEnd = new Date(dateStart)
+                // dateEnd.setHours(23, 59, 59, 999)
+                //
+                //
+                // /**
+                //  *  условия
+                //  *  1. дата отбора < текущей = показываем только закрытые задачи, за заданный период
+                //  *  2. дата отбора = текущей = показываем задачи на сегодня, и все не закрытые задачи за прошлые даты
+                //  *  3. дата отбора > текущей = показываем все задачи на заданный период
+                //  */
+                //
+                // let periodType = 2
+                //
+                // d.setHours(0, 0, 0, 0)
+                // if (dateEnd.valueOf() < d.valueOf()) periodType = 1
+                //
+                // d.setHours(23, 59, 59, 999)
+                // if (dateStart.valueOf() > d.valueOf()) periodType = 3
+                //
+                // let request: any = {}
+                //
+                // let tasks: Task[] = []
+                //
+                // if (periodType === 1) {
+                //     // прошедшие задачи
+                //     request = {
+                //         filter: {
+                //             '>=CLOSED_DATE': dateStart.toISOString(),
+                //             '<CLOSED_DATE': dateEnd.toISOString(),
+                //             RESPONSIBLE_ID: user_id
+                //         },
+                //         order: {
+                //             CREATED_DATE: 'DESC',
+                //         },
+                //         select: ['*', 'UF_*']
+                //     }
+                //
+                //     tasks = await TaskService._loadTasks(request)
+                //
+                // } else if (periodType === 2) {
+                //     // задачи на сегодня
+                //
+                //     // let requestDeadlineNotSet = {
+                //     //     filter: {
+                //     //         "DEADLINE": '',
+                //     //         '<REAL_STATUS': Task.STATE_COMPLETED,
+                //     //         RESPONSIBLE_ID: user_id,
+                //     //     },
+                //     //     order: {
+                //     //         DEADLINE: 'DESC',
+                //     //         CREATED_DATE: 'DESC'
+                //     //     },
+                //     //     select: ['*', 'UF_*']
+                //     // }
+                //
+                //     let requestDeadline = {
+                //         filter: {
+                //             "<DEADLINE": dateEnd.toISOString(),
+                //             '<REAL_STATUS': Task.STATE_COMPLETED,
+                //             RESPONSIBLE_ID: user_id,
+                //         },
+                //         order: {
+                //             DEADLINE: 'DESC',
+                //             CREATED_DATE: 'DESC'
+                //         },
+                //         select: ['*', 'UF_*']
+                //     }
+                //
+                //
+                //
+                //     let requestClosed = {
+                //         filter: {
+                //             '<CLOSED_DATE': dateEnd.toISOString(),
+                //             '>=CLOSED_DATE': dateStart.toISOString(),
+                //             RESPONSIBLE_ID: user_id
+                //         },
+                //         order: {
+                //             CLOSED_DATE: 'DESC',
+                //         },
+                //         select: ['*', 'UF_*']
+                //     }
+                //
+                //
+                //     await Promise.all([
+                //         // TaskService._loadTasks(requestDeadlineNotSet)
+                //         //     .then(t => ctx.updateAppContext(s => {
+                //         //         if(!s.tasks.length) return {...s, tasks: t, tasksLoading: false}
+                //         //         if(s.tasks[0].deadline){
+                //         //             let i = 0
+                //         //             while(s.tasks[i].deadline) i++
+                //         //             return {...s, tasksLoading: false, tasks: [...s.tasks.slice(0,i), ...t, ...s.tasks.slice(i+1)]}
+                //         //         }
+                //         //         return {...s, tasksLoading: false, tasks: [ ...t, ...s.tasks]}
+                //         //     })),
+                //         TaskService._loadTasks(requestDeadline)
+                //             .then(t => ctx.updateAppContext(s => ({...s, tasks: [...t, ...s.tasks]}))),
+                //         TaskService._loadTasks(requestClosed)
+                //             .then(t =>  ctx.updateAppContext(s => ({...s, tasks: [ ...s.tasks, ...t]})))
+                //     ])
+                //         .finally(() => ctx.updateAppContext(s => ({...s, tasksLoading: false})))
+                //
+                //     return
+                // } else {
+                //     //задачи на завтра
+                //     request = {
+                //         filter: {
+                //             '<DEADLINE': dateEnd.toISOString(),
+                //             '>=DEADLINE': dateStart.toISOString(),
+                //             '<REAL_STATUS': Task.STATE_COMPLETED,
+                //             RESPONSIBLE_ID: user_id
+                //         },
+                //         order: {
+                //             DEADLINE: 'DESC',
+                //             CREATED_DATE: 'DESC',
+                //         },
+                //         select: ['*', 'UF_*']
+                //     }
+                //     tasks = await TaskService._loadTasks(request)
+                // }
 
 
                 // сортировка задач без дедлайн ------------------------------
@@ -173,20 +174,20 @@ export class TaskService {
         })()
     }
 
-    static async _loadTasks(request: any = {}) {
-        // загрузка всех задач
-        let next = 0
-        let res: IBXSuccessResponse<{ tasks: Task[] }>
-        let tasks: Task[] = []
-
-        do {
-            request.start = next
-            res = await fetchTasks(request)
-            next = res.next
-            tasks = tasks.concat(res.result.tasks.map(t => new Task(t)))
-        } while (next < res.total)
-        return tasks
-    }
+    // static async _loadTasks(request: any = {}) {
+    //     // загрузка всех задач
+    //     let next = 0
+    //     let res: IBXSuccessResponse<{ tasks: Task[] }>
+    //     let tasks: Task[] = []
+    //
+    //     do {
+    //         request.start = next
+    //         res = await fetchTasks(request)
+    //         next = res.next
+    //         tasks = tasks.concat(res.result.tasks.map(t => new Task(t)))
+    //     } while (next < res.total)
+    //     return tasks
+    // }
 
 
     /**
@@ -223,6 +224,7 @@ export class TaskService {
      */
     static async add(ctx: AppContextState, task: Task) {
         try {
+            // @ts-ignore
             const partTask = Object.entries(task).reduce((a, [k, v]) => {
                 if (v) a[k] = v
                 return a
@@ -230,8 +232,14 @@ export class TaskService {
 
             const bxTask = Task.transformToBitrixFields(partTask)
             console.log('add task fields: ', bxTask)
-            const res = await fetchRestAPI<{ task: Task }>('tasks.task.add', {fields: bxTask})
-            return res.result.task.id
+
+            //--------------------------- new api ------------------------------------------------------
+            const task = await fetchAddTask(bxTask)
+            return task?.id
+            //--------------------------- new api end --------------------------------------------------
+
+            // const res = await fetchRestAPI<{ task: Task }>('tasks.task.add', {fields: bxTask})
+            // return res.result.task.id
         } catch (e) {
             ErrorService.handleError(ctx)(e as Error)
         }
@@ -262,10 +270,16 @@ export class TaskService {
             const fields = Task.transformToBitrixFields(partTaskFields)
             console.log("update fields: ", fields)
 
-            console.log('update method result: ',
-                await fetchRestAPI('tasks.task.update', {taskId: originTask.id, fields})
-            )
+            //--------------------------- new api ------------------------------------------------------
+            const res = await fetchUpdateTask(fields, task.files)
+            console.log(res)
             return true
+            //--------------------------- new api end --------------------------------------------------
+
+            // console.log('update method result: ',
+            //     await fetchRestAPI('tasks.task.update', {taskId: originTask.id, fields})
+            // )
+            // return true
         } catch (e) {
             ErrorService.handleError(ctx)(e as Error)
         }
@@ -288,40 +302,40 @@ export class TaskService {
                 }
             }
 
-            if(task.ufCrmTask.length){
-                const company = await ContactService.getCompany(ctx, task.ufCrmTask[0])
-                if(company) {
-                    const folderName = `${company.TITLE} [C${company.ID}]`
-                    const foldersResponse = await fetchFindFolder(folderName)
-                    if(foldersResponse && foldersResponse.crm){
-                        const  crmFolder : BXFolder = foldersResponse.crm
-                        let folder : BXFolder
-                        if(foldersResponse.folder) folder = foldersResponse.folder
-                        else {
-                            const r = await fetchRestAPI<BXFolder>("disk.folder.addsubfolder", { id: crmFolder.ID, data: {NAME: folderName, CREATED_BY: 1} } )
-                            folder = new BXFolder(r.result)
-                        }
-                        // const r = await fetchRestAPI<BXFolder>("disk.folder.addsubfolder", { id: folder.ID, data: {NAME: 'Задачи', CREATED_BY: 1} } )
-                        // let taskFolder = new BXFolder(r.result)
-
-                        await Promise.all([
-                            task.files.map(f => {
-                                const dt = new DataTransfer()
-                                dt.items.add(f)
-                                const inputElement = document.createElement('input');
-                                inputElement.type = 'file';
-                                inputElement.files = dt.files;
-                                return fetchRestAPI("disk.folder.uploadfile", {
-                                    id: folder.ID,
-                                    data: {NAME: f.name},
-                                    fileContent: inputElement,
-                                    generateUniqueName: true,
-                                })
-                            })
-                        ])
-                    }
-                }
-            }
+            // if(task.ufCrmTask.length){
+            //     const company = await ContactService.getCompany(ctx, task.ufCrmTask[0])
+            //     if(company) {
+            //         const folderName = `${company.TITLE} [C${company.ID}]`
+            //         const foldersResponse = await fetchFindFolder(folderName)
+            //         if(foldersResponse && foldersResponse.crm){
+            //             const  crmFolder : BXFolder = foldersResponse.crm
+            //             let folder : BXFolder
+            //             if(foldersResponse.folder) folder = foldersResponse.folder
+            //             else {
+            //                 const r = await fetchRestAPI<BXFolder>("disk.folder.addsubfolder", { id: crmFolder.ID, data: {NAME: folderName, CREATED_BY: 1} } )
+            //                 folder = new BXFolder(r.result)
+            //             }
+            //             // const r = await fetchRestAPI<BXFolder>("disk.folder.addsubfolder", { id: folder.ID, data: {NAME: 'Задачи', CREATED_BY: 1} } )
+            //             // let taskFolder = new BXFolder(r.result)
+            //
+            //             await Promise.all([
+            //                 task.files.map(f => {
+            //                     const dt = new DataTransfer()
+            //                     dt.items.add(f)
+            //                     const inputElement = document.createElement('input');
+            //                     inputElement.type = 'file';
+            //                     inputElement.files = dt.files;
+            //                     return fetchRestAPI("disk.folder.uploadfile", {
+            //                         id: folder.ID,
+            //                         data: {NAME: f.name},
+            //                         fileContent: inputElement,
+            //                         generateUniqueName: true,
+            //                     })
+            //                 })
+            //             ])
+            //         }
+            //     }
+            // }
 
             const res = await TaskService.update(ctx, task, nextTask)
             if (res) TaskService.getTasks(ctx)

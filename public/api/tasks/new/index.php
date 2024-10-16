@@ -38,7 +38,7 @@ if (CModule::IncludeModule("tasks")) {
         $arTask = $rsTask->GetNext();
         $result = [
             'ok' => true,
-            'task' => $arTask,
+            'result' => $arTask,
             'request' => $request
         ];
     }

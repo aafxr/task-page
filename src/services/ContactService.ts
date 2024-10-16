@@ -4,6 +4,8 @@ import {ErrorService} from "./ErrorService";
 import {Task} from "../classes/Task";
 import {fetchRestAPI} from "../api";
 import {BXCompany} from "../classes/BXCompany";
+import {fetchContact} from "../api/fetchContact";
+import {fetchCompany} from "../api/fetchCompany";
 
 const contactsMap = new Map<BXContact['ID'], BXContact>()
 const companiesMap = new Map<BXCompany['ID'], BXCompany>()
@@ -32,8 +34,9 @@ export class ContactService {
                 })
 
                 for (const id of ids) {
-                    const res = await fetchRestAPI<BXContact>('crm.contact.get', {ID: id})
-                    const c = new BXContact(res.result)
+                    const res = await fetchContact(id)
+                    if(!res) continue
+                    const c = new BXContact(res)
                     contactsMap.set(c.ID, c)
                     contacts.push(c)
                 }
@@ -60,8 +63,9 @@ export class ContactService {
 
                 if(contactsMap.has(id)) return resolve(contactsMap.get(id))
 
-                const res = await fetchRestAPI<BXContact>('crm.contact.get', {id})
-                const c = new BXContact(res.result)
+                const res = await fetchContact(id)
+                if(!res) return
+                const c = new BXContact(res)
                 contactsMap.set(c.ID, c)
                 return c
             } catch (e){
@@ -94,8 +98,9 @@ export class ContactService {
                 })
 
                 for (const id of ids) {
-                    const res = await fetchRestAPI<BXCompany>('crm.company.get', {id})
-                    const c = new BXCompany(res.result)
+                    const res = await fetchCompany(id)
+                    if(!res) continue
+                    const c = new BXCompany(res)
                     companiesMap.set(c.ID, c)
                     companies.push(c)
                 }
@@ -122,8 +127,9 @@ export class ContactService {
 
                 if(companiesMap.has(id)) return resolve(companiesMap.get(id)!)
 
-                const res = await fetchRestAPI<BXCompany>('crm.company.get', {id})
-                const c = new BXCompany(res.result)
+                const res = await fetchCompany(id)
+                if(!res) return
+                const c = new BXCompany(res)
                 companiesMap.set(c.ID, c)
                 return c
             } catch (e){

@@ -1,5 +1,22 @@
 <?php
 
+/*
+request payload
+{
+    userId: '',
+    date: '' // iso format
+}
+
+
+
+response
+{
+    ok: boolean
+    message?: 'if error',
+    result?: 'tasks list if no errors'
+}
+*/
+
 define('AUTH_REQUIRED', true);
 
 require_once(dirname(__DIR__, 2) . '/local/header.php');

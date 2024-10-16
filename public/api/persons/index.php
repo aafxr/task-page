@@ -22,8 +22,6 @@ while($cUser = $rsUsers->GetNext()){
 $result = [
     'ok' => true,
     'result' => $list,
-    'dir' => dirname(__DIR__,1) . '/local/footer',
-    'exists' => file_exists(__DIR__ . '/../local/header.php')
 ];
 
 

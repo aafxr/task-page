@@ -44,7 +44,7 @@ if (!isset($request) || !$request['task']) {
     http_response_code(400);
     $result = [
         'ok' => false,
-        'message' => "fields taskId, taskNextTypeId are require \n taskClosePrevDate - optional"
+        'message' => "fields task is require \n nextTask - optional \n taskClosePrevDate - optional"
     ];
     echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     exit;
