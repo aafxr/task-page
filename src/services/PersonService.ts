@@ -15,20 +15,6 @@ export class PersonService{
         (async () => {
             try {
                 if(persons.length) return persons
-
-                // let request: any = {}
-                // // загрузка всех задач
-                // let next = 0
-                // let res:  IBXSuccessResponse<BXPerson[]>
-                //
-                // do {
-                //     request.start = next
-                //     res = await fetchUsers(request)
-                //     next = res.next
-                //     persons = persons.concat(res.result.map(p => new BXPerson(p)))
-                // }while(next < res.total)
-
-                // persons = persons.map(p => new BXPerson(p))
                 persons = await fetchUsers()
                 persons.sort((a,b) => a.LAST_NAME < b.LAST_NAME ? -1 : a.LAST_NAME > b.LAST_NAME ? 1 : 0)
                 persons.forEach(p => map.set(p.ID, p))

@@ -1,0 +1,1 @@
+{"version":3,"file":"static/css/512.ed1a8c6d.chunk.css","mappings":"AAAA,iBAEI,+BAAgC,CADhC,qBAEJ","sources":["pages/TestPage/TestPage.css"],"sourcesContent":[".selectTaskTypes{\r\n    color: var(--ui-color);\r\n    background-color: var(--bg-main);\r\n}"],"names":[],"sourceRoot":""}

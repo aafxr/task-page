@@ -1,14 +1,18 @@
 import axios from "axios";
 import {APiResponse} from "../../@types/APiResponse";
+import {transformTaskToLocal} from "../utils/transformTaskToLocal";
 import {Task} from "../classes/Task";
 import {appFetch} from "../axios";
 import {BASE_URL} from "../App";
+
+
+
 
 export async function fetchTasks(userId: string, date: Date): Promise<Task[]> {
     const res = await appFetch.post<APiResponse<Task[]>>(BASE_URL + 'api/tasks/getList/', {userId, date: date.toISOString()})
     if(res.status > 199 && res.status < 300){
         if (res.data.ok){
-            return res.data.result.map(t => new Task(t))
+            return res.data.result.map(t => new Task(transformTaskToLocal(t)))
         }
         throw new Error(res.data.message)
     }

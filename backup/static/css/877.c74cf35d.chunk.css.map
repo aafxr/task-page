@@ -1,0 +1,1 @@
+{"version":3,"file":"static/css/877.c74cf35d.chunk.css","mappings":"AAAA,SACI,wBAAyB,CACzB,sBACJ","sources":["pages/NewTask/NewTask.css"],"sourcesContent":[".newTask{\r\n    margin-top: var(--margin);\r\n    padding: var(--padding);\r\n}"],"names":[],"sourceRoot":""}

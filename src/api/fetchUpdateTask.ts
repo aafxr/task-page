@@ -17,7 +17,7 @@ export async function fetchUpdateTask(taskFields: Object, files: File[] = [], ne
     const fd = new FormData()
     fd.set('request', JSON.stringify(payload))
     files.forEach((f, i) => fd.append('file_' + i, f))
-    const res = await appFetch.post<APiResponse<FetchUpdateTaskResponse>>(BASE_URL + 'api/tasks/update/', fd)
+    const res = await appFetch.post<APiResponse<FetchUpdateTaskResponse>>(BASE_URL + 'api/tasks/update/', fd,{onUploadProgress: console.log})
 
     if (res.status > 199 && res.status < 300) {
         if (res.data.ok) {

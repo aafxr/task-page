@@ -44,7 +44,7 @@ if (!isset($request) || !$request['task']) {
     http_response_code(400);
     $result = [
         'ok' => false,
-        'message' => "fields task is require \n nextTask - optional \n taskClosePrevDate - optional"
+        'message' => "fields taskId, taskNextTypeId are require \n taskClosePrevDate - optional"
     ];
     echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     exit;
@@ -61,15 +61,7 @@ $arTask = CTasks::GetList([], ['ID' => $taskId], ['*', 'UF_*'])->fetch();
 
 $updateTaskFields = [];
 foreach ($task as $k => $v) {
-    if($k == "CLOSED_DATE" && !!$v) {
-        $updateTaskFields[$k] = \Bitrix\Main\Type\DateTime::createFromPhp(new \DateTime($v));
-        continue;
-    }
-    if($k == "DEADLINE" && !!$v) {
-        $updateTaskFields[$k] = \Bitrix\Main\Type\DateTime::createFromPhp(new \DateTime($v));
-        continue;
-    }
-    if (array_key_exists($k, $arTask) && $arTask[$k] != $task[$k] ) $updateTaskFields[$k] = $v;
+    if (array_key_exists($k, $arTask) && $arTask[$k] != $task[$k]) $updateTaskFields[$k] = $v;
 }
 
 
@@ -80,7 +72,6 @@ if ($nextTask) {
     }
     $arNextTask['TITLE'] = $arTask['TITLE'];
     $arNextTask['CREATE_DATE'] = date(DATE_ATOM);
-    if ($nextTask['DEADLINE']) $arNextTask['CREATE_DATE'] = $nextTask['DEADLINE'];
 }
 
 
@@ -93,21 +84,16 @@ $updateResult = true;
 // -------------------- update task ----------------------------------
 if(count($updateTaskFields) > 0){
     $obTask = new CTasks;
-    $updateResult = $obTask->Update($taskId, $updateTaskFields);
+    $updateResult = $obTask->Update($taskId, $task);
 
     if (!$updateResult) {
         if ($e = $APPLICATION->GetException()) {
             $result['errors'][] = $e->GetString();
         }
     }
-    $result["updateResult"] = $updateResult;
-    $result["updateTaskFields"] = $updateTaskFields;
-    $result["taskID"] = $taskId;
 
-//    if($task['CLOSE_DATE']){
-//        $oTaskItem = new CTaskItem($taskId, $userId);
-//        $oTaskItem->complete();
-//    }
+    $oTaskItem = new CTaskItem($taskId, $userId);
+    $oTaskItem->complete();
 }
 
 $log = date("d.m.Y H:i:s") . PHP_EOL;
@@ -162,9 +148,6 @@ if ($request['taskClosePrevDate']) {
 }
 
 
-
-
-
 if (isset($arTask['UF_CRM_TASK']) && is_array($arTask['UF_CRM_TASK']) && count($arTask['UF_CRM_TASK']) > 0){
     $companyId = preg_replace("/[^0-9]/", '', $arTask['UF_CRM_TASK'][0]);
     $arCompany = CCrmCompany::GetList([], ["ID" => $companyId])->fetch();
@@ -175,12 +158,7 @@ if(!$arCompany && !empty($_FILES)){
 }
 
 
-
-$folderName = $arTask['TITLE'] . ($companyId ? "[C$companyId]" : '');
-if($arCompany) $folderName = $arCompany['TITLE'] . ' ' . '[C' . $companyId . ']';
-
-
-if (\Bitrix\Main\Loader::includeModule('disk') && !empty($_FILES) && $folderName) {
+if (\Bitrix\Main\Loader::includeModule('disk') && !empty($_FILES) && $companyId) {
     $driver = \Bitrix\Disk\Driver::getInstance();
     $storage = $driver->getStorageByCommonId('shared_files_s1');
     if ($storage) {
@@ -191,7 +169,7 @@ if (\Bitrix\Main\Loader::includeModule('disk') && !empty($_FILES) && $folderName
             )
         );
         if ($folderCrm) {
-            $folderEntityNameId = $folderName;
+            $folderEntityNameId = '*[C' . $companyId . ']';
             $folderEntity = $folderCrm->getChild(
                 [
                     'NAME' => "%" . $folderEntityNameId,
@@ -201,7 +179,7 @@ if (\Bitrix\Main\Loader::includeModule('disk') && !empty($_FILES) && $folderName
 
             if (!$folderEntity) {
                 $folderEntity = $folderCrm->addSubFolder([
-                    'NAME' => $folderName,
+                    'NAME' => $arCompany['TITLE'] . ' ' . '[C' . $companyId . ']',
                     'CREATED_BY' => 1
                 ]);
             }
@@ -222,15 +200,10 @@ if (\Bitrix\Main\Loader::includeModule('disk') && !empty($_FILES) && $folderName
     }
 }
 
-if($e = $APPLICATION->GetException()) $result['message'] =  "Error: ".$e->GetString();
-
 $result['result'] = [
     'task' =>  $arTask,
     'nextTask' =>  $arNextTask
 ];
-
-$result['request'] = $request;
-$result['folderName'] = $folderName;
 
 
 echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);

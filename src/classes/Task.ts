@@ -1,6 +1,83 @@
 import {TaskPerson} from "./TaskPerson";
 
-const toBxField = {
+export const BxField = {
+    id: 'ID',
+    parentId: 'PARENT_ID',// ++++
+    title: 'TITLE',// ++++
+    description: 'DESCRIPTION',// ++++
+    mark: 'MARK',
+    priority: 'PRIORITY',// ++++
+    status: 'STATUS',// ++++
+    multitask: 'MULTITASK',// ++++
+    groupId: 'GROUP_ID',
+    stageId: 'STAGE_ID',
+    createdBy: 'CREATE_BY',
+    createdDate: 'CREATE_DATE',
+    responsibleId: 'RESPONSIBLE_ID',
+    changedBy: 'CHANGED_BY',
+    changedDate: 'CHANGED_DATE',
+    statusChangedBy: 'STATUS_CHANGED_BY',
+    statusChangedDate: 'STATUS_CHANGED_DATE',
+    closedBy: 'CLOSED_BY',
+    closedDate: 'CLOSED_DATE',
+    dateStart: 'DATE_START',
+    deadline: 'DEADLINE',// ++++
+    startDatePlan: 'START_DATE_PLAN',// ++++
+    endDatePlan: 'END_DATE_PLAN',// ++++
+    guid: 'GUID',
+    commentsCount: 'COMMENTS_COUNT',
+    taskControl: 'TASK_CONTROL',// ++++
+    addInReport: 'ADD_IN_REPORT',
+    forkedByTemplateId: 'FORKED_BY_TEMPLATE_ID',
+    timeEstimate: 'TIME_ESTIMATE',
+    timeSpentInLogs: 'TIME_SPENT_IN_LOGS',
+    forumTopicId: 'FORUM_TOPIC_ID',
+    forumId: 'FORUM_ID',
+    siteId: 'FORUM_ID',
+    subordinate: 'SUBORDINATE',
+    favorite: 'FAVORITE',
+    exchangeModified: 'EXCHANGE_MODIFIED',
+    exchangeId: 'EXCHANGE_ID',
+    viewedDate: 'VIEWED_DATE',
+    durationPlan: 'DURATION_PLAN',
+    durationFact: 'DURATION_FACT',
+    durationType: 'DURATION_TYPE',
+    descriptionInBbcode: 'DESCRIPTION_IN_BBCODE',
+    auditors: 'AUDITORS',// ++++
+    auditor: 'AUDITOR',// ++++
+    accomplices: 'ACCOMPLICES',// ++++
+    tags: 'TAGS', // ++++
+    allowChangeDeadline: 'ALLOW_CHANGE_DEADLINE', // ++++
+    creator:'CREATOR',
+    responsible:'RESPONSIBLE',
+
+
+    ufCrmTask: 'UF_CRM_TASK',
+    ufTaskWebdavFiles: 'UF_TASK_WEBDAV_FILES',
+    ufAuto915658270214: 'UF_AUTO_915658270214',
+    ufAuto244510721805: 'UF_AUTO_244510721805',
+    ufAuto637823431651: 'UF_AUTO_637823431651',
+    ufMailMessage: 'UF_MAIL_MESSAGE',
+    ufAuto226929532613: 'UF_AUTO_226929532613',
+    ufAuto187628303463: 'UF_AUTO_187628303463',
+
+    ufAuto251545709641: 'UF_AUTO_251545709641', // successful flag
+    ufAuto274474131393: 'UF_AUTO_274474131393', // task next type
+    ufAuto280393729397: 'UF_AUTO_280393729397', // task result
+    ufAuto616972454340: 'UF_AUTO_616972454340',
+    ufAuto645211693582: 'UF_AUTO_645211693582',
+    ufAuto719191965958: 'UF_AUTO_719191965958',
+    ufAuto851551329931: 'UF_AUTO_851551329931', // important / urgent
+    ufTaskTime: 'UF_TASK_TIME',
+
+    ufColor: 'UF_COLOR',
+    ufCrmTaskContact: 'UF_CRM_TASK_CONTACT',
+    ufNextTask: 'UF_NEXT_TASK',
+    ufPreviewText: 'UF_PREVIEW_TEXT',
+    ufTaskReport: 'UF_TASK_REPORT'
+}
+
+export const toBxField = {
     id: 'ID',
     // parentId: 'PARENT_ID',// ++++
     title: 'TITLE',// ++++

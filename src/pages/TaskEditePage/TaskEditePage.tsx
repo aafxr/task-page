@@ -289,7 +289,7 @@ export function TaskEditePage() {
                                     <Text>{updateTimeLabel(report.taskTime)}</Text>
                                     <Range full min={1} max={12} value={+report.taskTime} onChange={handleSpentTime}/>
                                 </div>
-                                {report.ufCrmTask.length > 0 && (
+                                {report.ufCrmTask && (
                                     <div className='ui-form-row'>
                                         {files.length > 0 && <Text>файлы</Text>}
                                         {files.length > 0 && files.map((f, i) => (

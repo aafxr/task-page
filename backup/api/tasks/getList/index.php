@@ -1,22 +1,5 @@
 <?php
 
-/*
-request payload
-{
-    userId: '',
-    date: '' // iso format
-}
-
-
-
-response
-{
-    ok: boolean
-    message?: 'if error',
-    result?: 'tasks list if no errors'
-}
-*/
-
 define('AUTH_REQUIRED', true);
 
 require_once(dirname(__DIR__, 2) . '/local/header.php');
@@ -69,9 +52,6 @@ $periodEnd = clone $periodStart;
 $periodEnd->modify('+2 month');
 $periodEnd->modify('last day of this month');
 
-
-$list = [];
-
 /**
  *  условия
  *  1. дата отбора < текущей = показываем только закрытые задачи, за заданный период
@@ -84,7 +64,7 @@ $periodType = 2;
 if ($filterDateTime < $currentDateTime) {
     $periodType = 1;
 }
-if ($filterDateTime > $currentDateTimeNextDay) {
+if ($filterDateTime > $currentDateTime) {
     $periodType = 3;
 }
 
@@ -145,61 +125,19 @@ if ($periodType > 1) {
 }
 
 
+//echo $periodType;
 
 
 if ($periodType == 2) {
     $arListFilter = [
-        "<DEADLINE" => \Bitrix\Main\Type\DateTime::createFromPhp($currentDateTimeNextDay),
-        "<REAL_STATUS" => CTasks::STATE_COMPLETED,
-        "RESPONSIBLE_ID" => $userId,
-    ];
-
-     $resTaskList = CTasks::GetList(
         [
-            "DEADLINE" => "DESC",
-            "ID" => "DESC"
+            "LOGIC" => "AND",
+            "<DEADLINE" => \Bitrix\Main\Type\DateTime::createFromPhp($currentDateTime),
+
         ],
-        $arListFilter,
-        [
-            "*", "UF_*"
-        ]
-    );
-
-
-    while($task = $resTaskList->GetNext()){
-        if($task['CREATED_DATE']) $task['CREATED_DATE'] = (new \DateTime($task['CREATED_DATE']))->format('Y-m-d\TH:i:s');
-        if($task['CHANGED_DATE']) $task['CHANGED_DATE'] = (new \DateTime($task['CHANGED_DATE']))->format('Y-m-d\TH:i:s');
-        if($task['CLOSED_DATE']) $task['CLOSED_DATE'] = (new \DateTime($task['CLOSED_DATE']))->format('Y-m-d\TH:i:s');
-        if($task['DEADLINE']) $task['DEADLINE'] = (new \DateTime($task['DEADLINE']))->format('Y-m-d\TH:i:s');
-        $arUser = CUser::GetList(($by="id"), ($order="desc"),['id' => $task['RESPONSIBLE_ID']],[])->GetNext();
-        if($arUser){
-            $task['RESPONSIBLE'] = [
-                'id' => $arUser['ID'],
-                'name' => $arUser['LAST_NAME'] . ' ' . $arUser['NAME'],
-                'link' => '',
-                'icon' => ''
-            ];
-        }
-
-        $arUser = CUser::GetList(($by="id"), ($order="desc"),['id' => $task['CREATED_BY']],[])->GetNext();
-        if($arUser){
-            $task['CREATOR'] = [
-                'id' => $arUser['ID'],
-                'name' => $arUser['LAST_NAME'] . ' ' . $arUser['NAME'],
-                'link' => '',
-                'icon' => ''
-            ];
-        }
-        $list[] = $task;
-    }
-
-
-    $arListFilter = [
-        ">=CLOSED_DATE" => \Bitrix\Main\Type\DateTime::createFromPhp($currentDateTime),
-        "<CLOSED_DATE" => \Bitrix\Main\Type\DateTime::createFromPhp($currentDateTimeNextDay),
-        "REAL_STATUS" => CTasks::STATE_COMPLETED,
+        "!REAL_STATUS" => CTasks::STATE_COMPLETED,
         "RESPONSIBLE_ID" => $userId,
-//         "!UF_CRM_TASK" => false
+        "!UF_CRM_TASK" => false
     ];
 
     $resTaskList = CTasks::GetList(
@@ -214,31 +152,9 @@ if ($periodType == 2) {
     );
 }
 
+$list = [];
 
 while($task = $resTaskList->GetNext()){
-    if($task['CREATED_DATE']) $task['CREATED_DATE'] = (new \DateTime($task['CREATED_DATE']))->format('Y-m-d\TH:i:s');
-    if($task['CHANGED_DATE']) $task['CHANGED_DATE'] = (new \DateTime($task['CHANGED_DATE']))->format('Y-m-d\TH:i:s');
-    if($task['CLOSED_DATE']) $task['CLOSED_DATE'] = (new \DateTime($task['CLOSED_DATE']))->format('Y-m-d\TH:i:s');
-    if($task['DEADLINE']) $task['DEADLINE'] = (new \DateTime($task['DEADLINE']))->format('Y-m-d\TH:i:s');
-    $arUser = CUser::GetList(($by="id"), ($order="desc"),['id' => $task['RESPONSIBLE_ID']],[])->GetNext();
-    if($arUser){
-        $task['RESPONSIBLE'] = [
-            'id' => $arUser['ID'],
-            'name' => $arUser['LAST_NAME'] . ' ' . $arUser['NAME'],
-            'link' => '',
-            'icon' => ''
-        ];
-    }
-
-    $arUser = CUser::GetList(($by="id"), ($order="desc"),['id' => $task['CREATED_BY']],[])->GetNext();
-    if($arUser){
-        $task['CREATOR'] = [
-            'id' => $arUser['ID'],
-            'name' => $arUser['LAST_NAME'] . ' ' . $arUser['NAME'],
-            'link' => '',
-            'icon' => ''
-        ];
-    }
     $list[] = $task;
 }
 
