@@ -6,7 +6,8 @@ import {appFetch} from "../axios";
 import {BASE_URL} from "../App";
 
 export async function fetchUsers(): Promise<BXPerson[]> {
-    const res = await appFetch.get<APiResponse<BXPerson[]>>(BASE_URL + 'api/persons/')
+    const userId = Telegram.WebApp.initDataUnsafe.user?.id || -1
+    const res = await appFetch.get<APiResponse<BXPerson[]>>(BASE_URL + 'api/persons/?id=' + userId)
     if(res.status > 199 && res.status < 300){
         if (res.data.ok){
             return res.data.result.map(t => new BXPerson(t))

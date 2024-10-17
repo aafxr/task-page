@@ -3,9 +3,9 @@ import {ErrorService} from "./ErrorService";
 import {Task} from "../classes/Task";
 import {fetchTasks, fetchTaskTypes} from "../api";
 import {TaskType} from "../classes/TaskType";
-import {bitrix, bxAuth} from "../bitrix";
 import {fetchAddTask} from "../api/fetchAddTask";
 import {fetchUpdateTask} from "../api/fetchUpdateTask";
+import {errors} from "../errors";
 
 
 export class TaskService {
@@ -16,13 +16,14 @@ export class TaskService {
     static getTasks(ctx: AppContextState) {
         (async () => {
             try {
-                let auth = await bitrix.getAuth()
-                if(!auth) {
-                    await bxAuth.auth()
-                    auth = await bitrix.getAuth()
-                }
-                if(!auth) return
-                const user_id = auth.user_id
+                // let auth = await bitrix.getAuth()
+                // if(!auth) {
+                //     await bxAuth.auth()
+                //     auth = await bitrix.getAuth()
+                // }
+                // if(!auth) return
+                const user_id = ctx.user?.ID
+                if(!user_id) throw new Error(errors.UNAUTHORIZED)
                 ctx.updateAppContext( s => ({...s, tasksLoading: true, tasks: []}))
 
                 //--------------------------- new api ------------------------------------------------------

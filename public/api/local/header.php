@@ -11,12 +11,26 @@ $ok = $USER->IsAuthorized();
 
 $result = [];
 
+
 if($AUTH_REQUIRED && !$ok){
-    http_response_code(401);
-    $result['ok'] = false;
-    $result['message'] = 'unauthorized';
-    echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    exit;
+
+    $arParams["SELECT"] = Array("*", "UF_*");
+    $filter = Array(
+        "UF_TELEGRAM_ID"=> $_GET['id']
+    );
+
+    $rsUsers = CUser::GetList(($by="id"), ($order="desc"), $filter,$arParams);
+    $cUser = $rsUsers->GetNext();
+
+
+    if($cUser == false){
+        http_response_code(401);
+        $result['ok'] = false;
+        $result['message'] = 'unauthorized';
+        echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        exit;
+    }
+    $USER->Authorize($cUser['ID']);
 }
 
 $request = file_get_contents('php://input');

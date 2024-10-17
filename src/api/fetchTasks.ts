@@ -9,7 +9,8 @@ import {BASE_URL} from "../App";
 
 
 export async function fetchTasks(userId: string, date: Date): Promise<Task[]> {
-    const res = await appFetch.post<APiResponse<Task[]>>(BASE_URL + 'api/tasks/getList/', {userId, date: date.toISOString()})
+    const tgId = Telegram.WebApp.initDataUnsafe.user?.id || -1
+    const res = await appFetch.post<APiResponse<Task[]>>(BASE_URL + 'api/tasks/getList/?id=' + tgId, {userId, date: date.toISOString()})
     if(res.status > 199 && res.status < 300){
         if (res.data.ok){
             return res.data.result.map(t => new Task(transformTaskToLocal(t)))

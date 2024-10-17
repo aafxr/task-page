@@ -5,7 +5,8 @@ import {BASE_URL} from "../App";
 import axios from "axios";
 
 export async function fetchAddTask(fields: Object){
-    const res = await appFetch.post<APiResponse<Task>>(BASE_URL + 'api/tasks/new/',fields)
+    const userId = Telegram.WebApp.initDataUnsafe.user?.id || -1
+    const res = await appFetch.post<APiResponse<Task>>(BASE_URL + 'api/tasks/new/?id=' + userId,fields)
     if(res.status > 199 && res.status < 300){
         if (res.data.ok){
             return new Task(res.data.result)

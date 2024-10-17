@@ -13,7 +13,6 @@ import {Block} from "../../components/Block";
 import {TaskService} from "../../services";
 import {Text} from "../../components/Text";
 import {Task} from "../../classes/Task";
-import {bitrix} from "../../bitrix";
 
 import './NewTask.css'
 
@@ -26,11 +25,8 @@ export function NewTask() {
 
 
     useEffect(() => {
-        bitrix.getAuth()
-            .then(u => {
-                task.responsibleId = '' + u?.user_id
-                setTask(new Task(task))
-            })
+        task.responsibleId = '' + s.user?.ID
+        setTask(new Task(task))
     }, []);
 
 

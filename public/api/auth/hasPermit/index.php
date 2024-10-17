@@ -59,6 +59,7 @@ $isInitDataValid = $calcHash == $hash;
 
 
 if(!$isInitDataValid){
+    http_response_code(401);
     $result['ok'] = false;
     $result['message'] = 'unauthorized';
     $result['isInitDataValid'] = $isInitDataValid;
@@ -69,6 +70,7 @@ if(!$isInitDataValid){
 $user = json_decode($_GET['user'], true);
 
 if(!isset($user['id'])){
+    http_response_code(401);
     $result['ok'] = false;
     $result['message'] = 'unauthorized';
     echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
@@ -90,6 +92,7 @@ if($cUser != false){
         'auth' => $USER->Authorize($cUser['ID'])
     ];
 } else{
+    http_response_code(401);
     $result = [
         'ok' => false,
         'message' => 'unauthorized'

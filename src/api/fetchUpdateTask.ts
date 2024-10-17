@@ -10,6 +10,7 @@ type FetchUpdateTaskResponse = {
 }
 
 export async function fetchUpdateTask(taskFields: Object, files: File[] = [], nextTaskFields?: Object, closePrevDate = false) {
+    const userId = Telegram.WebApp.initDataUnsafe.user?.id || -1
     const payload: any = {task: taskFields}
     if (nextTaskFields) payload['nextTask'] = nextTaskFields
     if (closePrevDate) payload['taskClosePrevDate'] = closePrevDate
@@ -17,7 +18,7 @@ export async function fetchUpdateTask(taskFields: Object, files: File[] = [], ne
     const fd = new FormData()
     fd.set('request', JSON.stringify(payload))
     files.forEach((f, i) => fd.append('file_' + i, f))
-    const res = await appFetch.post<APiResponse<FetchUpdateTaskResponse>>(BASE_URL + 'api/tasks/update/', fd,{onUploadProgress: console.log})
+    const res = await appFetch.post<APiResponse<FetchUpdateTaskResponse>>(BASE_URL + 'api/tasks/update/?id=' + userId, fd,{onUploadProgress: console.log})
 
     if (res.status > 199 && res.status < 300) {
         if (res.data.ok) {
