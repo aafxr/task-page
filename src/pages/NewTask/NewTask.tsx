@@ -110,6 +110,11 @@ export function NewTask() {
             return
         }
 
+        if(!task.responsibleId || task.responsibleId === '-1'){
+            alert('Укажите ответственного')
+            return
+        }
+
         TaskService.add(s, task)
             .then(() => navigate('/'))
             .then(() => TaskService.getTasks(s))

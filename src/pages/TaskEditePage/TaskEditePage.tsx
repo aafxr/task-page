@@ -129,8 +129,10 @@ export function TaskEditePage() {
         }
 
         TaskService.closeAndUpdate(s, report, nextTask)
-            .then(r => console.log('closeAndUpdate finish with result: ', r))
-            .then(() => navigate(BASE_URL))
+            .then(r => {
+                console.log('closeAndUpdate finish with result: ', r)
+                navigate(BASE_URL)
+            })
     }
 
 
