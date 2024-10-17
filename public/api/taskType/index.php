@@ -2,6 +2,10 @@
 
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
 
+define('AUTH_REQUIRED', true);
+
+require_once(dirname(__DIR__, 1) . '/local/header.php');
+
 $result = [];
 
 // Проверка авторизации

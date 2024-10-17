@@ -13,6 +13,10 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_be
 define("UF_FIELD_RESULT", "UF_AUTO_280393729397");
 define("UF_FIELD_SUCCESS", "UF_AUTO_251545709641");
 
+define('AUTH_REQUIRED', true);
+
+require_once(dirname(__DIR__, 2) . '/local/header.php');
+
 global $APPLICATION;
 global $DB;
 global $USER;
