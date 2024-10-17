@@ -69,6 +69,9 @@ $periodEnd = clone $periodStart;
 $periodEnd->modify('+2 month');
 $periodEnd->modify('last day of this month');
 
+
+$list = [];
+
 /**
  *  условия
  *  1. дата отбора < текущей = показываем только закрытые задачи, за заданный период
@@ -142,7 +145,6 @@ if ($periodType > 1) {
 }
 
 
-//echo $periodType;
 
 
 if ($periodType == 2) {
@@ -163,7 +165,6 @@ if ($periodType == 2) {
         ]
     );
 
-    $list = [];
 
     while($task = $resTaskList->GetNext()){
         $list[] = $task;

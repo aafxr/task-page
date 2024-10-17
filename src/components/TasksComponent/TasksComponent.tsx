@@ -27,6 +27,7 @@ export function TasksComponent({filter = 'all'}: TasksComponentProps) {
         return s.tasks
     }, [s, filter])
 
+
     return s.tasksLoading
         ? (
             <Block>

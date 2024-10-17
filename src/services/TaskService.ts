@@ -27,7 +27,7 @@ export class TaskService {
 
                 //--------------------------- new api ------------------------------------------------------
                 const tasks = await fetchTasks('' + user_id, ctx.selectedDay)
-                console.log(tasks)
+                console.log('tasks ',tasks)
                 //@ts-ignore
                 window.tasks = tasks
                 ctx.updateAppContext(s => ({...s, tasks}))
