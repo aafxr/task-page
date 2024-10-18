@@ -1,12 +1,13 @@
 <?php
 
 function initDataValidate($initData, $TOKEN){
-    if(!$initData) return false;
+    if(!$initData || !$TOKEN) return false;
 
     $hash = '';
 
     $strs = [];
-    foreach($initData as $k => $v){
+    parse_str($initData, $params);
+    foreach($params as $k => $v){
         if($k == 'hash') {
             $hash = $v;
             continue;
@@ -15,6 +16,7 @@ function initDataValidate($initData, $TOKEN){
     }
 
     sort($strs);
+
 
     $data_check_string = implode("\n", $strs);
 
@@ -25,5 +27,4 @@ function initDataValidate($initData, $TOKEN){
     $calcHash= bin2hex($dataHash);
 
     return $calcHash == $hash;
-
 }

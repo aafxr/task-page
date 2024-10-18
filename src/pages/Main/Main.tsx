@@ -116,11 +116,11 @@ export function Main() {
                     </div>
                 )}
                 <Container style={{paddingBottom: 'var(--padding)'}}>
-                    {!!s.error && (
-                        <ErrorMessageComponent onClose={handleResetError}>
-                            {s.error}
-                        </ErrorMessageComponent>
-                    )}
+                    {/*{!!s.error && (*/}
+                    {/*    <ErrorMessageComponent onClose={handleResetError}>*/}
+                    {/*        {s.error}*/}
+                    {/*    </ErrorMessageComponent>*/}
+                    {/*)}*/}
                     <Modal
                         className='calendar-modal'
                         open={s.openCalendar}

@@ -25,10 +25,12 @@ if($AUTH_REQUIRED && !$ok){
         $user = $params['user'];
         if($user) {
             $user = json_decode($user, true);
-            $arParams["SELECT"] = Array("*", "UF_*");
-            $filter = Array( "UF_TELEGRAM_ID"=> $_GET[$user['id']] );
-            $rsUsers = CUser::GetList(($by="id"), ($order="desc"), $filter,$arParams);
-            $cUser = $rsUsers->GetNext();
+            if(isset($user['id'])){
+                $arParams["SELECT"] = Array("*", "UF_*");
+                $filter = Array( "UF_TELEGRAM_ID"=> $user['id'] );
+                $rsUsers = CUser::GetList(($by="id"), ($order="desc"), $filter,$arParams);
+                $cUser = $rsUsers->GetNext();
+            }
         }
     }
 
