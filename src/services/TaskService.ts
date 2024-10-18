@@ -16,12 +16,6 @@ export class TaskService {
     static getTasks(ctx: AppContextState) {
         (async () => {
             try {
-                // let auth = await bitrix.getAuth()
-                // if(!auth) {
-                //     await bxAuth.auth()
-                //     auth = await bitrix.getAuth()
-                // }
-                // if(!auth) return
                 const user_id = ctx.user?.ID
                 if(!user_id) throw new Error(errors.UNAUTHORIZED)
                 ctx.updateAppContext( s => ({...s, tasksLoading: true, tasks: []}))

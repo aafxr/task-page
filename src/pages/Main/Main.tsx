@@ -1,7 +1,6 @@
 import {useNavigate} from "react-router-dom";
 import React, {useEffect, useMemo, useState} from "react";
 
-import {ErrorMessageComponent} from "../../components/ErrorMessageComponent";
 import {TaskFilter, TasksComponent} from "../../components/TasksComponent";
 import {dateFormatter} from "../../utils/dateFormatter";
 import {useAppContext} from "../../context/AppContext";

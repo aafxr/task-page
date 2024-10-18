@@ -3,38 +3,6 @@ import {Task} from "../../classes/Task";
 import {BXPerson} from "../../classes/BXPerson";
 
 
-
-const tasks = [
-    new Task({
-        id: '1',
-        title: 'задача 1',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque error expedita illum iusto magni minus modi molestiae neque quisquam sed.',
-        deadline: new Date('2024.08.12'),
-        createdDate: new Date(),
-        changedDate: new Date('2024.9.20')
-    }),
-    new Task({
-        id: '2',
-        title: 'задача 2',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque error expedita illum iusto magni minus modi molestiae neque quisquam sed.',
-        deadline: new Date('2024.08.11'),
-        closedDate: new Date('2024.08.10'),
-        createdDate: new Date(),
-        changedDate: new Date('2024.9.20')
-    }),
-    new Task({
-        id: '3',
-        title: 'задача 3',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque error expedita illum iusto magni minus modi molestiae neque quisquam sed.',
-        deadline: new Date('2024.08.11'),
-        createdDate: new Date(),
-        changedDate: new Date('2024.9.20')
-    }),
-]
-
-
-
-
 export interface AppContextState {
     user?: BXPerson
     loggedIn?: boolean
@@ -66,7 +34,7 @@ const defaultState: AppContextState = {
     openCalendar: false,
     selectedDay: new Date(),
     tasksLoading: false,
-    tasks: window.location.origin.includes('localhost') ? tasks : [],
+    tasks: [],
     error: null,
     errorCode: null,
     selectedTask: null,

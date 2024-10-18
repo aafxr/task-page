@@ -1,5 +1,4 @@
 import axios, {AxiosInstance, AxiosRequestConfig} from "axios";
-// import { bxAuth} from "../bitrix";
 import {errors} from "../errors";
 import {fetchHasPermit} from "../api";
 
