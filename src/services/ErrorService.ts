@@ -5,6 +5,8 @@ import {AuthMessage} from "../components/AuthMessage";
 import axios from "axios";
 import {BASE_URL} from "../App";
 import {dispatchAlert} from "../components/AlertMessage";
+import {Simulate} from "react-dom/test-utils";
+import error = Simulate.error;
 
 /**
  * преобразует сообщение  об ошибке в читаемое сообщение
@@ -45,8 +47,14 @@ export class ErrorService {
             axios.post(BASE_URL + 'api/log/', log).catch(console.error)
             dispatchAlert(e.message)
 
+
             const err = errorMessageToReadableMessage(e.message)
-            ctx.updateAppContext(s => ({...s, error: err.node, errorCode: err.code}))
+
+            ctx.updateAppContext(s => {
+                const newState = {...s, error: err.node, errorCode: err.code}
+                if(e.message === errors.UNAUTHORIZED) newState.loggedIn = false
+                return newState
+            })
             console.error('[ErrorService] ', e)
         }
     }

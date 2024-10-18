@@ -83,8 +83,7 @@ $list = [];
 $periodType = 2;
 if ($filterDateTime < $currentDateTime) {
     $periodType = 1;
-}
-if ($filterDateTime > $currentDateTimeNextDay) {
+} elseif ($filterDateTime > $currentDateTimeNextDay) {
     $periodType = 3;
 }
 
@@ -97,125 +96,9 @@ if ($filterDateTime > $currentDateTimeNextDay) {
  *
  */
 
-$arListFilterCompleted = [
-    [
-        "LOGIC" => "AND",
-        ">=CLOSED_DATE" => \Bitrix\Main\Type\DateTime::createFromPhp($filterDateTime),
-        "<CLOSED_DATE" => \Bitrix\Main\Type\DateTime::createFromPhp($filterDateTimeNextDay),
-    ],
-    "REAL_STATUS" => CTasks::STATE_COMPLETED,
-    "RESPONSIBLE_ID" => $userId,
-    /* "!UF_CRM_TASK" => false */ // Убираем так как нам надо будет фиксировать и обычные задачи
-];
-$resTaskList = CTasks::GetList(
-    [
-        "DEADLINE" => "DESC",
-        "ID" => "DESC"
-    ],
-    $arListFilterCompleted,
-    [
-        "*", "UF_*"
-    ]
-);
-$row = 0;
 
-if ($periodType > 1) {
-    $arListFilterPlanned = [
-        [
-            "LOGIC" => "AND",
-            ">=DEADLINE" => \Bitrix\Main\Type\DateTime::createFromPhp($filterDateTime),
-            "<DEADLINE" => \Bitrix\Main\Type\DateTime::createFromPhp($filterDateTimeNextDay),
-        ],
-        "!REAL_STATUS" => CTasks::STATE_COMPLETED,
-        "RESPONSIBLE_ID" => $userId,
-        /* "!UF_CRM_TASK" => false */ // Убираем так как нам надо будет фиксировать и обычные задачи
-    ];
-    $resTaskList = CTasks::GetList(
-        [
-            "UF_AUTO_851551329931" => 'DESC',
-            "DEADLINE" => "DESC",
-            "ID" => "DESC"
-        ],
-        $arListFilterPlanned,
-        [
-            "*", "UF_*"
-        ]
-    );
-
-}
-
-
-
-
-if ($periodType == 2) {
-    $arListFilter = [
-        "<DEADLINE" => \Bitrix\Main\Type\DateTime::createFromPhp($currentDateTimeNextDay),
-        "<REAL_STATUS" => CTasks::STATE_COMPLETED,
-        "RESPONSIBLE_ID" => $userId,
-    ];
-
-     $resTaskList = CTasks::GetList(
-        [
-            "DEADLINE" => "DESC",
-            "ID" => "DESC"
-        ],
-        $arListFilter,
-        [
-            "*", "UF_*"
-        ]
-    );
-
-
-    while($task = $resTaskList->GetNext()){
-        if($task['CREATED_DATE']) $task['CREATED_DATE'] = (new \DateTime($task['CREATED_DATE']))->format('Y-m-d\TH:i:s');
-        if($task['CHANGED_DATE']) $task['CHANGED_DATE'] = (new \DateTime($task['CHANGED_DATE']))->format('Y-m-d\TH:i:s');
-        if($task['CLOSED_DATE']) $task['CLOSED_DATE'] = (new \DateTime($task['CLOSED_DATE']))->format('Y-m-d\TH:i:s');
-        if($task['DEADLINE']) $task['DEADLINE'] = (new \DateTime($task['DEADLINE']))->format('Y-m-d\TH:i:s');
-        $arUser = CUser::GetList(($by="id"), ($order="desc"),['id' => $task['RESPONSIBLE_ID']],[])->GetNext();
-        if($arUser){
-            $task['RESPONSIBLE'] = [
-                'id' => $arUser['ID'],
-                'name' => $arUser['LAST_NAME'] . ' ' . $arUser['NAME'],
-                'link' => '',
-                'icon' => ''
-            ];
-        }
-
-        $arUser = CUser::GetList(($by="id"), ($order="desc"),['id' => $task['CREATED_BY']],[])->GetNext();
-        if($arUser){
-            $task['CREATOR'] = [
-                'id' => $arUser['ID'],
-                'name' => $arUser['LAST_NAME'] . ' ' . $arUser['NAME'],
-                'link' => '',
-                'icon' => ''
-            ];
-        }
-        $list[] = $task;
-    }
-
-
-    $arListFilter = [
-        ">=CLOSED_DATE" => \Bitrix\Main\Type\DateTime::createFromPhp($currentDateTime),
-        "<CLOSED_DATE" => \Bitrix\Main\Type\DateTime::createFromPhp($currentDateTimeNextDay),
-        "REAL_STATUS" => CTasks::STATE_COMPLETED,
-        "RESPONSIBLE_ID" => $userId,
-//         "!UF_CRM_TASK" => false
-    ];
-
-    $resTaskList = CTasks::GetList(
-        [
-            "DEADLINE" => "DESC",
-            "ID" => "DESC"
-        ],
-        $arListFilter,
-        [
-            "*", "UF_*"
-        ]
-    );
-}
-
-
-while($task = $resTaskList->GetNext()){
+function uploadTaskFields($task)
+{
     if($task['CREATED_DATE']) $task['CREATED_DATE'] = (new \DateTime($task['CREATED_DATE']))->format('Y-m-d\TH:i:s');
     if($task['CHANGED_DATE']) $task['CHANGED_DATE'] = (new \DateTime($task['CHANGED_DATE']))->format('Y-m-d\TH:i:s');
     if($task['CLOSED_DATE']) $task['CLOSED_DATE'] = (new \DateTime($task['CLOSED_DATE']))->format('Y-m-d\TH:i:s');
@@ -239,7 +122,102 @@ while($task = $resTaskList->GetNext()){
             'icon' => ''
         ];
     }
-    $list[] = $task;
+    return $task;
+}
+
+
+
+
+if ($periodType == 1) {
+    $arListFilterPlanned = [
+        ">=CLOSED_DATE" => \Bitrix\Main\Type\DateTime::createFromPhp($filterDateTime),
+        "<CLOSED_DATE" => \Bitrix\Main\Type\DateTime::createFromPhp($filterDateTimeNextDay),
+        "REAL_STATUS" => CTasks::STATE_COMPLETED,
+        "RESPONSIBLE_ID" => $userId,
+        /* "!UF_CRM_TASK" => false */ // Убираем так как нам надо будет фиксировать и обычные задачи
+    ];
+    $resTaskList = CTasks::GetList(
+        [
+            "CLOSED_DATE" => "DESC",
+            "ID" => "DESC"
+        ],
+        $arListFilterPlanned,
+        [
+            "*", "UF_*"
+        ]
+    );
+
+    while($task = $resTaskList->GetNext()){
+        $list[] = uploadTaskFields($task);
+    }
+
+}elseif ($periodType == 2) {
+    $arListFilter = [
+        "<DEADLINE" => \Bitrix\Main\Type\DateTime::createFromPhp($currentDateTimeNextDay),
+        "<REAL_STATUS" => CTasks::STATE_COMPLETED,
+        "RESPONSIBLE_ID" => $userId,
+    ];
+
+     $resTaskList = CTasks::GetList(
+        [
+            "DEADLINE" => "DESC",
+            "ID" => "DESC"
+        ],
+        $arListFilter,
+        [
+            "*", "UF_*"
+        ]
+    );
+
+
+    while($task = $resTaskList->GetNext()){
+        $list[] = uploadTaskFields($task);
+    }
+
+
+    $arListFilter = [
+        ">=CLOSED_DATE" => \Bitrix\Main\Type\DateTime::createFromPhp($currentDateTime),
+        "<CLOSED_DATE" => \Bitrix\Main\Type\DateTime::createFromPhp($currentDateTimeNextDay),
+        "REAL_STATUS" => CTasks::STATE_COMPLETED,
+        "RESPONSIBLE_ID" => $userId,
+//         "!UF_CRM_TASK" => false
+    ];
+
+    $resTaskList = CTasks::GetList(
+        [
+            "CLOSED_DATE" => "DESC",
+            "ID" => "DESC"
+        ],
+        $arListFilter,
+        [
+            "*", "UF_*"
+        ]
+    );
+    while($task = $resTaskList->GetNext()){
+        $list[] = uploadTaskFields($task);
+    }
+}elseif ($periodType == 3){
+    $arListFilterCompleted = [
+        ">=DEADLINE" => \Bitrix\Main\Type\DateTime::createFromPhp($filterDateTime),
+        "<DEADLINE" => \Bitrix\Main\Type\DateTime::createFromPhp($filterDateTimeNextDay),
+        "<REAL_STATUS" => CTasks::STATE_COMPLETED,
+        "RESPONSIBLE_ID" => $userId,
+        /* "!UF_CRM_TASK" => false */ // Убираем так как нам надо будет фиксировать и обычные задачи
+    ];
+    $resTaskList = CTasks::GetList(
+        [
+            "DEADLINE" => "DESC",
+            "ID" => "DESC"
+        ],
+        $arListFilterCompleted,
+        [
+            "*", "UF_*"
+        ]
+    );
+
+    while($task = $resTaskList->GetNext()){
+        $list[] = uploadTaskFields($task);
+    }
 }
 
 
@@ -248,9 +226,6 @@ $result = [
     'ok' => true,
     'result' => $list
 ];
-
-//echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-
 
 
 require_once (dirname(__DIR__, 2) . '/local/footer.php');

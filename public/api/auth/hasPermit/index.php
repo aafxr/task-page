@@ -1,6 +1,7 @@
 <?php
 
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
+require_once(dirname(__DIR__, 2) . '/local/utils/initDataValidate.php');
 
 global $USER;
 if (!is_object($USER)) $USER = new CUser;
@@ -33,29 +34,8 @@ if($ok){
 $query = $_SERVER['QUERY_STRING'];
 parse_str($query, $params);
 
-$hash = '';
 
-$strs = [];
-foreach($params as $k => $v){
-    if($k == 'hash') {
-        continue;
-    }
-    $strs[$k] = $k . '=' . $v;
-}
-
-sort($strs);
-
-$data_check_string = implode("\n", $strs);
-
-$hash = $_GET['hash'];
-
-$secret_key = hash_hmac('sha256', $TOKEN, "WebAppData", true);
-
-$dataHash = hash_hmac('sha256', $data_check_string, $secret_key, true);
-
-$calcHash= bin2hex($dataHash);
-
-$isInitDataValid = $calcHash == $hash;
+$isInitDataValid = initDataValidate($query, $TOKEN);
 
 
 if(!$isInitDataValid){

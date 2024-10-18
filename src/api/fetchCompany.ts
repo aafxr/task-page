@@ -5,8 +5,7 @@ import {BASE_URL} from "../App";
 import axios from "axios";
 
 export async function fetchCompany(id: string){
-    const userId = Telegram.WebApp.initDataUnsafe.user?.id || -1
-    const res = await appFetch.post<APiResponse<BXCompany>>(BASE_URL + 'api/contact/getById/?id=' + userId, {id})
+    const res = await appFetch.post<APiResponse<BXCompany>>(BASE_URL + 'api/contact/getById/', {id})
     if(res.status > 199 && res.status < 300){
         if (res.data.ok){
             return new BXCompany(res.data.result)

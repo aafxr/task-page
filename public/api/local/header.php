@@ -1,6 +1,10 @@
 <?php
 
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
+require_once(__DIR__ . '/utils/initDataValidate.php');
+
+$TOKEN = '7523877036:AAHjl9LsmBpJhGJzjaIOgziJDUapxUSJiNI';
+
 
 global $USER;
 if (!is_object($USER)) $USER = new CUser;
@@ -13,15 +17,20 @@ $result = [];
 
 
 if($AUTH_REQUIRED && !$ok){
+    $query = $_GET['initData'];
+    $cUser = false;
 
-    $arParams["SELECT"] = Array("*", "UF_*");
-    $filter = Array(
-        "UF_TELEGRAM_ID"=> $_GET['id']
-    );
-
-    $rsUsers = CUser::GetList(($by="id"), ($order="desc"), $filter,$arParams);
-    $cUser = $rsUsers->GetNext();
-
+    if(initDataValidate($query, $TOKEN)){
+        parse_str($query, $params);
+        $user = $params['user'];
+        if($user) {
+            $user = json_decode($user, true);
+            $arParams["SELECT"] = Array("*", "UF_*");
+            $filter = Array( "UF_TELEGRAM_ID"=> $_GET[$user['id']] );
+            $rsUsers = CUser::GetList(($by="id"), ($order="desc"), $filter,$arParams);
+            $cUser = $rsUsers->GetNext();
+        }
+    }
 
     if($cUser == false){
         http_response_code(401);

@@ -10,7 +10,7 @@ import {useAppContext} from "./context/AppContext";
 import {Container} from "./components/Container";
 import {QueryNav} from "./components/QueryNav";
 import {NetStat} from "./components/NetStat";
-import {TaskService} from "./services";
+import {ErrorService, TaskService} from "./services";
 import {fetchHasPermit} from "./api";
 import {Main} from "./pages";
 
@@ -43,7 +43,7 @@ function App() {
                     if (ok) s.updateAppContext(p => p.loggedIn === ok ? p : {...p, loggedIn: true, user})
                     else s.updateAppContext(p => p.loggedIn === ok ? p : {...p, loggedIn: false, user: undefined})
                 })
-                .catch(console.error)
+                .catch(ErrorService.handleError(s))
         }, 30_000)
 
         fetchHasPermit()
@@ -51,7 +51,7 @@ function App() {
                 if (ok) s.updateAppContext(p => p.loggedIn === ok ? p : {...p, loggedIn: true, user})
                 else s.updateAppContext(p => p.loggedIn === ok ? p : {...p, loggedIn: false, user: undefined})
             })
-            .catch(console.error)
+            .catch(ErrorService.handleError(s))
     }, []);
 
 
