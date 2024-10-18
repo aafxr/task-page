@@ -21,7 +21,7 @@ import {CompanyPreview} from "../../components/CompanyPreview";
 import {BXCompany} from "../../classes/BXCompany";
 
 
-const dateFormatter = new Intl.DateTimeFormat(navigator.language, {
+const dateFormatter = new Intl.DateTimeFormat('ru-RU', {
     day: '2-digit',
     month: 'long',
     year: '2-digit',

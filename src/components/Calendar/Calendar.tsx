@@ -8,7 +8,7 @@ type CalendarProps = {
 }
 
 
-const montFormatter = new Intl.DateTimeFormat(navigator.language, {
+const montFormatter = new Intl.DateTimeFormat('ru-RU', {
     month: "long",
     year: "numeric"
 })

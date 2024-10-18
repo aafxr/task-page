@@ -14,14 +14,14 @@ type TaskComponentProps = {
 }
 
 
-const formatter = new Intl.DateTimeFormat(navigator.language, {
+const formatter = new Intl.DateTimeFormat('ru-RU', {
     day: "2-digit",
     month: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
 });
 
-const todayFormatter = new Intl.DateTimeFormat(navigator.language, {
+const todayFormatter = new Intl.DateTimeFormat('ru-RU', {
     hour: "2-digit",
     minute: "2-digit",
 });
