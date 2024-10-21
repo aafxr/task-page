@@ -16,9 +16,15 @@ $ok = $USER->IsAuthorized();
 $result = [];
 
 
-if($AUTH_REQUIRED && !$ok){
+$cUser = false;
+
+if($ok){
+    $arParams["SELECT"] = Array("*", "UF_*");
+    $filter = Array( "ID"=> $USER->GetId() );
+    $rsUsers = CUser::GetList(($by="id"), ($order="desc"), $filter,$arParams);
+    $cUser = $rsUsers->GetNext();
+} elseif($AUTH_REQUIRED && !$ok){
     $query = $_GET['initData'];
-    $cUser = false;
 
     if(initDataValidate($query, $TOKEN)){
         parse_str($query, $params);
@@ -33,15 +39,16 @@ if($AUTH_REQUIRED && !$ok){
             }
         }
     }
-
-    if($cUser == false){
-        http_response_code(401);
-        $result['ok'] = false;
-        $result['message'] = 'unauthorized';
-        echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        exit;
-    }
     $USER->Authorize($cUser['ID']);
+}
+
+if($cUser == false){
+    http_response_code(401);
+    $result['ok'] = false;
+    $result['message'] = 'unauthorized';
+    $result['user'] = $cUser;
+    echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    exit;
 }
 
 $request = file_get_contents('php://input');

@@ -59,16 +59,6 @@ $filterDateTime = new \DateTime($filterDate);
 $filterDateTimeNextDay = clone $filterDateTime;
 $filterDateTimeNextDay->modify("+1 day");
 
-// Первый день месяца
-$periodStart = clone $currentDateTime;
-$periodStart->modify('-1 month');
-$periodStart->modify('first day of this month');
-
-// Последний день месяца
-$periodEnd = clone $periodStart;
-$periodEnd->modify('+2 month');
-$periodEnd->modify('last day of this month');
-
 
 $list = [];
 
