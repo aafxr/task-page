@@ -28,11 +28,12 @@ export interface AppContextState {
     updateAppContext: React.Dispatch<React.SetStateAction<AppContextState>>
 }
 
-
+const initDate = new Date()
+initDate.setHours(0,0,0,0)
 const defaultState: AppContextState = {
     loggedIn: undefined,
     openCalendar: false,
-    selectedDay: new Date(),
+    selectedDay: initDate,
     tasksLoading: false,
     tasks: [],
     error: null,
