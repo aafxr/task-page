@@ -25,5 +25,5 @@ yarn-error.log*
 
 loginAs.php
 
-/.idea
+.idea/
 /backup
