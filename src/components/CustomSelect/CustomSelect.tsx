@@ -12,6 +12,7 @@ export function CustomSelect<
         container: (style) => ({...style, display:'block', backgroundColor: 'var(--bg-main)', width: '100%'}),
         control: (styles) => ({
             ...styles,
+            color:'var(--text-color)',
             backgroundColor: 'var(--bg-main)',
             borderColor: 'var(--text-accent-color)'
         }),
@@ -28,9 +29,10 @@ export function CustomSelect<
                 },
             };
         },
-        input: (styles) => ({ ...styles, backgroundColor: 'transparent'}),
+        input: (styles) => ({ ...styles, color:'var(--text-color)', backgroundColor: 'transparent'}),
         placeholder: (styles) => ({ ...styles, color: 'var(--text-color-secondary)' }),
         singleValue: (styles, { data }) => ({ ...styles, color:'var(--text-color)' }),
+        valueContainer: (style) => ({...style, color:'var(--text-color)'})
     };
 
     return (
