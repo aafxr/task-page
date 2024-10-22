@@ -39,11 +39,13 @@ export class ErrorService {
     static handleError(ctx: AppContextState) {
         return (e: Error) => {
             // handle error here ...
-            const log = {
+            const isUnauthorized = e.message === errors.UNAUTHORIZED
+            const log: any = {
                 name: e.name,
                 message: e.message,
                 stack: e.stack
             }
+            if (isUnauthorized && Telegram.WebApp.initDataUnsafe.user) log.telegram = Telegram.WebApp.initDataUnsafe.user
             axios.post(BASE_URL + 'api/log/', log).catch(console.error)
             dispatchAlert(e.message)
 
@@ -52,7 +54,7 @@ export class ErrorService {
 
             ctx.updateAppContext(s => {
                 const newState = {...s, error: err.node, errorCode: err.code}
-                if(e.message === errors.UNAUTHORIZED) newState.loggedIn = false
+                if(isUnauthorized) newState.loggedIn = false
                 return newState
             })
             console.error('[ErrorService] ', e)
