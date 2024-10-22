@@ -282,7 +282,7 @@ export class Task {
     }
 
     get important() {
-        return !this.ufAuto851551329931.startsWith('не важная')
+        return !this.ufAuto851551329931.includes('не важная')
     }
 
     set urgent(v: boolean) {
@@ -292,7 +292,7 @@ export class Task {
     }
 
     get urgent() {
-        return !this.ufAuto851551329931.endsWith('не срочная')
+        return !this.ufAuto851551329931.includes('не срочная')
     }
 
     ufColor: any | null = null
