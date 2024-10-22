@@ -21,6 +21,24 @@ define('AUTH_REQUIRED', true);
 
 require_once(dirname(__DIR__, 2) . '/local/header.php');
 
+global $cUser;
+
+$timezones = [
+    0 => 'Europe/Dublin',
+    1 => 'Europe/Amsterdam',
+    2 => 'Europe/Kaliningrad',
+    3 => 'Europe/Moscow',
+    4 => 'Europe/Samara',
+    5 => 'Asia/Yekaterinburg',
+    6 => 'Asia/Omsk',
+    7 => 'Asia/Novosibirsk',
+    8 => 'Asia/Irkutsk',
+    9 => 'Asia/Yakutsk',
+    10 => 'Asia/Vladivostok',
+    11 => 'Asia/Sakhalin',
+    12 => 'Asia/Kamchatka',
+];
+
 
 $hlid = 2; // Указываем ID нашего highloadblock блока к которому будет делать запросы.
 $hlblock = Bitrix\Highloadblock\HighloadBlockTable::getById($hlid)->fetch();
@@ -34,7 +52,7 @@ while ($taskTypeData = $taskTypesRes->Fetch()) {
 }
 
 
-if(!isset($request['userId']) || !isset($request['date'])){
+if (!isset($request['userId']) || !isset($request['date'])) {
     http_response_code(400);
     $result = [
         'ok' => false,
@@ -52,9 +70,20 @@ $currentDateTimeNextDay = clone $currentDateTime;
 $currentDateTimeNextDay->setTime(0, 0);
 $currentDateTimeNextDay->modify("+1 day");
 
+if(isset($cUser['TIME_ZONE_OFFSET'])){
+    $offset = $currentDateTime->getTimezone()->getOffset($currentDateTime) + intval($cUser['TIME_ZONE_OFFSET']);
+    $timezone = (int)($offset / 3600);
+    $timezoneConstant = $timezones[$timezone];
+}
+
 
 $filterDate = $request['date'];
-$filterDateTime = new \DateTime($filterDate);
+if($timezoneConstant){
+    $timezone = new DateTimeZone($timezoneConstant);
+    $filterDateTime = new \DateTime($filterDate, $timezone);
+} else{
+    $filterDateTime = new \DateTime($filterDate);
+}
 
 $filterDateTimeNextDay = clone $filterDateTime;
 $filterDateTimeNextDay->modify("+1 day");
@@ -89,12 +118,12 @@ if ($filterDateTime < $currentDateTime) {
 
 function uploadTaskFields($task)
 {
-    if($task['CREATED_DATE']) $task['CREATED_DATE'] = (new \DateTime($task['CREATED_DATE']))->format('Y-m-d\TH:i:s');
-    if($task['CHANGED_DATE']) $task['CHANGED_DATE'] = (new \DateTime($task['CHANGED_DATE']))->format('Y-m-d\TH:i:s');
-    if($task['CLOSED_DATE']) $task['CLOSED_DATE'] = (new \DateTime($task['CLOSED_DATE']))->format('Y-m-d\TH:i:s');
-    if($task['DEADLINE']) $task['DEADLINE'] = (new \DateTime($task['DEADLINE']))->format('Y-m-d\TH:i:s');
-    $arUser = CUser::GetList(($by="id"), ($order="desc"),['id' => $task['RESPONSIBLE_ID']],[])->GetNext();
-    if($arUser){
+    if ($task['CREATED_DATE']) $task['CREATED_DATE'] = (new \DateTime($task['CREATED_DATE']))->format('Y-m-d\TH:i:s');
+    if ($task['CHANGED_DATE']) $task['CHANGED_DATE'] = (new \DateTime($task['CHANGED_DATE']))->format('Y-m-d\TH:i:s');
+    if ($task['CLOSED_DATE']) $task['CLOSED_DATE'] = (new \DateTime($task['CLOSED_DATE']))->format('Y-m-d\TH:i:s');
+    if ($task['DEADLINE']) $task['DEADLINE'] = (new \DateTime($task['DEADLINE']))->format('Y-m-d\TH:i:s');
+    $arUser = CUser::GetList(($by = "id"), ($order = "desc"), ['id' => $task['RESPONSIBLE_ID']], [])->GetNext();
+    if ($arUser) {
         $task['RESPONSIBLE'] = [
             'id' => $arUser['ID'],
             'name' => $arUser['LAST_NAME'] . ' ' . $arUser['NAME'],
@@ -103,8 +132,8 @@ function uploadTaskFields($task)
         ];
     }
 
-    $arUser = CUser::GetList(($by="id"), ($order="desc"),['id' => $task['CREATED_BY']],[])->GetNext();
-    if($arUser){
+    $arUser = CUser::GetList(($by = "id"), ($order = "desc"), ['id' => $task['CREATED_BY']], [])->GetNext();
+    if ($arUser) {
         $task['CREATOR'] = [
             'id' => $arUser['ID'],
             'name' => $arUser['LAST_NAME'] . ' ' . $arUser['NAME'],
@@ -114,8 +143,6 @@ function uploadTaskFields($task)
     }
     return $task;
 }
-
-
 
 
 if ($periodType == 1) {
@@ -137,18 +164,18 @@ if ($periodType == 1) {
         ]
     );
 
-    while($task = $resTaskList->GetNext()){
+    while ($task = $resTaskList->GetNext()) {
         $list[] = uploadTaskFields($task);
     }
 
-}elseif ($periodType == 2) {
+} elseif ($periodType == 2) {
     $arListFilter = [
         "<DEADLINE" => \Bitrix\Main\Type\DateTime::createFromPhp($currentDateTimeNextDay),
         "<REAL_STATUS" => CTasks::STATE_COMPLETED,
         "RESPONSIBLE_ID" => $userId,
     ];
 
-     $resTaskList = CTasks::GetList(
+    $resTaskList = CTasks::GetList(
         [
             "DEADLINE" => "DESC",
             "ID" => "DESC"
@@ -160,7 +187,7 @@ if ($periodType == 1) {
     );
 
 
-    while($task = $resTaskList->GetNext()){
+    while ($task = $resTaskList->GetNext()) {
         $list[] = uploadTaskFields($task);
     }
 
@@ -183,10 +210,10 @@ if ($periodType == 1) {
             "*", "UF_*"
         ]
     );
-    while($task = $resTaskList->GetNext()){
+    while ($task = $resTaskList->GetNext()) {
         $list[] = uploadTaskFields($task);
     }
-}elseif ($periodType == 3){
+} elseif ($periodType == 3) {
     $arListFilterCompleted = [
         ">=DEADLINE" => \Bitrix\Main\Type\DateTime::createFromPhp($filterDateTime),
         "<DEADLINE" => \Bitrix\Main\Type\DateTime::createFromPhp($filterDateTimeNextDay),
@@ -205,17 +232,16 @@ if ($periodType == 1) {
         ]
     );
 
-    while($task = $resTaskList->GetNext()){
+    while ($task = $resTaskList->GetNext()) {
         $list[] = uploadTaskFields($task);
     }
 }
 
 
-
 $result = [
     'ok' => true,
-    'result' => $list
+    'result' => $list,
 ];
 
 
-require_once (dirname(__DIR__, 2) . '/local/footer.php');
+require_once(dirname(__DIR__, 2) . '/local/footer.php');

@@ -181,6 +181,7 @@ export function TaskEditePage() {
         setReport(nextReport)
 
         const nt = new Task(nextTask)
+        nt.ufCrmTask = nextReport.ufCrmTask
         const tt = taskTypes.find(tt => tt.ID === v)
         if (tt) {
             nt.title = tt.UF_CODE + ' ' + tt.UF_NAME

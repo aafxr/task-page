@@ -383,6 +383,27 @@ export class Task {
         return this.ufCrmTaskContact ? [...this.ufCrmTaskContact] : []
     }
 
+    get statusText(){
+        switch (this.status) {
+            case 1:
+                return 'Новая'
+            case 2:
+                return 'Ожидание'
+            case 3:
+                return 'Выполняется'
+            case 4:
+                return 'Предварительно выполнена'
+            case 5:
+                return 'Выполнена'
+            case 6:
+                return 'Отложена'
+            case 7:
+                return 'Отклонена'
+            default:
+                return ''
+        }
+    }
+
 
     static transformToBitrixFields(task: Partial<Task>) {
         const result: any = {}
