@@ -115,7 +115,11 @@ export function TaskEditePage() {
             report.files = files
         }
 
-        if(nextTask) nextTask.deadline = nextTaskDate
+        if(nextTask) {
+            nextTask.deadline = nextTaskDate
+            if(!nextTask.ufCrmTaskContact && report.ufCrmTaskContact) nextTask.ufCrmTaskContact = report.ufCrmTaskContact
+            if(!nextTask.ufCrmTask.length && report.ufCrmTask.length) nextTask.ufCrmTask = report.ufCrmTask
+        }
 
         const _files = files.reduce((a, f) => {
             a[f.name] = false
