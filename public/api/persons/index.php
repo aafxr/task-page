@@ -16,6 +16,9 @@ $rsUsers = CUser::GetList(($by="id"), ($order="desc"), $filter,$arParams);
 $list = [];
 
 while($cUser = $rsUsers->GetNext()){
+    foreach ($cUser as $k => $v) {
+        if($k[0] == '~') unset($cUser[$k]);
+    }
     $list[] = $cUser;
 }
 
