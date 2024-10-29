@@ -17,7 +17,7 @@ $list = [];
 
 while($cUser = $rsUsers->GetNext()){
     foreach ($cUser as $k => $v) {
-        if($k[0] == '~') unset($cUser[$k]);
+        if($k[0] == '~' || substr($k,0, 8) == "PASSWORD") unset($cUser[$k]);
     }
     $list[] = $cUser;
 }
