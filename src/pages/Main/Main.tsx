@@ -12,6 +12,7 @@ import {Block} from "../../components/Block";
 import {Modal} from "../../components/Moadl";
 import {Text} from "../../components/Text";
 import {BASE_URL} from "../../App";
+import {Navigation} from "../../components/Navigation";
 
 
 type FilterType = {
@@ -131,16 +132,17 @@ export function Main() {
             </div>
             <div className='wrapper-content'>
                 <Container>
-                    {
-                        <Block className='addTask' onClick={handleAddTask}>
-                            <PlusIcon className='icon'/>
-                            <Text>добавить задачу</Text>
-                        </Block>
-                    }
+                    {/*{*/}
+                    {/*    <Block className='addTask' onClick={handleAddTask}>*/}
+                    {/*        <PlusIcon className='icon'/>*/}
+                    {/*        <Text>добавить задачу</Text>*/}
+                    {/*    </Block>*/}
+                    {/*}*/}
                     <TasksComponent filter={f.filter}/>
                 </Container>
             </div>
             <div className='wrapper-footer'>
+                <Navigation />
             </div>
         </div>
     );

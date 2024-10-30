@@ -1,0 +1,12 @@
+.contacts{
+}
+
+.contacts-container{
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.contacts-item + .contacts-item{
+    border-top: 1px solid var(--border-color);
+}

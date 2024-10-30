@@ -25,6 +25,7 @@ const TaskDetailsLazy = lazy(() => import('./pages/TaskDetails/TaskDetails'))
 const CompanyPageLazy = lazy(() => import('./pages/CompanyPage/CompanyPage'))
 const TaskEditePageLazy = lazy(() => import('./pages/TaskEditePage/TaskEditePage'))
 const TestPageLazy = lazy(() => import('./pages/TestPage/TestPage'))
+const ContactsPageLazy = lazy(() => import('./pages/ContactsPage/ContactsPage'))
 
 
 
@@ -112,13 +113,14 @@ function App() {
             <AlertMessage />
             <QueryNav name={'page'} />
             <Routes>
-                <Route path={BASE_URL} element={<Main/>}/>
+                <Route path={BASE_URL + 'tasks'} element={<Main/>}/>
+                <Route path={BASE_URL + 'contacts'} element={<Suspense fallback={<PageLoader/>}><ContactsPageLazy/></Suspense>}/>
                 <Route path={BASE_URL + 'task/new'} element={<Suspense fallback={<PageLoader/>}><NewTaskLazy/></Suspense>}/>
                 <Route path={BASE_URL + 'task/:taskID'} element={<Suspense fallback={<PageLoader/>}><TaskDetailsLazy/></Suspense>}/>
                 <Route path={BASE_URL + 'task/:taskID/:companyID'} element={<Suspense fallback={<PageLoader/>}><CompanyPageLazy/></Suspense>}/>
                 <Route path={BASE_URL + 'task/:taskID/edite'} element={<Suspense fallback={<PageLoader/>}><TaskEditePageLazy/></Suspense>}/>
                 <Route path={BASE_URL + 'test'} element={<Suspense fallback={<PageLoader/>}><TestPageLazy/></Suspense>}/>
-                <Route path={'*'} element={<Navigate to={BASE_URL}/>}/>
+                <Route path={'*'} element={<Navigate to={BASE_URL + 'tasks'}/>}/>
             </Routes>
         </>
     )

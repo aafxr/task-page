@@ -1,0 +1,40 @@
+.contact {
+
+}
+
+.contact-container{
+    padding: var(--offset);
+    background-color: var(--bg-main);
+    min-height: 90px;
+}
+
+.contact-name{
+    color: var(--text-accent-color);
+    font-size: .9rem;
+    font-weight: 600;
+    text-decoration: underline;
+    letter-spacing: 1px;
+}
+
+.contact-position{
+    margin-top: 4px;
+    color: var(--text-color);
+    font-size: 0.8rem;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.contact-contacts{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 8px;
+    color: var(--text-color-secondary);
+    font-size: 0.7rem;
+}
+
+.contact-contacts a{
+    text-decoration: underline;
+    white-space: nowrap;
+}
+

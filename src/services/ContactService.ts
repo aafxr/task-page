@@ -2,15 +2,27 @@ import {AppContextState} from "../context/AppContext";
 import {BXContact} from "../classes/BXContact";
 import {ErrorService} from "./ErrorService";
 import {Task} from "../classes/Task";
-import {fetchRestAPI} from "../api";
 import {BXCompany} from "../classes/BXCompany";
 import {fetchContact} from "../api/fetchContact";
 import {fetchCompany} from "../api/fetchCompany";
+import {fetchContactsListByCompany} from "../api/fetchContactsList";
 
 const contactsMap = new Map<BXContact['ID'], BXContact>()
 const companiesMap = new Map<BXCompany['ID'], BXCompany>()
 
 export class ContactService {
+
+
+    static async getContactsList(ctx: AppContextState){
+        try {
+            return await fetchContactsListByCompany()
+        } catch (e){
+            ErrorService.handleError(ctx)(e as Error)
+            return []
+        }
+    }
+
+
     /**
      * получить список контактов указанных в задаче
      * @param ctx

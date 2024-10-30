@@ -1,0 +1,41 @@
+.navigation-content {
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: stretch;
+  align-items: center;
+  background-color: var(--bg-main);
+}
+
+.navigation-item {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 56px;
+  color: var(--text-color-secondary);
+  cursor: pointer;
+}
+
+.navigation-item.active {
+  color: var(--text-accent-color);
+}
+
+.navigation-icon-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2px 10px;
+  min-width: 64px;
+  background: transparent;
+  border-radius: 35px;
+}
+
+.navigation-item.active .navigation-icon-container{
+  background: color-mix(in srgb, var(--text-accent-color) 10%, transparent);
+}
+
+.navigation-icon{
+  width: var(--nav-icon-size);
+  height: var(--nav-icon-size);
+}

@@ -65,4 +65,6 @@
     --placeholder-color: #e3e3e3;
     --placeholder-height: .7rem;
     --placeholder-flash-colort: rgba(255,255,255, .5);
+
+    --nav-icon-size: 24px
 }
