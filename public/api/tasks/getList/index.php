@@ -78,11 +78,10 @@ if(isset($cUser['TIME_ZONE_OFFSET'])){
 
 
 $filterDate = $request['date'];
+$filterDateTime = new \DateTime($filterDate);
 if($timezoneConstant){
     $timezone = new DateTimeZone($timezoneConstant);
-    $filterDateTime = new \DateTime($filterDate, $timezone);
-} else{
-    $filterDateTime = new \DateTime($filterDate);
+    $filterDateTime->setTimezone($timezone);
 }
 
 $filterDateTimeNextDay = clone $filterDateTime;
@@ -102,7 +101,7 @@ $list = [];
 $periodType = 2;
 if ($filterDateTime < $currentDateTime) {
     $periodType = 1;
-} elseif ($filterDateTime > $currentDateTimeNextDay) {
+} elseif ($filterDateTime >= $currentDateTimeNextDay) {
     $periodType = 3;
 }
 
@@ -240,7 +239,7 @@ if ($periodType == 1) {
 
 $result = [
     'ok' => true,
-    'result' => $list,
+    'result' => $list
 ];
 
 
