@@ -30,6 +30,7 @@ let refreshResult = false
 appFetch.interceptors.request.use(r => {
     if(r.params) r.params['initData'] = Telegram.WebApp.initData
     else r.params = {initData: Telegram.WebApp.initData}
+    r.params.tg = (window.tgState || '').split('=')[1]
     return r
 })
 
@@ -57,7 +58,7 @@ appFetch.interceptors.response.use(async (r) => r, async (err) => {
 async function refreshSession(): Promise<boolean>{
     refresh = true
     try{
-        const res = await fetchHasPermit()
+        const res = await fetchHasPermit(window.tgState)
         refreshResult = res.ok
         return res.ok
     } finally {

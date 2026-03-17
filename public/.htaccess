@@ -1,11 +1,15 @@
-
 <IfModule mod_rewrite.c>
-
     RewriteEngine On
     RewriteBase /pub/test
+
+    # Не перенаправляем запросы к реально существующему index.html
     RewriteRule ^index\.html$ - [L]
+
+    # Не перенаправляем запросы к реально существующим файлам, директориям и симлинкам
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-l
-    RewriteRule . /index.html [L]
+
+    # Перенаправляем все остальные запросы на index.html с сохранением query-параметров
+    RewriteRule . /pub/test/index.html [L,QSA]
 </IfModule>

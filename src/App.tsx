@@ -1,4 +1,4 @@
-import {lazy, Suspense, useEffect} from "react";
+import {lazy, Suspense, useEffect, useState} from "react";
 import {Navigate, Route, Routes, useLocation, useNavigate} from "react-router-dom";
 
 import {ErrorMessageComponent} from "./components/ErrorMessageComponent";
@@ -28,17 +28,27 @@ const TestPageLazy = lazy(() => import('./pages/TestPage/TestPage'))
 
 
 
+const tgState = (() => {
+    const url = new URL(window.location.href)
+    console.log(window.location.href)
+    console.log(url.searchParams.get('tg'))
+    if(url.searchParams.get('tg')) return `tg=${url.searchParams.get('tg')}`
+})()
 
+window.tgState = tgState
 
 function App() {
     const s = useAppContext()
     const navigate = useNavigate()
     const {pathname} = useLocation()
 
+    console.log(tgState)
 
     useEffect(() => {
         setInterval(() => {
-            fetchHasPermit()
+            console.log(tgState)
+
+            fetchHasPermit(tgState)
                 .then(({ok, user}) => {
                     if (ok) s.updateAppContext(p => p.loggedIn === ok ? p : {...p, loggedIn: true, user})
                     else s.updateAppContext(p => p.loggedIn === ok ? p : {...p, loggedIn: false, user: undefined})
@@ -46,7 +56,7 @@ function App() {
                 .catch(ErrorService.handleError(s))
         }, 30_000)
 
-        fetchHasPermit()
+        fetchHasPermit(tgState)
             .then(({ok, user}) => {
                 if (ok) s.updateAppContext(p => p.loggedIn === ok ? p : {...p, loggedIn: true, user})
                 else s.updateAppContext(p => p.loggedIn === ok ? p : {...p, loggedIn: false, user: undefined})
