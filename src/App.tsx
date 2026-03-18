@@ -32,7 +32,15 @@ const tgState = (() => {
     const url = new URL(window.location.href)
     console.log(window.location.href)
     console.log(url.searchParams.get('tg'))
-    if(url.searchParams.get('tg')) return `tg=${url.searchParams.get('tg')}`
+    if(url.searchParams.get('tg')) {
+        localStorage.setItem('tgState', url.searchParams.get('tg') || '')
+        return `tg=${url.searchParams.get('tg')}`
+    } else {
+        const tg = localStorage.getItem('tgState')
+        if (tg){
+            return `tg=${tg}`
+        }
+    }
 })()
 
 window.tgState = tgState
