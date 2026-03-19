@@ -1,6 +1,6 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /pub/test
+    RewriteBase /pub/test/tmp2
 
     # Не перенаправляем запросы к реально существующему index.html
     RewriteRule ^index\.html$ - [L]
@@ -11,5 +11,5 @@
     RewriteCond %{REQUEST_FILENAME} !-l
 
     # Перенаправляем все остальные запросы на index.html с сохранением query-параметров
-    RewriteRule . /pub/test/index.html [L,QSA]
+    RewriteRule . index.html [L,QSA]
 </IfModule>

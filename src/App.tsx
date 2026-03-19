@@ -1,4 +1,4 @@
-import {lazy, Suspense, useEffect, useState} from "react";
+import {lazy, Suspense, useEffect} from "react";
 import {Navigate, Route, Routes, useLocation, useNavigate} from "react-router-dom";
 
 import {ErrorMessageComponent} from "./components/ErrorMessageComponent";
@@ -19,6 +19,7 @@ import {PageLoader} from "./components/PageLoader";
 
 export const BASE_URL = process.env.REACT_APP_BACKEND_URL || '/';
 
+console.log('BASE_URL', BASE_URL)
 
 const NewTaskLazy = lazy(() => import('./pages/NewTask/NewTask'))
 const TaskDetailsLazy = lazy(() => import('./pages/TaskDetails/TaskDetails'))
@@ -88,13 +89,15 @@ function App() {
             id = window.setInterval(() => tgInit(), 50)
         }
         const tgInit = () => {
-            if ('Telegram' in window && id) clearInterval(id)
-            Telegram.WebApp.ready()
-            Telegram.WebApp.disableVerticalSwipes()
-            Telegram.WebApp.expand()
-            Telegram.WebApp.BackButton.onClick(() => navigate(-1))
-            Telegram.WebApp.onEvent('themeChanged', setTGThemeColor)
-            setTGThemeColor()
+            if ('Telegram' in window && id) {
+                clearInterval(id)
+                Telegram.WebApp.ready()
+                Telegram.WebApp.disableVerticalSwipes()
+                Telegram.WebApp.expand()
+                Telegram.WebApp.BackButton.onClick(() => navigate(-1))
+                Telegram.WebApp.onEvent('themeChanged', setTGThemeColor)
+                setTGThemeColor()
+            }
         }
 
         tgInit()
@@ -103,9 +106,11 @@ function App() {
 
 
     useEffect(() => {
-        pathname === BASE_URL
-            ? Telegram.WebApp.BackButton.hide()
-            : Telegram.WebApp.BackButton.show()
+        if ('Telegram' in window ) {
+            pathname === BASE_URL
+                ? Telegram.WebApp.BackButton.hide()
+                : Telegram.WebApp.BackButton.show()
+        }
     }, [pathname]);
 
 

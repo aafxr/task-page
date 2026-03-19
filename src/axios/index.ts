@@ -28,9 +28,12 @@ let refresh = false
 let refreshResult = false
 
 appFetch.interceptors.request.use(r => {
-    if(r.params) r.params['initData'] = Telegram.WebApp.initData
-    else r.params = {initData: Telegram.WebApp.initData}
-    r.params.tg = (window.tgState || '').split('=')[1]
+    if('Telegram' in window){
+        if(r.params) r.params['initData'] = Telegram.WebApp.initData
+        else r.params = {initData: Telegram.WebApp.initData}
+    }
+    if(r.params) r.params['tg'] = (window.tgState || '=').split('=')[1]
+    else r.params = {tg: (window.tgState || '=').split('=')[1]}
     return r
 })
 
